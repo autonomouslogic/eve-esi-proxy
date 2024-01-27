@@ -1,114 +1,114 @@
 plugins {
-    id "java"
-    id "idea"
-    id "jacoco"
-    id "io.micronaut.application" version "4.2.1"
-    id "io.freefair.lombok" version "8.4"
-    id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "2.0.5"
-    id "com.diffplug.spotless" version "6.23.3"
+	id "java"
+	id "idea"
+	id "jacoco"
+	id "io.micronaut.application" version "4.2.1"
+	id "io.freefair.lombok" version "8.4"
+	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "2.0.5"
+	id "com.diffplug.spotless" version "6.23.3"
 }
 
 group = "com.autonomouslogic.esiproxy"
 
 ext {
-    mainClassName = "com.autonomouslogic.esiproxy.Application"
-    micronautVersion = "4.2.1"
+	mainClassName = "com.autonomouslogic.esiproxy.Application"
+	micronautVersion = "4.2.1"
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 java {
-    withJavadocJar()
-    withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+	withJavadocJar()
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
 dependencies {
-    annotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
-    annotationProcessor "io.micronaut.micrometer:micronaut-micrometer-annotation"
-    implementation "io.micronaut.platform:micronaut-parent:$micronautVersion"
-    implementation "io.micronaut:micronaut-jackson-databind"
-    implementation "io.micronaut:micronaut-management"
-    implementation "io.micronaut.jaxrs:micronaut-jaxrs-server"
-    implementation "io.micronaut.micrometer:micronaut-micrometer-core"
-    implementation "io.micronaut.micrometer:micronaut-micrometer-registry-prometheus"
-    implementation "io.micronaut.rxjava3:micronaut-rxjava3"
-    implementation "io.micronaut.rxjava3:micronaut-rxjava3-http-client"
-    implementation "org.apache.logging.log4j:log4j-api:2.22.1"
-    implementation platform("org.apache.logging.log4j:log4j-bom:2.20.0")
-    runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:2.22.1"
-    compileOnly "io.micronaut:micronaut-http-client"
-    runtimeOnly "org.apache.logging.log4j:log4j-core:2.22.1"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.16.1"
-    implementation "com.fasterxml.jackson.core:jackson-core:2.16.1"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.16.1"
-    implementation "com.squareup.okhttp3:okhttp:4.12.0"
+	annotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
+	annotationProcessor "io.micronaut.micrometer:micronaut-micrometer-annotation"
+	implementation "io.micronaut.platform:micronaut-parent:$micronautVersion"
+	implementation "io.micronaut:micronaut-jackson-databind"
+	implementation "io.micronaut:micronaut-management"
+	implementation "io.micronaut.jaxrs:micronaut-jaxrs-server"
+	implementation "io.micronaut.micrometer:micronaut-micrometer-core"
+	implementation "io.micronaut.micrometer:micronaut-micrometer-registry-prometheus"
+	implementation "io.micronaut.rxjava3:micronaut-rxjava3"
+	implementation "io.micronaut.rxjava3:micronaut-rxjava3-http-client"
+	implementation "org.apache.logging.log4j:log4j-api:2.22.1"
+	implementation platform("org.apache.logging.log4j:log4j-bom:2.20.0")
+	runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:2.22.1"
+	compileOnly "io.micronaut:micronaut-http-client"
+	runtimeOnly "org.apache.logging.log4j:log4j-core:2.22.1"
+	implementation "com.fasterxml.jackson.core:jackson-annotations:2.16.1"
+	implementation "com.fasterxml.jackson.core:jackson-core:2.16.1"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.16.1"
+	implementation "com.squareup.okhttp3:okhttp:4.12.0"
 
-    testAnnotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
-    testImplementation "org.junit.jupiter:junit-jupiter:5.10.1"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:5.10.1"
-    testImplementation "org.junit-pioneer:junit-pioneer:2.2.0"
-    testImplementation "org.mockito:mockito-junit-jupiter:5.8.0"
-    testImplementation "com.squareup.okhttp3:mockwebserver:4.12.0"
+	testAnnotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
+	testImplementation "org.junit.jupiter:junit-jupiter:5.10.1"
+	testImplementation "org.junit.jupiter:junit-jupiter-params:5.10.1"
+	testImplementation "org.junit-pioneer:junit-pioneer:2.2.0"
+	testImplementation "org.mockito:mockito-junit-jupiter:5.8.0"
+	testImplementation "com.squareup.okhttp3:mockwebserver:4.12.0"
 }
 
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
 
 spotless {
-    java {
-        target "src/**/*.java"
-        palantirJavaFormat()
-        indentWithTabs()
-    }
+	java {
+		target "src/**/*.java"
+		palantirJavaFormat()
+		indentWithTabs()
+	}
 
-    groovyGradle {
-        indentWithTabs()
-    }
+	groovyGradle {
+		indentWithTabs()
+	}
 }
 
 gitSemVer {
-    buildMetadataSeparator.set("-")
+	buildMetadataSeparator.set("-")
 }
 
 test {
-    environment "LOG_LEVEL", "trace"
-    jvmArgs "-client", "-XX:+UseG1GC", "-Xmx8g"
+	environment "LOG_LEVEL", "trace"
+	jvmArgs "-client", "-XX:+UseG1GC", "-Xmx8g"
 
-    useJUnitPlatform()
-    testLogging {
-        events = [ "FAILED", "PASSED", "SKIPPED" ]
-        showExceptions = true
-        exceptionFormat = "FULL"
-        showExceptions = true
-        showCauses = true
-        showStackTraces = true
-    }
-    // https://junit-pioneer.org/docs/environment-variables/#warnings-for-reflective-access
-    jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED", "--add-opens", "java.base/java.lang=ALL-UNNAMED")
+	useJUnitPlatform()
+	testLogging {
+		events = [ "FAILED", "PASSED", "SKIPPED" ]
+		showExceptions = true
+		exceptionFormat = "FULL"
+		showExceptions = true
+		showCauses = true
+		showStackTraces = true
+	}
+	// https://junit-pioneer.org/docs/environment-variables/#warnings-for-reflective-access
+	jvmArgs("--add-opens", "java.base/java.util=ALL-UNNAMED", "--add-opens", "java.base/java.lang=ALL-UNNAMED")
 }
 
 application {
-    mainClass = mainClassName
-    applicationDefaultJvmArgs = [
-            "-XX:+PrintCommandLineFlags",
-            "-XX:MinHeapSize=" + 10 * 1024 * 1024,
-            "-XX:MaxRAMPercentage=80.0",
-            "-Dorg.jooq.no-logo=true",
-            "-Dorg.jooq.no-tips=true"
-    ]
+	mainClass = mainClassName
+	applicationDefaultJvmArgs = [
+			"-XX:+PrintCommandLineFlags",
+			"-XX:MinHeapSize=" + 10 * 1024 * 1024,
+			"-XX:MaxRAMPercentage=80.0",
+			"-Dorg.jooq.no-logo=true",
+			"-Dorg.jooq.no-tips=true"
+	]
 }
 
 micronaut {
-    version "$micronautVersion"
-    runtime("netty")
-    testRuntime("junit5")
+	version "$micronautVersion"
+	runtime("netty")
+	testRuntime("junit5")
 }
 
 wrapper {
-    distributionType = "ALL"
+	distributionType = "ALL"
 }

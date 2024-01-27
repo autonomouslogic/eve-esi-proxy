@@ -8,7 +8,6 @@ import okhttp3.OkHttpClient;
 public class TestOkHttpClientFactory {
 	@Bean
 	public OkHttpClient okHttpClient() {
-		return new OkHttpClient.Builder()
-				.build();
+		return new OkHttpClient.Builder().build();
 	}
 }
