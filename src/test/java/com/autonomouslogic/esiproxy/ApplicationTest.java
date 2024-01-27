@@ -7,6 +7,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,7 @@ public class ApplicationTest {
 						.build())
 				.execute();
 		assertEquals(200, response.code());
+		assertEquals(Protocol.HTTP_2, response.protocol());
 		assertEquals("Hello World!\n", response.body().string());
 	}
 }
