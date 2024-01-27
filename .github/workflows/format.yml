@@ -1,0 +1,21 @@
+name: Format
+on: [ push ]
+jobs:
+  Format:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Lint
+        run: |
+          echo "Run 'make format' to auto-format"
+          make lint
