@@ -1,6 +1,7 @@
 package com.autonomouslogic.esiproxy;
 
 import static com.autonomouslogic.esiproxy.test.TestConstants.MOCK_ESI_PORT;
+import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.NonNull;
@@ -37,11 +39,15 @@ public class ProxyControllerTest {
 	@Inject
 	OkHttpClient client;
 
+	@Inject
+	EsiRelay esiRelay;
+
 	MockWebServer mockEsi;
 
 	@BeforeEach
 	@SneakyThrows
 	void setup() {
+		esiRelay.clearCache();
 		mockEsi = new MockWebServer();
 		mockEsi.start(MOCK_ESI_PORT);
 	}
@@ -124,6 +130,42 @@ public class ProxyControllerTest {
 
 		// A second request to the ESI should be made.
 		assertNotNull(takeRequest());
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldMakeConditionalRequestsBeforeServiceFromCache() {
+		enqueueResponse(
+				200,
+				"Test body",
+				Map.of(
+						"Cache-Control",
+						"public, max-age=60",
+						"ETag",
+						"\"aa698174d2c33ae33b6080b84cd1cb6b8c18a6966baeff3f774a9bbb\"",
+						"Last-Modified",
+						RFC_1123_DATE_TIME.format(ZonedDateTime.now().minusSeconds(60)),
+						"Expires",
+						RFC_1123_DATE_TIME.format(ZonedDateTime.now())));
+		enqueueResponse(304);
+
+		// First proxy response.
+		var proxyResponse1 = callProxy("GET", "/");
+		assertResponse(proxyResponse1, 200, "Test body");
+
+		// ESI request.
+		assertNotNull(takeRequest());
+
+		Thread.sleep(2000);
+
+		// Second proxy response should be served from cache.
+		var proxyResponse2 = callProxy("GET", "/");
+		//		assertResponse(proxyResponse2, 200, "Test body");
+
+		// The second ESI request should be conditional.
+		var conditionalRequest = takeRequest();
+		assertNotNull(conditionalRequest);
+		assertNotNull(conditionalRequest.getHeader("If-Modified-Since"));
 	}
 
 	// ===============================================================

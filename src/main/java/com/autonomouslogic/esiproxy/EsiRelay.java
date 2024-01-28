@@ -43,6 +43,7 @@ public class EsiRelay {
 			})
 			.get();
 
+	private final Cache cache;
 	private final OkHttpClient client;
 
 	@SneakyThrows
@@ -57,10 +58,11 @@ public class EsiRelay {
 		} else {
 			tempDir = Files.createTempDirectory("esi-proxy-http-cache").toFile();
 		}
+		cache = new Cache(tempDir, httpCacheMaxSize);
 		client = new OkHttpClient.Builder()
 				.followRedirects(false)
 				.followSslRedirects(false)
-				.cache(new Cache(tempDir, httpCacheMaxSize))
+				.cache(cache)
 				.build();
 	}
 
@@ -113,5 +115,10 @@ public class EsiRelay {
 					})
 					.observeOn(Schedulers.computation());
 		});
+	}
+
+	@SneakyThrows
+	public void clearCache() {
+		cache.evictAll();
 	}
 }
