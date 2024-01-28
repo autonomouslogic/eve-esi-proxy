@@ -9,10 +9,14 @@ import io.reactivex.rxjava3.core.SingleEmitter;
 import io.reactivex.rxjava3.core.SingleOnSubscribe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.inject.Singleton;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Optional;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -41,10 +45,22 @@ public class EsiRelay {
 
 	private final OkHttpClient client;
 
+	@SneakyThrows
 	public EsiRelay() {
+		final File tempDir;
+		var httpCacheDir = Optional.ofNullable(System.getenv("HTTP_CACHE_DIR"));
+		var httpCacheMaxSize = Optional.ofNullable(System.getenv("HTTP_CACHE_MAX_SIZE"))
+				.map(Long::parseLong)
+				.orElse(134217728L);
+		if (httpCacheDir.isPresent()) {
+			tempDir = new File(httpCacheDir.get());
+		} else {
+			tempDir = Files.createTempDirectory("esi-proxy-http-cache").toFile();
+		}
 		client = new OkHttpClient.Builder()
 				.followRedirects(false)
 				.followSslRedirects(false)
+				.cache(new Cache(tempDir, httpCacheMaxSize))
 				.build();
 	}
 

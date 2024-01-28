@@ -60,11 +60,10 @@ public class ProxyControllerTest {
 		enqueueResponse(200, "Test body", Map.of("X-Server-Header", "Test server header"));
 
 		var proxyResponse = callProxy("GET", path, Map.of("X-Client-Header", "Test client header"));
-		assertEquals(200, proxyResponse.code());
-		assertEquals("Test body", proxyResponse.body().string());
-		assertEquals("Test server header", proxyResponse.header("X-Server-Header"));
+		assertResponse(proxyResponse, 200, "Test body", Map.of("X-Server-Header", "Test server header"));
 
 		var esiRequest = takeRequest();
+		assertNotNull(esiRequest);
 
 		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
 		assertEquals("Host", esiRequest.getHeaders().name(0));
@@ -79,10 +78,29 @@ public class ProxyControllerTest {
 		enqueueResponse(302, Map.of("Location", "http://localhost:" + MOCK_ESI_PORT + "/redirected"));
 
 		var proxyResponse = callProxy("GET", "/");
-		assertEquals(302, proxyResponse.code());
-		assertEquals("http://localhost:" + MOCK_ESI_PORT + "/redirected", proxyResponse.header("Location"));
+		assertResponse(proxyResponse, 302, Map.of("Location", "http://localhost:" + MOCK_ESI_PORT + "/redirected"));
 
 		assertNotNull(takeRequest());
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldCacheImmutableResponsesAndServeFromCache() {
+		enqueueResponse(200, "Test body", Map.of("Cache-Control", "public, max-age=60, immutable"));
+
+		// First proxy response.
+		var proxyResponse1 = callProxy("GET", "/");
+		assertResponse(proxyResponse1, 200, "Test body");
+
+		// ESI request.
+		assertNotNull(takeRequest());
+
+		// Second proxy response should be served from cache.
+		var proxyResponse2 = callProxy("GET", "/");
+		assertResponse(proxyResponse2, 200, "Test body");
+
+		// A second request to the ESI should never be made.
+		assertNoMoreRequests();
 	}
 
 	// ===============================================================
@@ -137,5 +155,25 @@ public class ProxyControllerTest {
 
 	private void assertNoMoreRequests() {
 		assertNull(takeRequest());
+	}
+
+	@SneakyThrows
+	private void assertResponse(Response proxyResponse, int status, String body, Map<String, String> headers) {
+		assertEquals(status, proxyResponse.code());
+		assertEquals(body == null ? "" : body, proxyResponse.body().string());
+		var contentLength = body == null ? 0 : body.length();
+		assertEquals(contentLength, proxyResponse.body().contentLength());
+		assertEquals(contentLength, Integer.parseInt(proxyResponse.header("Content-Length")));
+		if (headers != null) {
+			headers.forEach((name, value) -> assertEquals(value, proxyResponse.header(name), name));
+		}
+	}
+
+	private void assertResponse(Response proxyResponse, int status, String body) {
+		assertResponse(proxyResponse, status, body, null);
+	}
+
+	private void assertResponse(Response proxyResponse, int status, Map<String, String> headers) {
+		assertResponse(proxyResponse, status, null, headers);
 	}
 }
