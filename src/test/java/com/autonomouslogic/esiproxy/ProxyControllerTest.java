@@ -103,6 +103,29 @@ public class ProxyControllerTest {
 		assertNoMoreRequests();
 	}
 
+	@ParameterizedTest
+	@ValueSource(strings = {"private", "no-store", "no-cache", "max-age=0"})
+	@SneakyThrows
+	void shouldNotCacheUncachableResponses(String cacheControl) {
+		for (int i = 0; i < 2; i++) {
+			enqueueResponse(200, "Test body", Map.of("Cache-Control", cacheControl));
+		}
+
+		// First proxy response.
+		var proxyResponse1 = callProxy("GET", "/");
+		assertResponse(proxyResponse1, 200, "Test body", Map.of("Cache-Control", cacheControl));
+
+		// ESI request.
+		assertNotNull(takeRequest());
+
+		// Second proxy response should be sent to server too.
+		var proxyResponse2 = callProxy("GET", "/");
+		assertResponse(proxyResponse2, 200, "Test body", Map.of("Cache-Control", cacheControl));
+
+		// A second request to the ESI should be made.
+		assertNotNull(takeRequest());
+	}
+
 	// ===============================================================
 
 	private void enqueueResponse(int status) {
