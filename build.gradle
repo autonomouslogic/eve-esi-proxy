@@ -58,6 +58,14 @@ test {
 	useJUnitPlatform()
 }
 
+jacocoTestReport {
+	executionData(test)
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
 spotless {
 	java {
 		target "src/**/*.java"
