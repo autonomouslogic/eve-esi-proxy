@@ -64,6 +64,7 @@ public class SimpleRelayTest {
 		var esiRequest = mockEsi.takeRequest();
 
 		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
+		assertEquals("Host", esiRequest.getHeaders().name(0));
 		assertEquals("GET", esiRequest.getMethod());
 		assertEquals("/", esiRequest.getPath());
 		assertEquals("Test client header", esiRequest.getHeader("X-Client-Header"));

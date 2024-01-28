@@ -58,10 +58,13 @@ public class EsiRelay {
 			var esiRequestBuilder = new Request.Builder()
 					.url(esiUrl)
 					.method(proxyRequest.getMethod().name(), esiRequestBody);
-			proxyRequest
-					.getHeaders()
-					.forEach((name, values) -> values.forEach(value -> esiRequestBuilder.addHeader(name, value)));
 			esiRequestBuilder.header("Host", esiUrl.getHost() + ":" + esiUrl.getPort());
+			proxyRequest.getHeaders().forEach((name, values) -> {
+				if (name.equalsIgnoreCase("Host")) {
+					return;
+				}
+				values.forEach(value -> esiRequestBuilder.addHeader(name, value));
+			});
 			var esiRequest = esiRequestBuilder.build();
 			return Single.create(new SingleOnSubscribe<HttpResponse<byte[]>>() {
 						@Override
