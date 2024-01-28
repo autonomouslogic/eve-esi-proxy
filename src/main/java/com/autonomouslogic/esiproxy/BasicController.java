@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 @Controller
 @Singleton
@@ -18,6 +19,12 @@ public class BasicController {
 	@GET
 	@Path("/")
 	public Single<HttpResponse<byte[]>> get(HttpRequest<byte[]> request) {
+		return esiRelay.request(request);
+	}
+
+	@GET
+	@Path("{path:.*}")
+	public Single<HttpResponse<byte[]>> get(HttpRequest<byte[]> request, @PathParam("path") String path) {
 		return esiRelay.request(request);
 	}
 }

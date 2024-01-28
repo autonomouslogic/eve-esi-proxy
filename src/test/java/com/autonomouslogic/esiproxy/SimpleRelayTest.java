@@ -17,6 +17,8 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 /**
@@ -46,9 +48,10 @@ public class SimpleRelayTest {
 		mockEsi.shutdown();
 	}
 
-	@Test
+	@ParameterizedTest
+	@ValueSource(strings = {"/", "/path", "/path/with/multiple/segments"})
 	@SneakyThrows
-	void shouldRelaySuccessfulGetRequests() {
+	void shouldRelaySuccessfulGetRequests(String path) {
 		mockEsi.enqueue(new MockResponse()
 				.setResponseCode(200)
 				.setBody("Test body")
@@ -56,7 +59,7 @@ public class SimpleRelayTest {
 
 		var proxyResponse = client.newCall(new Request.Builder()
 						.get()
-						.url("http://localhost:" + server.getPort())
+						.url("http://localhost:" + server.getPort() + path)
 						.header("X-Client-Header", "Test client header")
 						.build())
 				.execute();
@@ -69,7 +72,7 @@ public class SimpleRelayTest {
 		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
 		assertEquals("Host", esiRequest.getHeaders().name(0));
 		assertEquals("GET", esiRequest.getMethod());
-		assertEquals("/", esiRequest.getPath());
+		assertEquals(path, esiRequest.getPath());
 		assertEquals("Test client header", esiRequest.getHeader("X-Client-Header"));
 
 		assertNull(mockEsi.takeRequest(0, TimeUnit.SECONDS));
