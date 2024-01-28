@@ -12,7 +12,7 @@ import jakarta.ws.rs.PathParam;
 
 @Controller
 @Singleton
-public class BasicController {
+public class ProxyController {
 	@Inject
 	protected EsiRelay esiRelay;
 
