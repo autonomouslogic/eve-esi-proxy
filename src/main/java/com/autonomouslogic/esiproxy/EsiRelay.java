@@ -37,12 +37,15 @@ public class EsiRelay {
 					throw new RuntimeException("ESI_BASE_URL environment variable must be a valid URL", e);
 				}
 			})
-			.orElseThrow(() -> new RuntimeException("ESI_BASE_URL environment variable must be set"));
+			.get();
 
 	private final OkHttpClient client;
 
 	public EsiRelay() {
-		client = new OkHttpClient.Builder().build();
+		client = new OkHttpClient.Builder()
+				.followRedirects(false)
+				.followSslRedirects(false)
+				.build();
 	}
 
 	/**
