@@ -14,6 +14,8 @@ public class TestOkHttpClientFactory {
 				.connectTimeout(Duration.ofSeconds(1))
 				.readTimeout(Duration.ofSeconds(1))
 				.writeTimeout(Duration.ofSeconds(1))
+				.followRedirects(false)
+				.followSslRedirects(false)
 				.build();
 	}
 }
