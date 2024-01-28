@@ -52,16 +52,17 @@ public class EsiRelay {
 	 */
 	public Single<HttpResponse<byte[]>> request(HttpRequest<byte[]> proxyRequest) {
 		return Single.defer(() -> {
-			var url = new URL(esiBaseUrl, proxyRequest.getPath());
-			var body = proxyRequest.getBody().orElse(null);
-			var requestBody = body == null ? null : RequestBody.create(body);
-			var requestBuilder = new Request.Builder()
-					.url(url)
-					.method(proxyRequest.getMethod().name(), requestBody);
+			var esiUrl = new URL(esiBaseUrl, proxyRequest.getPath());
+			var esiBody = proxyRequest.getBody().orElse(null);
+			var esiRequestBody = esiBody == null ? null : RequestBody.create(esiBody);
+			var esiRequestBuilder = new Request.Builder()
+					.url(esiUrl)
+					.method(proxyRequest.getMethod().name(), esiRequestBody);
 			proxyRequest
 					.getHeaders()
-					.forEach((name, values) -> values.forEach(value -> requestBuilder.addHeader(name, value)));
-			var esiRequest = requestBuilder.build();
+					.forEach((name, values) -> values.forEach(value -> esiRequestBuilder.addHeader(name, value)));
+			esiRequestBuilder.header("Host", esiUrl.getHost() + ":" + esiUrl.getPort());
+			var esiRequest = esiRequestBuilder.build();
 			return Single.create(new SingleOnSubscribe<HttpResponse<byte[]>>() {
 						@Override
 						public void subscribe(@NonNull SingleEmitter<HttpResponse<byte[]>> emitter) throws Throwable {

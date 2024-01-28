@@ -21,7 +21,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
  */
 @MicronautTest
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
-public class EsiRelayTest {
+public class SimpleRelayTest {
 	@Inject
 	EmbeddedServer server;
 
@@ -51,19 +51,21 @@ public class EsiRelayTest {
 				.setBody("Test body")
 				.addHeader("X-Server-Header", "Test server header"));
 
-		var response = client.newCall(new Request.Builder()
+		var proxyResponse = client.newCall(new Request.Builder()
 						.get()
 						.url("http://localhost:" + server.getPort())
 						.header("X-Client-Header", "Test client header")
 						.build())
 				.execute();
-		assertEquals(200, response.code());
-		assertEquals("Test body", response.body().string());
-		assertEquals("Test server header", response.header("X-Server-Header"));
+		assertEquals(200, proxyResponse.code());
+		assertEquals("Test body", proxyResponse.body().string());
+		assertEquals("Test server header", proxyResponse.header("X-Server-Header"));
 
-		var request = mockEsi.takeRequest();
-		assertEquals("GET", request.getMethod());
-		assertEquals("/", request.getPath());
-		assertEquals("Test client header", request.getHeader("X-Client-Header"));
+		var esiRequest = mockEsi.takeRequest();
+
+		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
+		assertEquals("GET", esiRequest.getMethod());
+		assertEquals("/", esiRequest.getPath());
+		assertEquals("Test client header", esiRequest.getHeader("X-Client-Header"));
 	}
 }
