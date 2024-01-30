@@ -1,6 +1,7 @@
 package com.autonomouslogic.esiproxy;
 
 import static com.autonomouslogic.esiproxy.test.TestConstants.MOCK_ESI_PORT;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_MODIFIED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -8,6 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.NonNull;
@@ -161,6 +165,46 @@ public class ProxyControllerTest {
 		assertNotNull(takeRequest());
 	}
 
+	@Test
+	@SneakyThrows
+	void shouldRefreshExpiredResourcesUsingConditionalRequests() {
+		enqueueResponse(
+				200,
+				"Test body",
+				Map.of(
+						"Cache-Control",
+						"public",
+						"Expires",
+						ZonedDateTime.now()
+								.minus(10, ChronoUnit.SECONDS)
+								.format(DateTimeFormatter.RFC_1123_DATE_TIME)));
+		enqueueResponse(NOT_MODIFIED.code());
+
+		// First proxy response.
+		var proxyResponse1 = callProxy("GET", "/");
+		assertResponse(
+				proxyResponse1,
+				200,
+				"Test body",
+				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+
+		// ESI request.
+		assertNotNull(takeRequest());
+
+		// Second proxy response should be sent to server too.
+		var proxyResponse2 = callProxy("GET", "/");
+		assertResponse(
+				proxyResponse2,
+				NOT_MODIFIED.code(),
+				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+
+		// A second request to the ESI should be made.
+		var conditionalEsiRequest = takeRequest();
+		assertNotNull(conditionalEsiRequest);
+		assertEquals("todo", conditionalEsiRequest.getHeader("If-Modified-Since"));
+		assertEquals("todo", conditionalEsiRequest.getHeader("If-None-Match"));
+	}
+
 	// ===============================================================
 
 	private void enqueueResponse(int status) {
@@ -221,7 +265,9 @@ public class ProxyControllerTest {
 		assertEquals(body == null ? "" : body, proxyResponse.body().string());
 		var contentLength = body == null ? 0 : body.length();
 		assertEquals(contentLength, proxyResponse.body().contentLength());
-		assertEquals(contentLength, Integer.parseInt(proxyResponse.header("Content-Length")));
+		if (contentLength > 0) {
+			assertEquals(contentLength, Integer.parseInt(proxyResponse.header("Content-Length")));
+		}
 		if (headers != null) {
 			headers.forEach((name, value) -> assertEquals(value, proxyResponse.header(name), name));
 		}
