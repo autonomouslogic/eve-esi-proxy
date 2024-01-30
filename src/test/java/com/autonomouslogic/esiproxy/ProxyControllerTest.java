@@ -53,8 +53,11 @@ public class ProxyControllerTest {
 	@AfterEach
 	@SneakyThrows
 	void stop() {
-		assertNoMoreRequests();
-		mockEsi.shutdown();
+		try {
+			assertNoMoreRequests();
+		} finally {
+			mockEsi.shutdown();
+		}
 	}
 
 	@ParameterizedTest
@@ -64,16 +67,20 @@ public class ProxyControllerTest {
 		enqueueResponse(200, "Test body", Map.of("X-Server-Header", "Test server header"));
 
 		var proxyResponse = callProxy("GET", path, Map.of("X-Client-Header", "Test client header"));
-		assertResponse(proxyResponse, 200, "Test body", Map.of("X-Server-Header", "Test server header"));
+		assertResponse(
+				proxyResponse,
+				200,
+				"Test body",
+				Map.of(
+						"X-Server-Header",
+						"Test server header",
+						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		var esiRequest = takeRequest();
 		assertNotNull(esiRequest);
 
-		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
-		assertEquals("Host", esiRequest.getHeaders().name(0));
-		assertEquals("GET", esiRequest.getMethod());
-		assertEquals(path, esiRequest.getPath());
-		assertEquals("Test client header", esiRequest.getHeader("X-Client-Header"));
+		assertRequest(esiRequest, "GET", path, Map.of("X-Client-Header", "Test client header"));
 	}
 
 	@Test
@@ -94,14 +101,22 @@ public class ProxyControllerTest {
 
 		// First proxy response.
 		var proxyResponse1 = callProxy("GET", "/");
-		assertResponse(proxyResponse1, 200, "Test body");
+		assertResponse(
+				proxyResponse1,
+				200,
+				"Test body",
+				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// ESI request.
 		assertNotNull(takeRequest());
 
 		// Second proxy response should be served from cache.
 		var proxyResponse2 = callProxy("GET", "/");
-		assertResponse(proxyResponse2, 200, "Test body");
+		assertResponse(
+				proxyResponse2,
+				200,
+				"Test body",
+				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
 
 		// A second request to the ESI should never be made.
 		assertNoMoreRequests();
@@ -117,14 +132,30 @@ public class ProxyControllerTest {
 
 		// First proxy response.
 		var proxyResponse1 = callProxy("GET", "/");
-		assertResponse(proxyResponse1, 200, "Test body", Map.of("Cache-Control", cacheControl));
+		assertResponse(
+				proxyResponse1,
+				200,
+				"Test body",
+				Map.of(
+						"Cache-Control",
+						cacheControl,
+						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// ESI request.
 		assertNotNull(takeRequest());
 
 		// Second proxy response should be sent to server too.
 		var proxyResponse2 = callProxy("GET", "/");
-		assertResponse(proxyResponse2, 200, "Test body", Map.of("Cache-Control", cacheControl));
+		assertResponse(
+				proxyResponse2,
+				200,
+				"Test body",
+				Map.of(
+						"Cache-Control",
+						cacheControl,
+						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// A second request to the ESI should be made.
 		assertNotNull(takeRequest());
@@ -202,5 +233,14 @@ public class ProxyControllerTest {
 
 	private void assertResponse(Response proxyResponse, int status, Map<String, String> headers) {
 		assertResponse(proxyResponse, status, null, headers);
+	}
+
+	private void assertRequest(RecordedRequest esiRequest, String get, String path, Map<String, String> headers) {
+		assertNotNull(esiRequest);
+		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
+		assertEquals("Host", esiRequest.getHeaders().name(0));
+		assertEquals(get, esiRequest.getMethod());
+		assertEquals(path, esiRequest.getPath());
+		headers.forEach((name, value) -> assertEquals(value, esiRequest.getHeader(name), name));
 	}
 }

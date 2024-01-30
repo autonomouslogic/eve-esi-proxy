@@ -63,6 +63,7 @@ public class EsiRelay {
 				.followRedirects(false)
 				.followSslRedirects(false)
 				.cache(cache)
+				.addInterceptor(new CacheStatusInterceptor())
 				.build();
 	}
 
