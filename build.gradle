@@ -22,8 +22,8 @@ repositories {
 java {
 	withJavadocJar()
 	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 dependencies {
@@ -46,6 +46,7 @@ dependencies {
 	implementation "com.fasterxml.jackson.core:jackson-databind:2.17.1"
 	implementation "com.squareup.okhttp3:okhttp:4.12.0"
 	implementation "org.yaml:snakeyaml:2.2"
+	implementation "io.helidon.webserver:helidon-webserver:4.0.8"
 
 	testAnnotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
 	testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
