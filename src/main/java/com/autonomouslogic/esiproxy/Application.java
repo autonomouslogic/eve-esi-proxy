@@ -29,7 +29,8 @@ public class Application {
 
 	private static void routing(HttpRouting.Builder routing) {
 		routing.get("/greet", (req, res) -> {
-			log.info(req.path());
+			log.info("Got request: {}", req.path());
+			Thread.sleep(1000);
 			res.send("Hello World!\n");
 		});
 	}
