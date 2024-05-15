@@ -2,6 +2,9 @@
 
 An HTTP proxy for the EVE Online ESI API.
 
+This project is currently in development.
+See the [First version](https://github.com/autonomouslogic/esi-proxy/milestone/1) milestone for progress.
+
 ## Configuration
 
 * `MICRONAUT_SERVER_PORT`
