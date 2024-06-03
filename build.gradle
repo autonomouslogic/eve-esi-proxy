@@ -2,9 +2,9 @@ plugins {
 	id "java"
 	id "idea"
 	id "jacoco"
-	id "io.micronaut.application" version "4.3.8"
+	id "io.micronaut.application" version "4.4.0"
 	id "io.freefair.lombok" version "8.6"
-	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "3.1.4"
+	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "3.1.7"
 	id "com.diffplug.spotless" version "6.25.0"
 }
 
@@ -12,7 +12,7 @@ group = "com.autonomouslogic.esiproxy"
 
 ext {
 	mainClassName = "com.autonomouslogic.esiproxy.Application"
-	micronautVersion = "4.4.2"
+	micronautVersion = "4.4.3"
 }
 
 repositories {
@@ -51,7 +51,7 @@ dependencies {
 	testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
 	testImplementation "org.junit.jupiter:junit-jupiter-params:5.10.2"
 	testImplementation "org.junit-pioneer:junit-pioneer:2.2.0"
-	testImplementation "org.mockito:mockito-junit-jupiter:5.11.0"
+	testImplementation "org.mockito:mockito-junit-jupiter:5.12.0"
 	testImplementation "com.squareup.okhttp3:mockwebserver:4.12.0"
 }
 
