@@ -39,6 +39,7 @@ dependencies {
 	implementation "org.apache.logging.log4j:log4j-api:2.23.1"
 	implementation platform("org.apache.logging.log4j:log4j-bom:2.23.1")
 	runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1"
+	runtimeOnly "org.slf4j:jul-to-slf4j:2.0.16"
 	compileOnly "io.micronaut:micronaut-http-client"
 	runtimeOnly "org.apache.logging.log4j:log4j-core:2.23.1"
 	implementation "com.fasterxml.jackson.core:jackson-annotations:2.17.2"
@@ -47,6 +48,8 @@ dependencies {
 	implementation "com.squareup.okhttp3:okhttp:4.12.0"
 	implementation "org.yaml:snakeyaml:2.2"
 	implementation "io.helidon.webserver:helidon-webserver:4.0.8"
+	implementation "io.helidon.logging:helidon-logging-slf4j:4.0.8"
+	implementation "com.autonomouslogic.commons:commons-java:1.9.1"
 
 	testAnnotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
 	testImplementation "org.junit.jupiter:junit-jupiter:5.10.3"
