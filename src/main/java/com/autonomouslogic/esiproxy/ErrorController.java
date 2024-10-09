@@ -7,6 +7,7 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Error;
 import lombok.extern.log4j.Log4j2;
 
+@Deprecated
 @Controller
 @Log4j2
 public class ErrorController {

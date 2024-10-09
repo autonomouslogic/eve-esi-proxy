@@ -31,14 +31,15 @@ import org.jetbrains.annotations.NotNull;
 @Singleton
 @Log4j2
 public class EsiRelay {
-	private final URL esiBaseUrl = Optional.ofNullable(System.getenv("ESI_BASE_URL"))
+	private final URL esiBaseUrl = Configs.ESI_BASE_URL
+			.get()
 			.or(() -> Optional.of("https://esi.evetech.net/"))
 			.map(url -> url.trim())
 			.map(url -> {
 				try {
 					return new URL(url);
 				} catch (Exception e) {
-					throw new RuntimeException("ESI_BASE_URL environment variable must be a valid URL", e);
+					throw new RuntimeException("ESI_BASE_URL must be a valid URL", e);
 				}
 			})
 			.get();

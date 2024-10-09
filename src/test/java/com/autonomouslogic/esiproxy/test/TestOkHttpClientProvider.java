@@ -1,13 +1,12 @@
-package com.autonomouslogic.esiproxy.factory;
+package com.autonomouslogic.esiproxy.test;
 
-import io.micronaut.context.annotation.Bean;
-import io.micronaut.context.annotation.Factory;
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.OkHttpClient;
 
-@Deprecated
-@Factory
-public class TestOkHttpClientFactory {
-	@Bean
+@Module
+public class TestOkHttpClientProvider {
+	@Provides
 	public OkHttpClient okHttpClient() {
 		return new OkHttpClient.Builder()
 				//				.callTimeout(Duration.ofSeconds(2))

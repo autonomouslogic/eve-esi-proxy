@@ -29,6 +29,7 @@ java {
 dependencies {
 	annotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
 	annotationProcessor "io.micronaut.micrometer:micronaut-micrometer-annotation"
+	annotationProcessor "com.google.dagger:dagger-compiler:2.52"
 	implementation "io.micronaut.platform:micronaut-parent:$micronautVersion"
 	implementation "io.micronaut:micronaut-jackson-databind"
 	implementation "io.micronaut:micronaut-management"
@@ -36,6 +37,7 @@ dependencies {
 	implementation "io.reactivex.rxjava3:rxjava:3.1.8"
 	implementation "io.micronaut.rxjava3:micronaut-rxjava3"
 	implementation "io.micronaut.rxjava3:micronaut-rxjava3-http-client"
+	implementation "com.google.dagger:dagger:2.52"
 	implementation "org.apache.logging.log4j:log4j-api:2.23.1"
 	implementation platform("org.apache.logging.log4j:log4j-bom:2.23.1")
 	runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1"
@@ -52,6 +54,8 @@ dependencies {
 	implementation "com.autonomouslogic.commons:commons-java:1.9.1"
 
 	testAnnotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
+	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.52"
+	testImplementation "com.google.dagger:dagger:2.52"
 	testImplementation "org.junit.jupiter:junit-jupiter:5.10.3"
 	testImplementation "org.junit.jupiter:junit-jupiter-params:5.10.3"
 	testImplementation "org.junit-pioneer:junit-pioneer:2.2.0"
