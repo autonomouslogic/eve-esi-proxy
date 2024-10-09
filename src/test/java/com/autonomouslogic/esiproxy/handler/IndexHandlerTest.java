@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,5 +44,16 @@ public class IndexHandlerTest {
 						.build())
 				.execute();
 		assertEquals(200, response.code());
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldDenyNonGetRequests() {
+		var response = client.newCall(new Request.Builder()
+						.url("http://localhost:" + proxy.port())
+						.post(RequestBody.create(new byte[]{}))
+						.build())
+				.execute();
+		assertEquals(405, response.code());
 	}
 }

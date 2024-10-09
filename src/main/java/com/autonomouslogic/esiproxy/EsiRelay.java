@@ -1,5 +1,6 @@
 package com.autonomouslogic.esiproxy;
 
+import io.helidon.webserver.http.ServerRequest;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -23,6 +24,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -73,10 +75,14 @@ public class EsiRelay {
 	 * @param proxyRequest
 	 * @return
 	 */
-	public Single<HttpResponse<byte[]>> request(HttpRequest<byte[]> proxyRequest) {
+	@SneakyThrows
+	public HttpResponse<byte[]> request(ServerRequest proxyRequest) {
 		return Single.defer(() -> {
-			var esiUrl = new URL(esiBaseUrl, proxyRequest.getPath());
-			var esiBody = proxyRequest.getBody().orElse(null);
+			var esiUrl = new URL(esiBaseUrl, proxyRequest.path().path());
+			byte[] esiBody = null;
+			try (var in = proxyRequest.content().inputStream()) {
+				esiBody = IOUtils.toByteArray(in);
+			}
 			var esiRequestBody = esiBody == null ? null : RequestBody.create(esiBody);
 			var esiRequestBuilder = new Request.Builder()
 					.url(esiUrl)
