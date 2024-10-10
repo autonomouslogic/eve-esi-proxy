@@ -1,14 +1,11 @@
 package com.autonomouslogic.esiproxy.handler;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.autonomouslogic.esiproxy.EveEsiProxy;
 import com.autonomouslogic.esiproxy.test.DaggerTestComponent;
+import com.autonomouslogic.esiproxy.test.TestHttpUtils;
 import jakarta.inject.Inject;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,21 +36,14 @@ public class IndexHandlerTest {
 	@Test
 	@SneakyThrows
 	void shouldRespondToRequests() {
-		var response = client.newCall(new Request.Builder()
-						.url("http://localhost:" + proxy.port())
-						.build())
-				.execute();
-		assertEquals(200, response.code());
+		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/");
+		TestHttpUtils.assertResponse(proxyResponse, 200, "EVE ESI Proxy dev\n");
 	}
 
 	@Test
 	@SneakyThrows
 	void shouldDenyNonGetRequests() {
-		var response = client.newCall(new Request.Builder()
-						.url("http://localhost:" + proxy.port())
-						.post(RequestBody.create(new byte[] {}))
-						.build())
-				.execute();
-		assertEquals(405, response.code());
+		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "POST", "/", "body");
+		TestHttpUtils.assertResponse(proxyResponse, 405);
 	}
 }

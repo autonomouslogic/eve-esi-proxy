@@ -6,12 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.autonomouslogic.esiproxy.EveEsiProxy;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -40,8 +42,13 @@ public class TestHttpUtils {
 		mockWebServer.enqueue(response);
 	}
 
+	public static Request.Builder proxyRequest(EveEsiProxy proxy, String method, String path, String body) {
+		var requestBody = body == null ? null : RequestBody.create(body.getBytes(StandardCharsets.UTF_8));
+		return new Request.Builder().method(method, requestBody).url("http://localhost:" + proxy.port() + path);
+	}
+
 	public static Request.Builder proxyRequest(EveEsiProxy proxy, String method, String path) {
-		return new Request.Builder().method(method, null).url("http://localhost:" + proxy.port() + path);
+		return proxyRequest(proxy, method, path, (String) null);
 	}
 
 	public static Request.Builder proxyRequest(
@@ -65,6 +72,10 @@ public class TestHttpUtils {
 		return callProxy(client, proxyRequest(proxy, method, path).build());
 	}
 
+	public static Response callProxy(OkHttpClient client, EveEsiProxy proxy, String method, String path, String body) {
+		return callProxy(client, proxyRequest(proxy, method, path, body).build());
+	}
+
 	@SneakyThrows
 	public static RecordedRequest takeRequest(MockWebServer mockWebServer) {
 		return mockWebServer.takeRequest(0, TimeUnit.SECONDS);
@@ -72,6 +83,11 @@ public class TestHttpUtils {
 
 	public static void assertNoMoreRequests(MockWebServer mockWebServer) {
 		assertNull(takeRequest(mockWebServer), "unexpected request");
+	}
+
+	public static void assertResponse(Response proxyResponse, int status) {
+		assertEquals(status, proxyResponse.code());
+		assertEquals(0, proxyResponse.body().contentLength());
 	}
 
 	@SneakyThrows
