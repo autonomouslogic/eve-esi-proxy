@@ -1,31 +1,23 @@
 package com.autonomouslogic.esiproxy;
 
 import io.helidon.webserver.http.ServerRequest;
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.core.SingleEmitter;
-import io.reactivex.rxjava3.core.SingleOnSubscribe;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.helidon.webserver.http.ServerResponse;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Cache;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles requests to the ESI API.
@@ -49,6 +41,7 @@ public class EsiRelay {
 	private final Cache cache;
 	private final OkHttpClient client;
 
+	@Inject
 	@SneakyThrows
 	public EsiRelay() {
 		final File tempDir;
@@ -72,57 +65,59 @@ public class EsiRelay {
 
 	/**
 	 * Relays the provided HTTP request to the ESI API.
+	 *
 	 * @param proxyRequest
+	 * @param res
+	 *
 	 * @return
 	 */
 	@SneakyThrows
-	public HttpResponse<byte[]> request(ServerRequest proxyRequest) {
-		return Single.defer(() -> {
-			var esiUrl = new URL(esiBaseUrl, proxyRequest.path().path());
-			byte[] esiBody = null;
-			try (var in = proxyRequest.content().inputStream()) {
-				esiBody = IOUtils.toByteArray(in);
-			}
-			var esiRequestBody = esiBody == null ? null : RequestBody.create(esiBody);
-			var esiRequestBuilder = new Request.Builder()
-					.url(esiUrl)
-					.method(proxyRequest.getMethod().name(), esiRequestBody);
-			esiRequestBuilder.header("Host", esiUrl.getHost() + ":" + esiUrl.getPort());
-			proxyRequest.getHeaders().forEach((name, values) -> {
-				if (name.equalsIgnoreCase("Host")) {
-					return;
-				}
-				values.forEach(value -> esiRequestBuilder.addHeader(name, value));
-			});
-			var esiRequest = esiRequestBuilder.build();
-			return Single.create(new SingleOnSubscribe<HttpResponse<byte[]>>() {
-						@Override
-						public void subscribe(@NonNull SingleEmitter<HttpResponse<byte[]>> emitter) throws Throwable {
-							client.newCall(esiRequest).enqueue(new Callback() {
-								@Override
-								public void onFailure(@NotNull Call call, @NotNull IOException e) {
-									emitter.onError(e);
-								}
+	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
+		var esiRequest = createEsiRequest(proxyRequest);
+		var esiResponse = client.newCall(esiRequest).execute();
+		sendResponse(esiResponse, res);
+	}
 
-								@Override
-								public void onResponse(@NotNull Call call, @NotNull Response esiResponse)
-										throws IOException {
-									var httpStatus = HttpStatus.valueOf(esiResponse.code());
-									var proxyResponse = HttpResponse.<byte[]>status(httpStatus);
-									esiResponse
-											.headers()
-											.forEach(pair -> proxyResponse.header(pair.getFirst(), pair.getSecond()));
-									var esiBody = esiResponse.body();
-									if (esiBody != null) {
-										proxyResponse.body(esiBody.bytes());
-									}
-									emitter.onSuccess(proxyResponse);
-								}
-							});
-						}
-					})
-					.observeOn(Schedulers.computation());
+	private static void sendResponse(Response esiResponse, ServerResponse res) throws IOException {
+		res.status(esiResponse.code());
+		esiResponse.headers().forEach(pair -> res.header(pair.getFirst(), pair.getSecond()));
+		res.send(esiResponse.body().bytes());
+	}
+
+	private Request createEsiRequest(ServerRequest proxyRequest) throws MalformedURLException {
+		var esiUrl = new URL(esiBaseUrl, proxyRequest.path().path());
+		var esiRequestBody = createRequestBody(proxyRequest);
+		var esiRequestBuilder = new Request.Builder()
+				.url(esiUrl)
+				.method(proxyRequest.prologue().method().toString(), esiRequestBody);
+		copyHeaders(proxyRequest, esiRequestBuilder, esiUrl);
+		return esiRequestBuilder.build();
+	}
+
+	private static void copyHeaders(ServerRequest proxyRequest, Request.Builder esiRequestBuilder, URL esiUrl) {
+		esiRequestBuilder.header("Host", esiUrl.getHost() + ":" + esiUrl.getPort());
+		proxyRequest.headers().forEach(header -> {
+			if (header.name().equalsIgnoreCase("Host")) {
+				return;
+			}
+			esiRequestBuilder.addHeader(header.name(), header.get());
 		});
+	}
+
+	@SneakyThrows
+	private static RequestBody createRequestBody(ServerRequest proxyRequest) {
+		var content = proxyRequest.content();
+		if (content == null || !content.hasEntity()) {
+			return null;
+		}
+		byte[] bytes;
+		try (var in = proxyRequest.content().inputStream()) {
+			bytes = IOUtils.toByteArray(in);
+		}
+		if (bytes == null) {
+			return null;
+		}
+		return RequestBody.create(bytes);
 	}
 
 	@SneakyThrows

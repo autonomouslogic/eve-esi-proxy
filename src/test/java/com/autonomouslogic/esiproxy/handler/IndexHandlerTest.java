@@ -51,7 +51,7 @@ public class IndexHandlerTest {
 	void shouldDenyNonGetRequests() {
 		var response = client.newCall(new Request.Builder()
 						.url("http://localhost:" + proxy.port())
-						.post(RequestBody.create(new byte[]{}))
+						.post(RequestBody.create(new byte[] {}))
 						.build())
 				.execute();
 		assertEquals(405, response.code());

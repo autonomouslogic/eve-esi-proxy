@@ -18,8 +18,7 @@ public class ProxyHandler implements Handler {
 	protected ProxyHandler() {}
 
 	@Override
-	public void handle(ServerRequest req, ServerResponse res) throws Exception {
-		log.info("Got request: {}", req.path());
-		var response = esiRelay.request(req);
+	public void handle(ServerRequest req, ServerResponse res) {
+		esiRelay.relayRequest(req, res);
 	}
 }

@@ -9,5 +9,6 @@ import jakarta.inject.Singleton;
 @Singleton
 public interface TestComponent {
 	void inject(IndexHandlerTest test);
+
 	void inject(ProxyHandlerTest test);
 }

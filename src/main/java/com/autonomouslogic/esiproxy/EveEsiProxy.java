@@ -33,6 +33,7 @@ public class EveEsiProxy {
 		log.info("Starting EVE ESI Proxy");
 
 		server = WebServer.builder()
+				.host("0.0.0.0")
 				.port(Configs.PORT.getRequired())
 				.connectionConfig(connectionConfig())
 				.routing(this::routing)
@@ -59,6 +60,10 @@ public class EveEsiProxy {
 	private void routing(HttpRouting.Builder routing) {
 		routing.get("/", indexHandler)
 				.any("/", (req, res) -> res.status(405).send())
-				.any(proxyHandler);
+				.any(proxyHandler)
+				.error(Exception.class, (req, res, ex) -> {
+					log.warn("Error processing request", ex);
+					res.status(500).send();
+				});
 	}
 }
