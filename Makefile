@@ -29,7 +29,7 @@ docker-push: docker
 	docker push $(DOCKER_TAG_LATEST)
 
 docker-run: docker
-	docker run -p 8080:8080 -it $(DOCKER_TAG)
+	docker run -p 8182:8182 -it $(DOCKER_TAG)
 
 clean:
 	./gradlew clean --stacktrace
