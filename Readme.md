@@ -1,15 +1,16 @@
 # EVE ESI Proxy
-An HTTP proxy specifically designed for the [ESI API](https://esi.evetech.net/ui/) [EVE Online](https://www.eveonline.com/).
+An HTTP proxy specifically designed for the [ESI API](https://esi.evetech.net/ui/) for [EVE Online](https://www.eveonline.com/).
 
 _This project is currently in development.
-See the [First version](https://github.com/autonomouslogic/eve-esi-proxy/milestone/1) milestone for progress._
+See the [First version](https://github.com/autonomouslogic/eve-esi-proxy/milestone/1) milestone for progress.
+Contributions welcome._
 
 ## Features
-There are many things you have to keep in mind when working with the ESI, many of which are handled automatically by the proxy,
-so you can get on with writing your application and not worry about the minutiae that is the ESI:
-
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
 * _More planned, see milestone_
+
+These are all things you have to do when working with the ESI.
+Using this proxy means you can get on with writing your application and not worry about the minutiae of ESI lore.
 
 ## Usage
 The proxy is easily run from Docker:
