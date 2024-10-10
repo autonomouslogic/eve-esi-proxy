@@ -24,9 +24,8 @@ curl http://localhost:8182/latest/status/
 ```
 
 ## Overhead
-The EVE ESI Proxy is built on Helidon, which is a very fast HTTP stack for Java 21.
-It's implemented with virtual threads and is non-blocking.
-It'll easily handle tens of thousands of requests per second without breaking a sweat.
+The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP stack for Java 21.
+It'll easily handle tens of thousands of requests per second without breaking a sweat, way more than you'd ever need.
 See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) for some very basic load testing.
 
 ## License
