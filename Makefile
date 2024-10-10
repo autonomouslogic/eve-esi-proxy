@@ -29,7 +29,7 @@ docker-push: docker
 	docker push $(DOCKER_TAG_LATEST)
 
 docker-run: docker
-	docker run -p 8182:8182 -it $(DOCKER_TAG)
+	docker run -it -v eve-esi-proxy:/data -p 8182:8182 $(DOCKER_TAG)
 
 clean:
 	./gradlew clean --stacktrace

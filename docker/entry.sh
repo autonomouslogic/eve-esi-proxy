@@ -1,5 +1,7 @@
 #!/bin/sh
 
+mkdir -p /data/http-cache
+
 bin/eve-esi-proxy
 ex=$?
 

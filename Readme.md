@@ -9,6 +9,11 @@ See the [First version](https://github.com/autonomouslogic/esi-proxy/milestone/1
 
 * `MICRONAUT_SERVER_PORT`
 
+## Usage
+```bash
+docker run -it -v eve-esi-proxy:/data -p 8182:8182 autonomouslogic/esi-proxy:latest
+```
+
 ## License
 ESI Proxy itself and the code contained within this repo is licensed under the [MIT-0 license](https://spdx.org/licenses/MIT-0.html).
 

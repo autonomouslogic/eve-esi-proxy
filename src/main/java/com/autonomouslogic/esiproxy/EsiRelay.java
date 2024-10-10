@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Cache;
@@ -25,18 +24,7 @@ import org.apache.commons.io.IOUtils;
 @Singleton
 @Log4j2
 public class EsiRelay {
-	private final URL esiBaseUrl = Configs.ESI_BASE_URL
-			.get()
-			.or(() -> Optional.of("https://esi.evetech.net/"))
-			.map(url -> url.trim())
-			.map(url -> {
-				try {
-					return new URL(url);
-				} catch (Exception e) {
-					throw new RuntimeException("ESI_BASE_URL must be a valid URL", e);
-				}
-			})
-			.get();
+	private final URL esiBaseUrl;
 
 	private final Cache cache;
 	private final OkHttpClient client;
@@ -44,16 +32,16 @@ public class EsiRelay {
 	@Inject
 	@SneakyThrows
 	public EsiRelay() {
+		esiBaseUrl = new URL(Configs.ESI_BASE_URL.getRequired());
 		final File tempDir;
-		var httpCacheDir = Optional.ofNullable(System.getenv("HTTP_CACHE_DIR"));
-		var httpCacheMaxSize = Optional.ofNullable(System.getenv("HTTP_CACHE_MAX_SIZE"))
-				.map(Long::parseLong)
-				.orElse(134217728L);
+		var httpCacheDir = Configs.ESI_PROXY_HTTP_CACHE_DIR.get();
+		var httpCacheMaxSize = Configs.ESI_PROXY_HTTP_CACHE_MAX_SIZE.getRequired();
 		if (httpCacheDir.isPresent()) {
 			tempDir = new File(httpCacheDir.get());
 		} else {
 			tempDir = Files.createTempDirectory("esi-proxy-http-cache").toFile();
 		}
+		log.info("Using HTTP cache dir {}", tempDir);
 		cache = new Cache(tempDir, httpCacheMaxSize);
 		client = new OkHttpClient.Builder()
 				.followRedirects(false)
