@@ -7,7 +7,7 @@ See the [First version](https://github.com/autonomouslogic/eve-esi-proxy/milesto
 ## Features
 There are many things you have to keep in mind when working with the ESI API, and many of them are handled automatically by this proxy:
 
-* *Caches responses* to disk to improve request times and reduce load on the ESI itself
+* **Caches responses** to disk to improve request times and reduce load on the ESI itself
 * _More planned, see milestone_
 
 You can focus on your application and not worry about the minutiae.
