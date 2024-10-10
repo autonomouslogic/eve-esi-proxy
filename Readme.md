@@ -5,12 +5,11 @@ _This project is currently in development.
 See the [First version](https://github.com/autonomouslogic/eve-esi-proxy/milestone/1) milestone for progress._
 
 ## Features
-There are many things you have to keep in mind when working with the ESI API, and many of them are handled automatically by this proxy:
+There are many things you have to keep in mind when working with the ESI, many of which are handled automatically by the proxy,
+so you can get on with writing your application and not worry about the minutiae that is the ESI:
 
-* **Caches responses** to disk to improve request times and reduce load on the ESI itself
+* **Cache responses** to disk to improve request times and reduce load on the ESI itself
 * _More planned, see milestone_
-
-You can focus on your application and not worry about the minutiae.
 
 ## Usage
 The proxy is easily run from Docker:
@@ -23,10 +22,18 @@ Then you request data as you would on the ESI, just from localhost instead:
 curl http://localhost:8182/latest/status/
 ```
 
-## License
-ESI Proxy itself and the code contained within this repo is licensed under the [MIT-0 license](https://spdx.org/licenses/MIT-0.html).
+## Overhead
+The EVE ESI Proxy is built on Helidon, which is a very fast HTTP stack for Java 21.
+It's implemented with virtual threads and is non-blocking.
+It'll easily handle tens of thousands of requests per second without breaking a sweat.
+See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) for some very basic load testing.
 
-EVE Online is owned by [CCP hf.](https://www.ccpgames.com/):
+## License
+The EVE ESI Proxy itself and the code contained within this repo is created
+Kenn, aka [Dato Tovikov](https://evewho.com/character/1452072530) of [EVE Ref](https://everef.net/).
+It is licensed under the [MIT-0 license](https://spdx.org/licenses/MIT-0.html).
+
+EVE Online and all assets related to it are owned by [CCP hf.](https://www.ccpgames.com/):
 * [Third-Party Developer License Agreement](https://developers.eveonline.com/license-agreement)
 * [End-user License Agreement](https://community.eveonline.com/support/policies/eve-eula-en/)
 
