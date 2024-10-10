@@ -2,7 +2,7 @@ plugins {
 	id "java"
 	id "idea"
 	id "jacoco"
-	id "io.micronaut.application" version "4.4.2"
+	id "application"
 	id "io.freefair.lombok" version "8.6"
 	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "3.1.7"
 	id "com.diffplug.spotless" version "6.25.0"
@@ -11,8 +11,7 @@ plugins {
 group = "com.autonomouslogic.esiproxy"
 
 ext {
-	mainClassName = "com.autonomouslogic.esiproxy.Application"
-	micronautVersion = "4.5.1"
+	mainClassName = "com.autonomouslogic.esiproxy.EveEsiProxy"
 }
 
 repositories {
@@ -27,34 +26,33 @@ java {
 }
 
 dependencies {
-	annotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
-	annotationProcessor "io.micronaut.micrometer:micronaut-micrometer-annotation"
 	annotationProcessor "com.google.dagger:dagger-compiler:2.52"
-	implementation "io.micronaut.platform:micronaut-parent:$micronautVersion"
-	implementation "io.micronaut:micronaut-jackson-databind"
-	implementation "io.micronaut:micronaut-management"
-	implementation "io.micronaut.jaxrs:micronaut-jaxrs-server"
-	implementation "io.reactivex.rxjava3:rxjava:3.1.8"
-	implementation "io.micronaut.rxjava3:micronaut-rxjava3"
-	implementation "io.micronaut.rxjava3:micronaut-rxjava3-http-client"
+//	implementation "io.reactivex.rxjava3:rxjava:3.1.8"
 	implementation "com.google.dagger:dagger:2.52"
+
+	// Logging
 	implementation "org.apache.logging.log4j:log4j-api:2.23.1"
 	implementation platform("org.apache.logging.log4j:log4j-bom:2.23.1")
 	runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:2.23.1"
 	runtimeOnly "org.slf4j:jul-to-slf4j:2.0.16"
-	compileOnly "io.micronaut:micronaut-http-client"
 	runtimeOnly "org.apache.logging.log4j:log4j-core:2.23.1"
-	implementation "com.fasterxml.jackson.core:jackson-annotations:2.17.2"
-	implementation "com.fasterxml.jackson.core:jackson-core:2.17.2"
-	implementation "com.fasterxml.jackson.core:jackson-databind:2.17.2"
-	implementation "com.squareup.okhttp3:okhttp:4.12.0"
-	implementation "org.yaml:snakeyaml:2.2"
+
+	// Jackson
+//	implementation "com.fasterxml.jackson.core:jackson-annotations:2.17.2"
+//	implementation "com.fasterxml.jackson.core:jackson-core:2.17.2"
+//	implementation "com.fasterxml.jackson.core:jackson-databind:2.17.2"
+
+	// Helidon
 	implementation "io.helidon.webserver:helidon-webserver:4.0.8"
 	implementation "io.helidon.logging:helidon-logging-slf4j:4.0.8"
+
+	// Misc
+	implementation "com.squareup.okhttp3:okhttp:4.12.0"
+	implementation "org.yaml:snakeyaml:2.2"
 	implementation "com.autonomouslogic.commons:commons-java:1.9.1"
 	implementation "commons-io:commons-io:2.17.0"
 
-	testAnnotationProcessor "io.micronaut.jaxrs:micronaut-jaxrs-processor"
+	// Tests
 	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.52"
 	testImplementation "com.google.dagger:dagger:2.52"
 	testImplementation "org.junit.jupiter:junit-jupiter:5.10.3"
@@ -114,16 +112,8 @@ application {
 	applicationDefaultJvmArgs = [
 			"-XX:+PrintCommandLineFlags",
 			"-XX:MinHeapSize=" + 10 * 1024 * 1024,
-			"-XX:MaxRAMPercentage=80.0",
-			"-Dorg.jooq.no-logo=true",
-			"-Dorg.jooq.no-tips=true"
+			"-XX:MaxRAMPercentage=80.0"
 	]
-}
-
-micronaut {
-	version "$micronautVersion"
-	runtime("netty")
-	testRuntime("junit5")
 }
 
 wrapper {
