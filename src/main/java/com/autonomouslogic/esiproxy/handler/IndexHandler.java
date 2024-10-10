@@ -18,7 +18,6 @@ public class IndexHandler implements Handler {
 
 	@Override
 	public void handle(ServerRequest req, ServerResponse res) throws Exception {
-		log.info("Got request: {}", req.path());
 		res.send("EVE ESI Proxy " + version + "\n");
 	}
 }
