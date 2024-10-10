@@ -110,6 +110,8 @@ test {
 application {
 	mainClass = mainClassName
 	applicationDefaultJvmArgs = [
+			"-server",
+			"-XX:+UseZGC",
 			"-XX:+PrintCommandLineFlags",
 			"-XX:MinHeapSize=" + 10 * 1024 * 1024,
 			"-XX:MaxRAMPercentage=80.0"
