@@ -9,7 +9,7 @@ Contributions welcome._
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
 * _More planned, see milestone_
 
-These are all things you have to do when working with the ESI.
+These are all things you have to do when working with the ESI to not risk getting banned.
 Using this proxy means you can get on with writing your application and not worry about the minutiae of ESI lore.
 
 ## Usage
