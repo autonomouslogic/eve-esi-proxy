@@ -1,22 +1,25 @@
 package com.autonomouslogic.esiproxy.handler;
 
 import static com.autonomouslogic.esiproxy.test.TestConstants.MOCK_ESI_PORT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.autonomouslogic.esiproxy.EveEsiProxy;
+import com.autonomouslogic.esiproxy.ProxyHeaderNames;
+import com.autonomouslogic.esiproxy.ProxyHeaderValues;
 import com.autonomouslogic.esiproxy.test.DaggerTestComponent;
+import com.autonomouslogic.esiproxy.test.TestHttpUtils;
 import jakarta.inject.Inject;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
@@ -46,26 +49,105 @@ public class ProxyHandlerTest {
 	@AfterEach
 	@SneakyThrows
 	void stop() {
-		proxy.stop();
-		mockEsi.shutdown();
+		try {
+			TestHttpUtils.assertNoMoreRequests(mockEsi);
+		} finally {
+			proxy.stop();
+			mockEsi.shutdown();
+		}
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"/esi", "/esi/with/multiple/segments"})
+	@SneakyThrows
+	void shouldProxyGetRequests(String path) {
+		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test response", Map.of("X-Server-Header", "Test server header"));
+		var proxyResponse =
+				TestHttpUtils.callProxy(client, proxy, "GET", path, Map.of("X-Client-Header", "Test client header"));
+		TestHttpUtils.assertResponse(
+				proxyResponse,
+				200,
+				"Test response",
+				Map.of(
+						"X-Server-Header",
+						"Test server header",
+						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderValues.CACHE_STATUS_MISS));
+
+		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
+		TestHttpUtils.assertRequest(esiRequest, "GET", path, Map.of("X-Client-Header", "Test client header"));
 	}
 
 	@Test
 	@SneakyThrows
-	void shouldProxyGetRequests() {
-		log.info("Mock ESI port: {}", mockEsi.getPort());
-		log.info("Proxy port: {}", proxy.port());
-		mockEsi.enqueue(new MockResponse().setResponseCode(200).setBody("Test response"));
+	void shouldNotFollowRedirects() {
+		TestHttpUtils.enqueueResponse(
+				mockEsi, 302, Map.of("Location", "http://localhost:" + mockEsi.getPort() + "/redirected"));
 
-		var response = client.newCall(new Request.Builder()
-						.url("http://localhost:" + proxy.port() + "/test")
-						.build())
-				.execute();
-		assertEquals(200, response.code());
+		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+				proxyResponse, 302, Map.of("Location", "http://localhost:" + MOCK_ESI_PORT + "/redirected"));
 
-		var request = mockEsi.takeRequest(0, TimeUnit.SECONDS);
-		assertEquals("/test", request.getPath());
-		assertEquals("GET", request.getMethod());
-		assertEquals(0, request.getBody().size());
+		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"public, max-age=60, immutable"})
+	@SneakyThrows
+	void shouldCacheCachableResponses(String cacheControl) {
+		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test body", Map.of("Cache-Control", cacheControl));
+
+		// First proxy response.
+		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+				proxyResponse1,
+				200,
+				"Test body",
+				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+
+		// ESI request.
+		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
+
+		// Second proxy response should be served from cache.
+		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+				proxyResponse2,
+				200,
+				"Test body",
+				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+
+		// A second request to the ESI should never be made.
+		TestHttpUtils.assertNoMoreRequests(mockEsi);
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"private", "no-store", "no-cache", "max-age=0"})
+	@SneakyThrows
+	void shouldNotCacheUncachableResponses(String cacheControl) {
+		for (int i = 0; i < 2; i++) {
+			TestHttpUtils.enqueueResponse(mockEsi, 200, "Test body " + i, Map.of("Cache-Control", cacheControl));
+		}
+
+		// First proxy response.
+		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+				proxyResponse1,
+				200,
+				"Test body 0",
+				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+
+		// ESI request.
+		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
+
+		// Second proxy response should be served from cache.
+		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+				proxyResponse2,
+				200,
+				"Test body 1",
+				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+
+		// A second request to the ESI should be made.
+		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 	}
 }
