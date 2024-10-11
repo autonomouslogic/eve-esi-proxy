@@ -63,9 +63,10 @@ dependencies {
 }
 
 task versionFile()  {
-	new File(projectDir, "src/main/resources/version").text = "$version\n"
+	doLast {
+		new File(projectDir, "src/main/resources/version").text = "$version\n"
+	}
 }
-classes.dependsOn(tasks.versionFile)
 
 test {
 	useJUnitPlatform()

@@ -1,10 +1,13 @@
-.PHONY: dist test format clean docker
+.PHONY: versionFile dist test format clean docker
 PROXY_VERSION = $(shell ./gradlew properties | grep 'version:' | cut -d' ' -f 2)
 DOCKER_TAG_BASE = autonomouslogic/eve-esi-proxy
 DOCKER_TAG = $(DOCKER_TAG_BASE):$(PROXY_VERSION)
 DOCKER_TAG_LATEST = $(DOCKER_TAG_BASE):latest
 
-dist:
+versionFile:
+	./gradlew versionFile --stacktrace
+
+dist: versionFile
 	./gradlew distTar --stacktrace
 
 test:
