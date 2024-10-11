@@ -11,6 +11,7 @@ Fly safe o7
 ## Features
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
 * **User agent header** is automatically set
+* **Rate limiting** requests to help avoid being banned
 * _More planned, see milestone_
 
 The ESI API is a great resource, but can be annoying to work with.
@@ -29,7 +30,8 @@ curl http://localhost:8182/latest/status/
 ```
 
 ## Overhead
-The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP stack for Java 21.
+The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP server stack for Java 21,
+and [OkHTTP](https://square.github.io/okhttp/), a fast HTTP client for Java.
 It'll easily handle tens of thousands of requests per second without breaking a sweat, way more than you'd ever need.
 See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) for some very basic load testing.
 

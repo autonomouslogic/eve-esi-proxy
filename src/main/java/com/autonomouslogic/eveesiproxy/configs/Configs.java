@@ -32,4 +32,22 @@ public class Configs {
 			.defaultValue(1024L * 1024L * 1024L)
 			.type(Long.class)
 			.build();
+
+	public static final Config<Integer> ESI_RATE_LIMIT_PER_S = Config.<Integer>builder()
+			.name("ESI_RATE_LIMIT_PER_S")
+			.defaultValue(100)
+			.type(Integer.class)
+			.build();
+
+	public static final Config<Double> ESI_MARKET_HISTORY_RATE_LIMIT_PER_S = Config.<Double>builder()
+			.name("ESI_MARKET_HISTORY_RATE_LIMIT_PER_S")
+			.defaultValue(300.0 / 60.0)
+			.type(Double.class)
+			.build();
+
+	public static final Config<Double> ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S = Config.<Double>builder()
+			.name("ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S")
+			.defaultValue(300.0 / 60.0)
+			.type(Double.class)
+			.build();
 }

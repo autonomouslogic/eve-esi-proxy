@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +43,10 @@ public class EsiRelay {
 
 	@Inject
 	@SneakyThrows
-	protected EsiRelay() {
+	protected EsiRelay(
+			CacheStatusInterceptor cacheStatusInterceptor,
+			RateLimitInterceptor rateLimitInterceptor,
+			LoggingInterceptor loggingInterceptor) {
 		esiBaseUrl = new URL(Configs.ESI_BASE_URL.getRequired());
 		final File tempDir;
 		var httpCacheDir = Configs.HTTP_CACHE_DIR.get();
@@ -55,10 +59,15 @@ public class EsiRelay {
 		log.info("Using HTTP cache dir {}", tempDir);
 		cache = new Cache(tempDir, httpCacheMaxSize);
 		client = new OkHttpClient.Builder()
-				.followRedirects(false)
-				.followSslRedirects(false)
+				.followRedirects(true)
+				.followSslRedirects(true)
+				.connectTimeout(Duration.ofSeconds(5))
+				.readTimeout(Duration.ofSeconds(20))
+				.writeTimeout(Duration.ofSeconds(5))
 				.cache(cache)
-				.addInterceptor(new CacheStatusInterceptor())
+				.addInterceptor(cacheStatusInterceptor)
+				.addInterceptor(loggingInterceptor)
+				.addNetworkInterceptor(rateLimitInterceptor)
 				.build();
 	}
 
