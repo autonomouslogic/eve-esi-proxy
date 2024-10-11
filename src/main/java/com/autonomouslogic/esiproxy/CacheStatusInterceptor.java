@@ -15,7 +15,9 @@ public class CacheStatusInterceptor implements Interceptor {
 		final var cacheResponse = response.cacheResponse();
 		var cached = cacheResponse != null && networkResponse == null;
 		return response.newBuilder()
-				.header(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, cached ? "HIT" : "MISS")
+				.header(
+						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
+						cached ? ProxyHeaderValues.CACHE_STATUS_HIT : ProxyHeaderValues.CACHE_STATUS_MISS)
 				.build();
 	}
 }

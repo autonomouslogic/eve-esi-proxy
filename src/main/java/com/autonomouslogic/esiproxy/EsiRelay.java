@@ -52,7 +52,7 @@ public class EsiRelay {
 		if (httpCacheDir.isPresent()) {
 			tempDir = new File(httpCacheDir.get());
 		} else {
-			tempDir = Files.createTempDirectory("esi-proxy-http-cache").toFile();
+			tempDir = Files.createTempDirectory("eve-esi-proxy-http-cache").toFile();
 		}
 		cache = new Cache(tempDir, httpCacheMaxSize);
 		client = new OkHttpClient.Builder()

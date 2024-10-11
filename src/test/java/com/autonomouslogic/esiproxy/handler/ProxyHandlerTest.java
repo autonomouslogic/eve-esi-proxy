@@ -74,7 +74,7 @@ public class ProxyHandlerTest {
 				Map.of(
 						"X-Server-Header",
 						"Test server header",
-						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
 						ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -106,7 +106,7 @@ public class ProxyHandlerTest {
 				proxyResponse1,
 				200,
 				"Test body",
-				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
@@ -117,7 +117,7 @@ public class ProxyHandlerTest {
 				proxyResponse2,
 				200,
 				"Test body",
-				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
 
 		// A second request to the ESI should never be made.
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
@@ -137,7 +137,7 @@ public class ProxyHandlerTest {
 				proxyResponse1,
 				200,
 				"Test body 0",
-				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
@@ -148,7 +148,7 @@ public class ProxyHandlerTest {
 				proxyResponse2,
 				200,
 				"Test body 1",
-				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// A second request to the ESI should be made.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
@@ -169,7 +169,7 @@ public class ProxyHandlerTest {
 				200,
 				"Test body",
 				Map.of(
-						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
 						ProxyHeaderValues.CACHE_STATUS_MISS,
 						HeaderNames.EXPIRES.lowerCase(),
 						expiresString));
@@ -184,7 +184,7 @@ public class ProxyHandlerTest {
 				200,
 				"Test body",
 				Map.of(
-						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
 						ProxyHeaderValues.CACHE_STATUS_HIT,
 						HeaderNames.EXPIRES.lowerCase(),
 						expiresString));
@@ -211,7 +211,7 @@ public class ProxyHandlerTest {
 				200,
 				"Test body",
 				Map.of(
-						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
 						ProxyHeaderValues.CACHE_STATUS_MISS,
 						HeaderNames.ETAG.lowerCase(),
 						"hash1"));
@@ -225,7 +225,7 @@ public class ProxyHandlerTest {
 				proxyResponse2,
 				200,
 				modified ? "Test body new" : "Test body",
-				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// A second request to the ESI should be conditional.
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -250,7 +250,7 @@ public class ProxyHandlerTest {
 				200,
 				"Test body",
 				Map.of(
-						ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
 						ProxyHeaderValues.CACHE_STATUS_MISS,
 						HeaderNames.EXPIRES.lowerCase(),
 						expiresString,
@@ -266,7 +266,7 @@ public class ProxyHandlerTest {
 				proxyResponse2,
 				200,
 				"Test body",
-				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
 
 		// No requests should have been made to the ESI.
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
@@ -285,7 +285,7 @@ public class ProxyHandlerTest {
 				proxyResponse3,
 				200,
 				"Test body",
-				Map.of(ProxyHeaderNames.X_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// A third request to the ESI should be conditional.
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
