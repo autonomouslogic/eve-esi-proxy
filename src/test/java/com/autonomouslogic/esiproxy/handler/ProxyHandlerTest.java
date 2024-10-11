@@ -10,7 +10,6 @@ import com.autonomouslogic.esiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.esiproxy.test.TestHttpUtils;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -36,10 +35,6 @@ public class ProxyHandlerTest {
 
 	@Inject
 	OkHttpClient client;
-
-	@Inject
-	@Named("version")
-	String version;
 
 	MockWebServer mockEsi;
 
@@ -84,15 +79,7 @@ public class ProxyHandlerTest {
 						ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
-		TestHttpUtils.assertRequest(
-				esiRequest,
-				"GET",
-				path,
-				Map.of(
-						"X-Client-Header",
-						"Test client header",
-						HeaderNames.USER_AGENT.lowerCase(),
-						"test@example.com eve-esi-proxy/" + version));
+		TestHttpUtils.assertRequest(esiRequest, "GET", path, Map.of("X-Client-Header", "Test client header"));
 	}
 
 	@Test

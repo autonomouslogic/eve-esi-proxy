@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Cache;
@@ -34,7 +35,9 @@ public class EsiRelay {
 	private final Cache cache;
 	private final OkHttpClient client;
 
-	private String userAgent;
+	private final Optional<String> configuredUserAgent =
+			Configs.ESI_USER_AGENT.get().map(String::trim).filter(h -> !h.isEmpty());
+	private String versionHeaderPart;
 
 	@Inject
 	@SneakyThrows
@@ -59,8 +62,13 @@ public class EsiRelay {
 	}
 
 	@Inject
-	protected void validate() {
-		getUserAgent();
+	protected void init() {
+		if (configuredUserAgent.isPresent()) {
+			if (configuredUserAgent.get().indexOf('@') == -1) {
+				log.warn(Configs.ESI_USER_AGENT.getName() + " should contain an email address");
+			}
+		}
+		versionHeaderPart = "eve-esi-proxy/" + version;
 	}
 
 	/**
@@ -73,7 +81,11 @@ public class EsiRelay {
 	 */
 	@SneakyThrows
 	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
-		var esiRequest = createEsiRequest(proxyRequest);
+		var esiRequestBuilder = createEsiRequest(proxyRequest);
+		if (!handleUserAgent(proxyRequest, res, esiRequestBuilder)) {
+			return;
+		}
+		var esiRequest = esiRequestBuilder.build();
 		var esiResponse = client.newCall(esiRequest).execute();
 		sendResponse(esiResponse, res);
 	}
@@ -84,15 +96,14 @@ public class EsiRelay {
 		res.send(esiResponse.body().bytes());
 	}
 
-	private Request createEsiRequest(ServerRequest proxyRequest) throws MalformedURLException {
+	private Request.Builder createEsiRequest(ServerRequest proxyRequest) throws MalformedURLException {
 		var esiUrl = new URL(esiBaseUrl, proxyRequest.path().path());
 		var esiRequestBody = createRequestBody(proxyRequest);
 		var esiRequestBuilder = new Request.Builder()
 				.url(esiUrl)
 				.method(proxyRequest.prologue().method().toString(), esiRequestBody);
 		copyHeaders(proxyRequest, esiRequestBuilder, esiUrl);
-		esiRequestBuilder.header(HeaderNames.USER_AGENT.lowerCase(), getUserAgent());
-		return esiRequestBuilder.build();
+		return esiRequestBuilder;
 	}
 
 	private static void copyHeaders(ServerRequest proxyRequest, Request.Builder esiRequestBuilder, URL esiUrl) {
@@ -121,19 +132,25 @@ public class EsiRelay {
 		return RequestBody.create(bytes);
 	}
 
-	private String getUserAgent() {
-		if (userAgent == null) {
-			var optional = Configs.ESI_USER_AGENT.get().map(String::trim);
-			if (optional.isEmpty()) {
-				throw new IllegalArgumentException(Configs.ESI_USER_AGENT.getName() + " must be set");
-			}
-			var agent = optional.get();
-			if (agent.indexOf('@') == -1) {
-				log.warn(Configs.ESI_USER_AGENT.getName() + " should contain an email address");
-			}
-			userAgent = agent + " eve-esi-proxy/" + version;
+	private boolean handleUserAgent(ServerRequest proxyRequest, ServerResponse res, Request.Builder esiRequestBuilder) {
+		var suppliedAgent = Optional.ofNullable(proxyRequest.headers().get(HeaderNames.USER_AGENT))
+				.flatMap(h -> Optional.ofNullable(h.values()))
+				.filter(h -> !h.trim().isEmpty());
+		if (suppliedAgent.isEmpty() && configuredUserAgent.isEmpty()) {
+			res.status(400).send("User agent must be configured or header supplied");
+			return false;
 		}
-		return userAgent;
+		esiRequestBuilder.removeHeader(HeaderNames.USER_AGENT.lowerCase());
+		String userAgent;
+		if (suppliedAgent.isPresent() && configuredUserAgent.isPresent()) {
+			userAgent = suppliedAgent.get() + " " + configuredUserAgent.get() + " " + versionHeaderPart;
+		} else if (suppliedAgent.isPresent()) {
+			userAgent = suppliedAgent.get() + " " + versionHeaderPart;
+		} else {
+			userAgent = configuredUserAgent.get() + " " + versionHeaderPart;
+		}
+		esiRequestBuilder.addHeader(HeaderNames.USER_AGENT.lowerCase(), userAgent);
+		return true;
 	}
 
 	@SneakyThrows
