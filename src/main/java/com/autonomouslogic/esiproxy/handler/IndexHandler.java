@@ -11,7 +11,7 @@ import lombok.extern.log4j.Log4j2;
 @Singleton
 @Log4j2
 public class IndexHandler implements Handler {
-	private final String version = Configs.ESI_PROXY_VERSION.getRequired();
+	private final String version = Configs.EVE_ESI_PROXY_VERSION.getRequired();
 
 	@Inject
 	protected IndexHandler() {}

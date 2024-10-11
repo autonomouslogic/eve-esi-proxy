@@ -32,10 +32,10 @@ public class EsiRelay {
 	@Inject
 	@SneakyThrows
 	public EsiRelay() {
-		esiBaseUrl = new URL(Configs.ESI_BASE_URL.getRequired());
+		esiBaseUrl = new URL(Configs.EVE_ESI_PROXY_ESI_BASE_URL.getRequired());
 		final File tempDir;
-		var httpCacheDir = Configs.ESI_PROXY_HTTP_CACHE_DIR.get();
-		var httpCacheMaxSize = Configs.ESI_PROXY_HTTP_CACHE_MAX_SIZE.getRequired();
+		var httpCacheDir = Configs.EVE_ESI_PROXY_HTTP_CACHE_DIR.get();
+		var httpCacheMaxSize = Configs.EVE_ESI_PROXY_HTTP_CACHE_MAX_SIZE.getRequired();
 		if (httpCacheDir.isPresent()) {
 			tempDir = new File(httpCacheDir.get());
 		} else {

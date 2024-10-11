@@ -25,7 +25,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
-@SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
+@SetEnvironmentVariable(key = "EVE_ESI_PROXY_ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @Timeout(30)
 @Log4j2
 public class ProxyHandlerTest {
