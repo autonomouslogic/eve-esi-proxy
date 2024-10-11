@@ -1,4 +1,4 @@
-package com.autonomouslogic.esiproxy;
+package com.autonomouslogic.eveesiproxy;
 
 import java.io.IOException;
 import okhttp3.Interceptor;

@@ -1,11 +1,11 @@
-package com.autonomouslogic.esiproxy.handler;
+package com.autonomouslogic.eveesiproxy.handler;
 
-import static com.autonomouslogic.esiproxy.test.TestConstants.MOCK_ESI_PORT;
+import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.autonomouslogic.esiproxy.EveEsiProxy;
-import com.autonomouslogic.esiproxy.test.DaggerTestComponent;
-import com.autonomouslogic.esiproxy.test.TestHttpUtils;
+import com.autonomouslogic.eveesiproxy.EveEsiProxy;
+import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
+import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;

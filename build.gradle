@@ -11,7 +11,7 @@ plugins {
 group = "com.autonomouslogic.esiproxy"
 
 ext {
-	mainClassName = "com.autonomouslogic.esiproxy.EveEsiProxy"
+	mainClassName = "com.autonomouslogic.eveesiproxy.EveEsiProxy"
 }
 
 repositories {

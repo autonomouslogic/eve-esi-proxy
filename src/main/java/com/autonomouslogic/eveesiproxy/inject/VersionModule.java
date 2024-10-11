@@ -1,4 +1,4 @@
-package com.autonomouslogic.esiproxy.inject;
+package com.autonomouslogic.eveesiproxy.inject;
 
 import dagger.Module;
 import dagger.Provides;

@@ -1,4 +1,4 @@
-package com.autonomouslogic.esiproxy;
+package com.autonomouslogic.eveesiproxy;
 
 public class ProxyHeaderValues {
 	public static final String CACHE_STATUS_HIT = "hit";

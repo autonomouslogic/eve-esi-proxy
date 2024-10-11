@@ -1,6 +1,6 @@
-package com.autonomouslogic.esiproxy.inject;
+package com.autonomouslogic.eveesiproxy.inject;
 
-import com.autonomouslogic.esiproxy.EveEsiProxy;
+import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import dagger.Component;
 import jakarta.inject.Singleton;
 

@@ -1,11 +1,11 @@
-package com.autonomouslogic.esiproxy.test;
+package com.autonomouslogic.eveesiproxy.test;
 
-import static com.autonomouslogic.esiproxy.test.TestConstants.MOCK_ESI_PORT;
+import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.autonomouslogic.esiproxy.EveEsiProxy;
+import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;

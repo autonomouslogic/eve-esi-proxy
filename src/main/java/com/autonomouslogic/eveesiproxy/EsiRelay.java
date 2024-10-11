@@ -1,4 +1,4 @@
-package com.autonomouslogic.esiproxy;
+package com.autonomouslogic.eveesiproxy;
 
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.ServerRequest;

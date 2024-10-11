@@ -1,8 +1,8 @@
-package com.autonomouslogic.esiproxy;
+package com.autonomouslogic.eveesiproxy;
 
-import com.autonomouslogic.esiproxy.handler.IndexHandler;
-import com.autonomouslogic.esiproxy.handler.ProxyHandler;
-import com.autonomouslogic.esiproxy.inject.DaggerMainComponent;
+import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
+import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
+import com.autonomouslogic.eveesiproxy.inject.DaggerMainComponent;
 import io.helidon.webserver.ConnectionConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;

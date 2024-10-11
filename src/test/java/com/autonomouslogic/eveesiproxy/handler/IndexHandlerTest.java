@@ -1,10 +1,10 @@
-package com.autonomouslogic.esiproxy.handler;
+package com.autonomouslogic.eveesiproxy.handler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.autonomouslogic.esiproxy.EveEsiProxy;
-import com.autonomouslogic.esiproxy.test.DaggerTestComponent;
-import com.autonomouslogic.esiproxy.test.TestHttpUtils;
+import com.autonomouslogic.eveesiproxy.EveEsiProxy;
+import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
+import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import jakarta.inject.Inject;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
