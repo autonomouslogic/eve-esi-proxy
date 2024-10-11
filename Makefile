@@ -1,7 +1,7 @@
 .PHONY: dist test format clean docker
-EVE_ESI_PROXY_VERSION = $(shell ./gradlew properties | grep 'version:' | cut -d' ' -f 2)
+PROXY_VERSION = $(shell ./gradlew properties | grep 'version:' | cut -d' ' -f 2)
 DOCKER_TAG_BASE = autonomouslogic/eve-esi-proxy
-DOCKER_TAG = $(DOCKER_TAG_BASE):$(EVE_ESI_PROXY_VERSION)
+DOCKER_TAG = $(DOCKER_TAG_BASE):$(PROXY_VERSION)
 DOCKER_TAG_LATEST = $(DOCKER_TAG_BASE):latest
 
 dist:
@@ -21,7 +21,7 @@ docker: dist
 		-f docker/Dockerfile \
 		--tag $(DOCKER_TAG) \
 		--tag $(DOCKER_TAG_LATEST) \
-		--build-arg "EVE_ESI_PROXY_VERSION=$(EVE_ESI_PROXY_VERSION)" \
+		--build-arg "PROXY_VERSION=$(PROXY_VERSION)" \
 		.
 
 docker-push: docker

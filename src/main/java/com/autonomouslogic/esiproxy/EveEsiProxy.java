@@ -6,6 +6,7 @@ import com.autonomouslogic.esiproxy.inject.DaggerMainComponent;
 import io.helidon.webserver.ConnectionConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
+import jakarta.inject.Named;
 import javax.inject.Inject;
 import lombok.extern.log4j.Log4j2;
 
@@ -20,17 +21,22 @@ public class EveEsiProxy {
 	@Inject
 	protected ProxyHandler proxyHandler;
 
+	@Inject
+	@Named("version")
+	protected String version;
+
 	private WebServer server;
 
 	@Inject
 	protected EveEsiProxy() {}
 
 	public static void main(String[] args) {
+		log.info("Starting EVE ESI Proxy");
 		DaggerMainComponent.create().createMain().start();
 	}
 
 	public void start() {
-		log.info("Starting EVE ESI Proxy");
+		log.info("EVE ESI Proxy version {}", version);
 
 		server = WebServer.builder()
 				.host(Configs.PROXY_HOST.getRequired())
