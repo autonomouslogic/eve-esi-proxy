@@ -6,6 +6,10 @@ See the [First version](https://github.com/autonomouslogic/eve-esi-proxy/milesto
 Breaking changes may occur at any time.
 Contributions welcome._
 
+```
+Fly safe o7
+```
+
 ## Features
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
 * _More planned, see milestone_
