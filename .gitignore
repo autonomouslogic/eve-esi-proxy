@@ -2,3 +2,4 @@
 .idea/
 build/
 local.env
+src/main/resources/version

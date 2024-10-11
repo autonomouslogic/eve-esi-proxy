@@ -1,5 +1,7 @@
 package com.autonomouslogic.esiproxy.handler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.autonomouslogic.esiproxy.EveEsiProxy;
 import com.autonomouslogic.esiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.esiproxy.test.TestHttpUtils;
@@ -37,7 +39,7 @@ public class IndexHandlerTest {
 	@SneakyThrows
 	void shouldRespondToRequests() {
 		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/");
-		TestHttpUtils.assertResponse(proxyResponse, 200, "EVE ESI Proxy dev\n");
+		assertEquals(200, proxyResponse.code());
 	}
 
 	@Test
