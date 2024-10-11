@@ -4,7 +4,7 @@ import com.autonomouslogic.esiproxy.EveEsiProxy;
 import dagger.Component;
 import jakarta.inject.Singleton;
 
-@Component(modules = {})
+@Component(modules = {VersionModule.class})
 @Singleton
 public interface MainComponent {
 	void inject(EveEsiProxy main);

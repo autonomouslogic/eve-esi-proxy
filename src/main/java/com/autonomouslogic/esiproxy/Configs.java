@@ -3,12 +3,6 @@ package com.autonomouslogic.esiproxy;
 import com.autonomouslogic.commons.config.Config;
 
 public class Configs {
-	public static final Config<String> EVE_ESI_PROXY_VERSION = Config.<String>builder()
-			.name("EVE_ESI_PROXY_VERSION")
-			.type(String.class)
-			.defaultValue("dev")
-			.build();
-
 	public static final Config<Integer> EVE_ESI_PROXY_PORT = Config.<Integer>builder()
 			.name("EVE_ESI_PROXY_PORT")
 			.type(Integer.class)
