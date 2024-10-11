@@ -20,7 +20,7 @@ using this proxy will let you get on with writing your application and not worry
 ## Usage
 The proxy is easily run from Docker:
 ```bash
-docker run -it -p 8182:8182 autonomouslogic/esi-proxy:latest
+docker run -it -p 8182:8182 -m 512m autonomouslogic/esi-proxy:latest
 ```
 
 Then you request data as you would on the ESI, just from localhost instead:
