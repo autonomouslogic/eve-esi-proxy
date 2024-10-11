@@ -9,8 +9,7 @@ COPY docker/entry.sh /eve-esi-proxy/
 FROM eclipse-temurin:21.0.4_7-jre-alpine
 ARG EVE_ESI_PROXY_VERSION
 ENV EVE_ESI_PROXY_VERSION=${EVE_ESI_PROXY_VERSION}
+ENV EVE_ESI_PROXY_HTTP_CACHE_DIR=/data/http-cache
 COPY --from=build /eve-esi-proxy /eve-esi-proxy
 WORKDIR /eve-esi-proxy
-RUN pwd
-RUN ls -l
 ENTRYPOINT ["./entry.sh"]
