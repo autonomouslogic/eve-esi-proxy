@@ -33,8 +33,8 @@ public class EveEsiProxy {
 		log.info("Starting EVE ESI Proxy");
 
 		server = WebServer.builder()
-				.host(Configs.EVE_ESI_PROXY_HOST.getRequired())
-				.port(Configs.EVE_ESI_PROXY_PORT.getRequired())
+				.host(Configs.PROXY_HOST.getRequired())
+				.port(Configs.PROXY_PORT.getRequired())
 				.connectionConfig(connectionConfig())
 				.routing(this::routing)
 				.build()
