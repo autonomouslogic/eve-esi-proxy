@@ -31,7 +31,7 @@ curl http://localhost:8182/latest/status/
 
 ## Overhead
 The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP server stack for Java 21,
-and [OkHTTP](https://square.github.io/okhttp/), a fast HTTP client for Java.
+and [OkHttp](https://square.github.io/okhttp/), a fast HTTP client for Java.
 It'll easily handle tens of thousands of requests per second without breaking a sweat, way more than you'd ever need.
 See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) for some very basic load testing.
 
