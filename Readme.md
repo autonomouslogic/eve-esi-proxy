@@ -12,11 +12,11 @@ Fly safe o7
 
 ## Features
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
-* **User agent header** is automatically set
 * **Rate limiting** requests to help avoid being banned
+* **User agent header** is automatically set
 * _More planned, see milestone_
 
-The ESI API is a great resource, but can be annoying to work with.
+The ESI API is a great resource, but can be difficult to work with.
 The above are all things you have to be acutely aware of.
 With CCP being trigger-happy about banning IPs from accessing the API,
 using this proxy will let you get on with writing your application and not worry about the minutiae of ESI lore.
