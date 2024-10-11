@@ -17,22 +17,22 @@ import org.jetbrains.annotations.NotNull;
 @Singleton
 @Log4j2
 public class RateLimitInterceptor implements Interceptor {
-	private final RateLimiter characterCorporationHistoryRateLimiter;
-	private final RateLimiter marketHistoryRateLimiter;
-	private final RateLimiter otherRateLimiter;
+	private final RateLimiter characterCorporationHistoryLimiter;
+	private final RateLimiter marketHistoryLimiter;
+	private final RateLimiter otherLimiter;
 
-	private final double loggingRateLimit = 1.0 / 5.0;
+	private final double logRateLimit = 1.0 / 5.0;
 
-	private final RateLimiter characterCorporationHistoryLoggingRateLimiter = RateLimiter.create(loggingRateLimit);
-	private final RateLimiter marketHistoryLoggingRateLimiter = RateLimiter.create(loggingRateLimit);
-	private final RateLimiter otherLoggingRateLimiter = RateLimiter.create(loggingRateLimit);
+	private final RateLimiter characterCorporationHistoryLogLimiter = RateLimiter.create(logRateLimit);
+	private final RateLimiter marketHistoryLogLimiter = RateLimiter.create(logRateLimit);
+	private final RateLimiter otherLogLimiter = RateLimiter.create(logRateLimit);
 
 	@Inject
 	protected RateLimitInterceptor() {
-		characterCorporationHistoryRateLimiter =
+		characterCorporationHistoryLimiter =
 				createRateLimiter(Configs.ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S);
-		marketHistoryRateLimiter = createRateLimiter(Configs.ESI_MARKET_HISTORY_RATE_LIMIT_PER_S);
-		otherRateLimiter = createRateLimiter(Configs.ESI_RATE_LIMIT_PER_S);
+		marketHistoryLimiter = createRateLimiter(Configs.ESI_MARKET_HISTORY_RATE_LIMIT_PER_S);
+		otherLimiter = createRateLimiter(Configs.ESI_RATE_LIMIT_PER_S);
 	}
 
 	private static RateLimiter createRateLimiter(Config<Double> config) {
@@ -48,13 +48,28 @@ public class RateLimitInterceptor implements Interceptor {
 	public Response intercept(@NotNull Chain chain) throws IOException {
 		var path = chain.request().url().encodedPath();
 		var type = EsiRouteClassifier.classifyRoute(path);
-		log.info("Classified {} as {}", path, type);
-		if (!otherRateLimiter.tryAcquire()) {
-			logRateLimit(EsiRouteType.OTHER, otherLoggingRateLimiter);
-			otherRateLimiter.acquire();
+		switch (type) {
+			case CHARACTER_CORPORATION_HISTORY:
+				rateLimit(characterCorporationHistoryLimiter, characterCorporationHistoryLogLimiter);
+				break;
+			case MARKET_HISTORY:
+				rateLimit(marketHistoryLimiter, marketHistoryLogLimiter);
+				break;
+			case OTHER:
+				rateLimit(otherLimiter, otherLogLimiter);
+				break;
+			default:
+				throw new IllegalStateException("Unknown ESI route type: " + type);
 		}
 		var response = chain.proceed(chain.request());
 		return response;
+	}
+
+	private void rateLimit(RateLimiter rateLimiter, RateLimiter loggingRateLimiter) {
+		if (!rateLimiter.tryAcquire()) {
+			logRateLimit(EsiRouteType.OTHER, loggingRateLimiter);
+			rateLimiter.acquire();
+		}
 	}
 
 	private void logRateLimit(EsiRouteType type, RateLimiter loggingRateLimiter) {
