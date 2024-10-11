@@ -28,6 +28,11 @@ The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP stack 
 It'll easily handle tens of thousands of requests per second without breaking a sweat, way more than you'd ever need.
 See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) for some very basic load testing.
 
+## Usage
+```bash
+docker run -it -v eve-esi-proxy:/data -p 8182:8182 autonomouslogic/esi-proxy:latest
+```
+
 ## License
 The EVE ESI Proxy itself and the code contained within this repo is created
 Kenn, aka [Dato Tovikov](https://evewho.com/character/1452072530) of [EVE Ref](https://everef.net/).
@@ -39,8 +44,8 @@ EVE Online and all assets related to it are owned by [CCP hf.](https://www.ccpga
 
 ## Status
 
-| Type         | Status                                                                                                                                                                                                                                                                                                                                                                                                |
-|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Code Climate | [![Maintainability](https://api.codeclimate.com/v1/badges/a48ec1513807fc073563/maintainability)](https://codeclimate.com/github/autonomouslogic/esi-proxy/maintainability)                                                                                                                                                                                                                            |
-| Sonar Cloud  | [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=autonomouslogic_esi-proxy&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=autonomouslogic_esi-proxy) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=autonomouslogic_esi-proxy&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=autonomouslogic_esi-proxy) |
-| Codecov      | [![codecov](https://codecov.io/gh/autonomouslogic/esi-proxy/graph/badge.svg?token=MXwjEUJRPk)](https://codecov.io/gh/autonomouslogic/esi-proxy)                                                                                                                                                                                                                                                       |
+| Type         | Status                                                                                                                                                                                                                                                                                                                                                                                                    |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Code Climate | [![Maintainability](https://api.codeclimate.com/v1/badges/a48ec1513807fc073563/maintainability)](https://codeclimate.com/github/autonomouslogic/eve-esi-proxy/maintainability)                                                                                                                                                                                                                            |
+| Sonar Cloud  | [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=autonomouslogic_eve-esi-proxy&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=autonomouslogic_esi-proxy) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=autonomouslogic_esi-proxy&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=autonomouslogic_esi-proxy) |
+| Codecov      | [![codecov](https://codecov.io/gh/autonomouslogic/eve-esi-proxy/graph/badge.svg?token=MXwjEUJRPk)](https://codecov.io/gh/autonomouslogic/eve-esi-proxy)                                                                                                                                                                                                                                                   |
