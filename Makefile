@@ -10,7 +10,7 @@ versionFile:
 dist: versionFile
 	./gradlew distTar --stacktrace
 
-test:
+test: versionFile
 	./gradlew test --stacktrace
 
 lint:
