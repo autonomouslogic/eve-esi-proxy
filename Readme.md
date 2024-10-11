@@ -31,6 +31,19 @@ Then you request data as you would on the ESI, just from localhost instead:
 curl http://localhost:8182/latest/status/
 ```
 
+## Config
+The proxy is configured via environment variables set via `docker run -e`:
+
+* `PROXY_PORT` - The port the proxy listens on - defaults to `8182`
+* `PROXY_HOST` - The host the proxy listens on - defaults to `0.0.0.0`
+* `ESI_BASE_URL` - The base URL of the ESI API - defaults to `https://esi.evetech.net`
+* `ESI_USER_AGENT` - The user agent to use when making requests to the ESI API - if this is not set and no user agent is supplied on the request, the proxy will return a `400 Bad Request`
+* `HTTP_CACHE_DIR` - The directory to store cached responses in
+* `HTTP_CACHE_MAX_SIZE` - The maximum size of the cache in bytes - defaults to 1 GiB
+* `ESI_RATE_LIMIT_PER_S` - The number of requests allowed per second for endpoints without a special rate limit - defaults to `100`
+* `ESI_MARKET_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for market history - defaults to `5` - increasing this is **not recommended**
+* `ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for character corporation history - defaults to `5` - increasing this is **not recommended**
+
 ## Overhead
 The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP server stack for Java 21,
 and [OkHttp](https://square.github.io/okhttp/), a fast HTTP client for Java.
