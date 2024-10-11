@@ -2,8 +2,8 @@
 An HTTP proxy specifically designed for the [ESI API](https://esi.evetech.net/ui/) for [EVE Online](https://www.eveonline.com/).
 
 _This project is currently in development.
-Breaking changes may occur at any time.
 See the [First version](https://github.com/autonomouslogic/eve-esi-proxy/milestone/1) milestone for progress.
+Breaking changes may occur at any time.
 Contributions welcome._
 
 ## Features
