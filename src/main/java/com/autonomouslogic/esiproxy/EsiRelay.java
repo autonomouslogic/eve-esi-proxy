@@ -39,7 +39,7 @@ public class EsiRelay {
 		if (httpCacheDir.isPresent()) {
 			tempDir = new File(httpCacheDir.get());
 		} else {
-			tempDir = Files.createTempDirectory("esi-proxy-http-cache").toFile();
+			tempDir = Files.createTempDirectory("eve-esi-proxy-http-cache").toFile();
 		}
 		log.info("Using HTTP cache dir {}", tempDir);
 		cache = new Cache(tempDir, httpCacheMaxSize);
