@@ -10,6 +10,7 @@ Fly safe o7
 
 ## Features
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
+* **User agent header** is automatically set
 * _More planned, see milestone_
 
 The ESI API is a great resource, but can be annoying to work with.
@@ -18,9 +19,8 @@ With CCP being trigger-happy about banning IPs from accessing the API,
 using this proxy will let you get on with writing your application and not worry about the minutiae of ESI lore.
 
 ## Usage
-The proxy is easily run from Docker:
 ```bash
-docker run -it -p 8182:8182 -m 512m autonomouslogic/esi-proxy:latest
+docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 512m -e "ESI_USER_AGENT=<your email>" autonomouslogic/eve-esi-proxy:latest
 ```
 
 Then you request data as you would on the ESI, just from localhost instead:
@@ -32,11 +32,6 @@ curl http://localhost:8182/latest/status/
 The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP stack for Java 21.
 It'll easily handle tens of thousands of requests per second without breaking a sweat, way more than you'd ever need.
 See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) for some very basic load testing.
-
-## Usage
-```bash
-docker run -it -v eve-esi-proxy:/data -p 8182:8182 autonomouslogic/esi-proxy:latest
-```
 
 ## License
 The EVE ESI Proxy itself and the code contained within this repo is created

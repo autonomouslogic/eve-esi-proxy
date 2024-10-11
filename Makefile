@@ -10,7 +10,7 @@ versionFile:
 dist: versionFile
 	./gradlew distTar --stacktrace
 
-test:
+test: versionFile
 	./gradlew test --stacktrace
 
 lint:
@@ -32,7 +32,7 @@ docker-push: docker
 	docker push $(DOCKER_TAG_LATEST)
 
 docker-run: docker
-	docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 512m $(DOCKER_TAG)
+	docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 512m -e "ESI_USER_AGENT=test" $(DOCKER_TAG)
 
 clean:
 	./gradlew clean --stacktrace
