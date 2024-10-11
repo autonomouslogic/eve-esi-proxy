@@ -1,6 +1,6 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
-import static com.autonomouslogic.eveesiproxy.ProxyHeaderNames.X_EVE_ESI_PROXY_VERSION;
+import static com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames.X_EVE_ESI_PROXY_VERSION;
 
 import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;

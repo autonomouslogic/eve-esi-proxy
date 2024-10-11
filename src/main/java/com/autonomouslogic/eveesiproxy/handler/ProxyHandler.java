@@ -1,6 +1,6 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
-import com.autonomouslogic.eveesiproxy.EsiRelay;
+import com.autonomouslogic.eveesiproxy.http.EsiRelay;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;

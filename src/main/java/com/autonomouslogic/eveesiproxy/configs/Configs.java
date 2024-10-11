@@ -1,4 +1,4 @@
-package com.autonomouslogic.eveesiproxy;
+package com.autonomouslogic.eveesiproxy.configs;
 
 import com.autonomouslogic.commons.config.Config;
 

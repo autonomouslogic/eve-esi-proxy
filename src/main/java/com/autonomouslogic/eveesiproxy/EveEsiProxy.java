@@ -1,5 +1,6 @@
 package com.autonomouslogic.eveesiproxy;
 
+import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
 import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
 import com.autonomouslogic.eveesiproxy.inject.DaggerMainComponent;

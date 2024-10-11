@@ -4,8 +4,8 @@ import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
-import com.autonomouslogic.eveesiproxy.ProxyHeaderNames;
-import com.autonomouslogic.eveesiproxy.ProxyHeaderValues;
+import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
+import com.autonomouslogic.eveesiproxy.http.ProxyHeaderValues;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import io.helidon.http.HeaderNames;

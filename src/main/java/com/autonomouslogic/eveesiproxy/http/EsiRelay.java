@@ -1,5 +1,6 @@
-package com.autonomouslogic.eveesiproxy;
+package com.autonomouslogic.eveesiproxy.http;
 
+import com.autonomouslogic.eveesiproxy.configs.Configs;
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
