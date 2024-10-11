@@ -34,6 +34,9 @@ public class RateLimitInterceptor implements Interceptor {
 	@NotNull
 	@Override
 	public Response intercept(@NotNull Chain chain) throws IOException {
+		var path = chain.request().url().encodedPath();
+		var type = EsiRouteClassifier.classifyRoute(path);
+		log.info("Classified {} as {}", path, type);
 		if (!rateLimiter.tryAcquire()) {
 			logRateLimit();
 			rateLimiter.acquire();

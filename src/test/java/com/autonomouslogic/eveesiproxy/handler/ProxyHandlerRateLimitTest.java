@@ -17,6 +17,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
@@ -27,13 +28,17 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
-@SetEnvironmentVariable(key = "ESI_RATE_LIMIT_PER_S", value = "5")
+@SetEnvironmentVariable(key = "ESI_RATE_LIMIT_PER_S", value = "20")
+@SetEnvironmentVariable(key = "ESI_MARKET_HISTORY_RATE_LIMIT_PER_S", value = "10")
+@SetEnvironmentVariable(key = "ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S", value = "5")
 @Timeout(30)
 @Log4j2
 public class ProxyHandlerRateLimitTest {
@@ -75,15 +80,16 @@ public class ProxyHandlerRateLimitTest {
 		mockEsi.shutdown();
 	}
 
-	@Test
+	@ParameterizedTest
+	@MethodSource("rateLimitTests")
 	@SneakyThrows
-	void shouldLimitRequests() {
+	void shouldLimitRequests(String url, double expectedRate) {
 		var count = new AtomicInteger(0);
 		var watch = Stopwatch.createStarted();
 		while (watch.elapsed().compareTo(duration) < 0) {
 			TestHttpUtils.assertResponse(
 					TestHttpUtils.callProxy(
-							client, proxy, "GET", "/page", Map.of(HeaderNames.CACHE_CONTROL.lowerCase(), "no-cache")),
+							client, proxy, "GET", url, Map.of(HeaderNames.CACHE_CONTROL.lowerCase(), "no-cache")),
 					200,
 					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 			count.incrementAndGet();
@@ -91,21 +97,22 @@ public class ProxyHandlerRateLimitTest {
 		var time = watch.elapsed().toMillis();
 		var rate = count.get() / (time / 1000.0);
 		log.info(String.format("Requests: %s, time: %s, rate: %.2f/s", count.get(), watch.elapsed(), rate));
-		assertEquals(5.0, rate, 1.5);
+		assertEquals(expectedRate, rate, expectedRate / 5.0);
 	}
 
-	@Test
+	@ParameterizedTest
+	@MethodSource("rateLimitTests")
 	@SneakyThrows
-	void shouldNotLimitCachedResponses() {
+	void shouldNotLimitCachedResponses(String url, double expectedRate) {
 		var count = new AtomicInteger(0);
 		var watch = Stopwatch.createStarted();
 		TestHttpUtils.assertResponse(
-				TestHttpUtils.callProxy(client, proxy, "GET", "/page"),
+				TestHttpUtils.callProxy(client, proxy, "GET", url),
 				200,
 				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 		while (watch.elapsed().compareTo(duration) < 0) {
 			TestHttpUtils.assertResponse(
-					TestHttpUtils.callProxy(client, proxy, "GET", "/page"),
+					TestHttpUtils.callProxy(client, proxy, "GET", url),
 					200,
 					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
 			count.incrementAndGet();
@@ -113,6 +120,13 @@ public class ProxyHandlerRateLimitTest {
 		var time = watch.elapsed().toMillis();
 		var rate = count.get() / (time / 1000.0);
 		log.info(String.format("Requests: %s, time: %s, rate: %.2f/s", count.get(), watch.elapsed(), rate));
-		assertTrue(rate > 10.0, "rate:" + rate);
+		assertTrue(rate > expectedRate, "rate:" + rate);
+	}
+
+	public static Stream<Arguments> rateLimitTests() {
+		return Stream.of(
+				Arguments.of("/latest/characters/1452072530/corporationhistory/", 5.0),
+				Arguments.of("/markets/10000002/history/", 10.0),
+				Arguments.of("/sovereignty/campaigns/", 20.0));
 	}
 }
