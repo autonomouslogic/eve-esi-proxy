@@ -10,6 +10,7 @@ Fly safe o7
 
 ## Features
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
+* **User agent header** is automatically set
 * _More planned, see milestone_
 
 The ESI API is a great resource, but can be annoying to work with.
