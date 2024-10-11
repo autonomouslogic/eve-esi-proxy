@@ -12,7 +12,7 @@ Fly safe o7
 
 ## Features
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
-* **Rate limiting** requests to help avoid being banned
+* **Rate limiting** requests to help avoid being banned, including different limits for the endpoints which have special undocumented limits
 * **User agent header** is automatically set
 * _More planned, see milestone_
 
