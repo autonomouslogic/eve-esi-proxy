@@ -10,6 +10,7 @@ import com.autonomouslogic.esiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.esiproxy.test.TestHttpUtils;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
+@SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
 @Timeout(30)
 @Log4j2
 public class ProxyHandlerTest {
@@ -34,6 +36,10 @@ public class ProxyHandlerTest {
 
 	@Inject
 	OkHttpClient client;
+
+	@Inject
+	@Named("version")
+	String version;
 
 	MockWebServer mockEsi;
 
@@ -78,7 +84,15 @@ public class ProxyHandlerTest {
 						ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
-		TestHttpUtils.assertRequest(esiRequest, "GET", path, Map.of("X-Client-Header", "Test client header"));
+		TestHttpUtils.assertRequest(
+				esiRequest,
+				"GET",
+				path,
+				Map.of(
+						"X-Client-Header",
+						"Test client header",
+						HeaderNames.USER_AGENT.lowerCase(),
+						"test@example.com eve-esi-proxy/" + version));
 	}
 
 	@Test

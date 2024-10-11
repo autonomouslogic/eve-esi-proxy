@@ -21,6 +21,9 @@ public class Configs {
 			.defaultValue("https://esi.evetech.net/")
 			.build();
 
+	public static final Config<String> ESI_USER_AGENT =
+			Config.<String>builder().name("ESI_USER_AGENT").type(String.class).build();
+
 	public static final Config<String> HTTP_CACHE_DIR =
 			Config.<String>builder().name("HTTP_CACHE_DIR").type(String.class).build();
 

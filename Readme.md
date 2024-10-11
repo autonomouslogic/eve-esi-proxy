@@ -35,7 +35,7 @@ See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) fo
 
 ## Usage
 ```bash
-docker run -it -v eve-esi-proxy:/data -p 8182:8182 autonomouslogic/esi-proxy:latest
+docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 512m -e "ESI_USER_AGENT=<your email>" autonomouslogic/esi-proxy:latest
 ```
 
 ## License

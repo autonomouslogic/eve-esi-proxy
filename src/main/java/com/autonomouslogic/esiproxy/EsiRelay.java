@@ -1,8 +1,10 @@
 package com.autonomouslogic.esiproxy;
 
+import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
@@ -24,14 +26,19 @@ import org.apache.commons.io.IOUtils;
 @Singleton
 @Log4j2
 public class EsiRelay {
-	private final URL esiBaseUrl;
+	@Inject
+	@Named("version")
+	protected String version;
 
+	private final URL esiBaseUrl;
 	private final Cache cache;
 	private final OkHttpClient client;
 
+	private String userAgent;
+
 	@Inject
 	@SneakyThrows
-	public EsiRelay() {
+	protected EsiRelay() {
 		esiBaseUrl = new URL(Configs.ESI_BASE_URL.getRequired());
 		final File tempDir;
 		var httpCacheDir = Configs.HTTP_CACHE_DIR.get();
@@ -49,6 +56,11 @@ public class EsiRelay {
 				.cache(cache)
 				.addInterceptor(new CacheStatusInterceptor())
 				.build();
+	}
+
+	@Inject
+	protected void validate() {
+		getUserAgent();
 	}
 
 	/**
@@ -79,6 +91,7 @@ public class EsiRelay {
 				.url(esiUrl)
 				.method(proxyRequest.prologue().method().toString(), esiRequestBody);
 		copyHeaders(proxyRequest, esiRequestBuilder, esiUrl);
+		esiRequestBuilder.header(HeaderNames.USER_AGENT.lowerCase(), getUserAgent());
 		return esiRequestBuilder.build();
 	}
 
@@ -106,6 +119,21 @@ public class EsiRelay {
 			return null;
 		}
 		return RequestBody.create(bytes);
+	}
+
+	private String getUserAgent() {
+		if (userAgent == null) {
+			var optional = Configs.ESI_USER_AGENT.get().map(String::trim);
+			if (optional.isEmpty()) {
+				throw new IllegalArgumentException(Configs.ESI_USER_AGENT.getName() + " must be set");
+			}
+			var agent = optional.get();
+			if (agent.indexOf('@') == -1) {
+				log.warn(Configs.ESI_USER_AGENT.getName() + " should contain an email address");
+			}
+			userAgent = agent + " eve-esi-proxy/" + version;
+		}
+		return userAgent;
 	}
 
 	@SneakyThrows
