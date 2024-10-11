@@ -33,10 +33,10 @@ public class Configs {
 			.type(Long.class)
 			.build();
 
-	public static final Config<Integer> ESI_RATE_LIMIT_PER_S = Config.<Integer>builder()
+	public static final Config<Double> ESI_RATE_LIMIT_PER_S = Config.<Double>builder()
 			.name("ESI_RATE_LIMIT_PER_S")
-			.defaultValue(100)
-			.type(Integer.class)
+			.defaultValue(100.0)
+			.type(Double.class)
 			.build();
 
 	public static final Config<Double> ESI_MARKET_HISTORY_RATE_LIMIT_PER_S = Config.<Double>builder()

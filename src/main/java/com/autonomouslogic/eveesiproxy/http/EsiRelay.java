@@ -60,8 +60,8 @@ public class EsiRelay {
 		log.info("Using HTTP cache dir {}", tempDir);
 		cache = new Cache(tempDir, httpCacheMaxSize);
 		client = new OkHttpClient.Builder()
-				.followRedirects(true)
-				.followSslRedirects(true)
+				.followRedirects(false)
+				.followSslRedirects(false)
 				.connectTimeout(Duration.ofSeconds(5))
 				.readTimeout(Duration.ofSeconds(20))
 				.writeTimeout(Duration.ofSeconds(5))
@@ -108,11 +108,12 @@ public class EsiRelay {
 	}
 
 	private Request.Builder createEsiRequest(ServerRequest proxyRequest) throws MalformedURLException {
-		var esiUrl = new URL(esiBaseUrl, proxyRequest.path().path());
+		var prologue = proxyRequest.prologue();
+		var esiUrl = new URL(
+				esiBaseUrl, prologue.uriPath().toString() + prologue.query().toString());
 		var esiRequestBody = createRequestBody(proxyRequest);
-		var esiRequestBuilder = new Request.Builder()
-				.url(esiUrl)
-				.method(proxyRequest.prologue().method().toString(), esiRequestBody);
+		var esiRequestBuilder =
+				new Request.Builder().url(esiUrl).method(prologue.method().toString(), esiRequestBody);
 		copyHeaders(proxyRequest, esiRequestBuilder, esiUrl);
 		return esiRequestBuilder;
 	}
