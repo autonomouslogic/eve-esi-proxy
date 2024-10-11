@@ -63,9 +63,7 @@ dependencies {
 }
 
 task versionFile()  {
-	doLast {
-		new File(projectDir, "src/main/resources/version").text = "$version\n"
-	}
+	new File(projectDir, "src/main/resources/version").text = "$version\n"
 }
 classes.dependsOn(tasks.versionFile)
 
