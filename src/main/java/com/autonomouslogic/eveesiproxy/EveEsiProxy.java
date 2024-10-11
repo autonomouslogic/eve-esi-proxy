@@ -3,6 +3,7 @@ package com.autonomouslogic.eveesiproxy;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
 import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
+import com.autonomouslogic.eveesiproxy.http.EsiRelay;
 import com.autonomouslogic.eveesiproxy.inject.DaggerMainComponent;
 import io.helidon.webserver.ConnectionConfig;
 import io.helidon.webserver.WebServer;
@@ -23,6 +24,9 @@ public class EveEsiProxy {
 	protected ProxyHandler proxyHandler;
 
 	@Inject
+	protected EsiRelay esiRelay;
+
+	@Inject
 	@Named("version")
 	protected String version;
 
@@ -33,10 +37,12 @@ public class EveEsiProxy {
 
 	public static void main(String[] args) {
 		log.info("Starting EVE ESI Proxy");
-		DaggerMainComponent.create().createMain().start();
+		var relay = DaggerMainComponent.create().createMain().start();
+		var protocol = relay.testProtocol();
+		log.debug("Connected to the ESI over {}", protocol);
 	}
 
-	public void start() {
+	public EsiRelay start() {
 		log.info("EVE ESI Proxy version {}", version);
 
 		server = WebServer.builder()
@@ -46,6 +52,8 @@ public class EveEsiProxy {
 				.routing(this::routing)
 				.build()
 				.start();
+
+		return esiRelay;
 	}
 
 	public void stop() {

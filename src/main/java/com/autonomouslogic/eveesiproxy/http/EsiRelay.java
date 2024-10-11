@@ -18,6 +18,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -166,5 +167,13 @@ public class EsiRelay {
 	@SneakyThrows
 	public void clearCache() {
 		cache.evictAll();
+	}
+
+	@SneakyThrows
+	public Protocol testProtocol() {
+		var response = client.newCall(
+						new Request.Builder().url(esiBaseUrl + "latest/status").build())
+				.execute();
+		return response.protocol();
 	}
 }
