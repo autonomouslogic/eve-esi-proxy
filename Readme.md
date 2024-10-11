@@ -6,6 +6,8 @@ See the [First version](https://github.com/autonomouslogic/eve-esi-proxy/milesto
 Breaking changes may occur at any time.
 Contributions welcome._
 
+Join us on [Discord](https://everef.net/discord).
+
 Fly safe o7
 
 ## Features
@@ -36,9 +38,7 @@ It'll easily handle tens of thousands of requests per second without breaking a 
 See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) for some very basic load testing.
 
 ## License
-The EVE ESI Proxy itself and the code contained within this repo is created
-Kenn, aka [Dato Tovikov](https://evewho.com/character/1452072530) of [EVE Ref](https://everef.net/).
-It is licensed under the [MIT-0 license](https://spdx.org/licenses/MIT-0.html).
+The EVE ESI Proxy itself is licensed under the [MIT-0 license](https://spdx.org/licenses/MIT-0.html).
 
 EVE Online and all assets related to it are owned by [CCP hf.](https://www.ccpgames.com/):
 * [Third-Party Developer License Agreement](https://developers.eveonline.com/license-agreement)
