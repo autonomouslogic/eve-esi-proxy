@@ -25,6 +25,9 @@ public class EsiRelay {
 	@Inject
 	protected OkHttpClient client;
 
+	@Inject
+	protected PageFetcher pageFetcher;
+
 	private final URL esiBaseUrl;
 
 	@Inject
@@ -46,6 +49,7 @@ public class EsiRelay {
 		var esiRequestBuilder = createEsiRequest(proxyRequest);
 		var esiRequest = esiRequestBuilder.build();
 		var esiResponse = client.newCall(esiRequest).execute();
+		esiResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
 		sendResponse(esiResponse, res);
 	}
 

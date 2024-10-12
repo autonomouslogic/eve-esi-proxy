@@ -19,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -30,6 +31,7 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -133,6 +135,7 @@ public class ProxyHandlerPagesTest {
 		assertNull(proxyResponse.header(HeaderNames.EXPIRES.lowerCase()));
 		assertNull(proxyResponse.header(ProxyHeaderNames.X_PAGES));
 		assertNull(proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS));
+		assertEquals(Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_PAGES_FETCHED));
 	}
 
 	private ArrayNode createPage(int page) {
@@ -145,5 +148,65 @@ public class ProxyHandlerPagesTest {
 
 	private ObjectNode createEntry(int page, int entry) {
 		return objectMapper.createObjectNode().put("order_id", (page + 1) * 100 + entry);
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldNotFetchPagesIfAPageIsRequested() {
+		TestHttpUtils.enqueueResponse(
+			mockEsi, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "10"));
+
+		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi?page=1");
+		TestHttpUtils.assertResponse(
+			proxyResponse, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "10"));
+
+		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
+		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi?page=1");
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldNotFetchPagesIfOnlyOnePageIsAvailable() {
+		TestHttpUtils.enqueueResponse(
+			mockEsi, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "1"));
+
+		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+			proxyResponse, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "1"));
+
+		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
+		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi");
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldNotFetchPagesIfThereIsAnErrorOnTheFirstPage() {
+		TestHttpUtils.enqueueResponse(
+			mockEsi, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "1"));
+		TestHttpUtils.enqueueResponse(
+			mockEsi, 400);
+		TestHttpUtils.enqueueResponse(
+			mockEsi, 200, "[{\"order_id\":4},{\"order_id\":5}]", Map.of(ProxyHeaderNames.X_PAGES, "1"));
+
+		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+			proxyResponse, 400);
+
+		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
+		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi");
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldNotFetchPagesIfThereIsAnErrorOnASubsequentPage() {
+		TestHttpUtils.enqueueResponse(
+			mockEsi, 400);
+
+		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+			proxyResponse, 400);
+
+		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
+		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi");
 	}
 }

@@ -110,13 +110,19 @@ public class TestHttpUtils {
 		assertResponse(proxyResponse, status, null, headers);
 	}
 
-	public static void assertRequest(RecordedRequest esiRequest, String get, String path, Map<String, String> headers) {
+	public static void assertRequest(RecordedRequest esiRequest, String method, String path) {
+		assertRequest(esiRequest, method, path, null);
+	}
+
+	public static void assertRequest(RecordedRequest esiRequest, String method, String path, Map<String, String> headers) {
 		assertNotNull(esiRequest);
 		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
 		assertEquals("Host", esiRequest.getHeaders().name(0));
-		assertEquals(get, esiRequest.getMethod());
+		assertEquals(method, esiRequest.getMethod());
 		assertEquals(path, esiRequest.getPath());
-		headers.forEach((name, value) -> assertEquals(value, esiRequest.getHeader(name), name));
+		if (headers != null) {
+			headers.forEach((name, value) -> assertEquals(value, esiRequest.getHeader(name), name));
+		}
 		assertEquals(0, esiRequest.getBody().size());
 	}
 }
