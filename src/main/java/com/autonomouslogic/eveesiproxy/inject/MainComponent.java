@@ -5,7 +5,7 @@ import dagger.Component;
 import jakarta.inject.Singleton;
 import okhttp3.OkHttpClient;
 
-@Component(modules = {VersionModule.class, OkHttpModule.class})
+@Component(modules = {VersionModule.class, OkHttpModule.class, JacksonModule.class})
 @Singleton
 public interface MainComponent {
 	void inject(EveEsiProxy main);

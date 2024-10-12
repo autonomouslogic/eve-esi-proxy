@@ -38,9 +38,10 @@ dependencies {
 	runtimeOnly "org.apache.logging.log4j:log4j-core:2.24.1"
 
 	// Jackson
-//	implementation "com.fasterxml.jackson.core:jackson-annotations:2.17.2"
-//	implementation "com.fasterxml.jackson.core:jackson-core:2.17.2"
-//	implementation "com.fasterxml.jackson.core:jackson-databind:2.17.2"
+	implementation "com.fasterxml.jackson.core:jackson-annotations:2.17.2"
+	implementation "com.fasterxml.jackson.core:jackson-core:2.17.2"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.17.2"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.0"
 
 	// Helidon
 	implementation "io.helidon.webserver:helidon-webserver:4.1.2"
@@ -48,7 +49,7 @@ dependencies {
 
 	// Misc
 	implementation "com.squareup.okhttp3:okhttp:4.12.0"
-	implementation "org.yaml:snakeyaml:2.3"
+//	implementation "org.yaml:snakeyaml:2.3"
 	implementation "com.autonomouslogic.commons:commons-java:1.9.1"
 	implementation "commons-io:commons-io:2.17.0"
 	implementation "com.google.guava:guava:33.3.1-jre"
