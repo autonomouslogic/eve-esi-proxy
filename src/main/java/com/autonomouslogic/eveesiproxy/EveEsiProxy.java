@@ -5,12 +5,17 @@ import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
 import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
 import com.autonomouslogic.eveesiproxy.http.EsiRelay;
 import com.autonomouslogic.eveesiproxy.inject.DaggerMainComponent;
+import io.helidon.http.HeaderNames;
 import io.helidon.webserver.ConnectionConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
 import jakarta.inject.Named;
+import java.net.URL;
 import javax.inject.Inject;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 /**
  * Entry point for the stand-alone application.
@@ -37,12 +42,12 @@ public class EveEsiProxy {
 
 	public static void main(String[] args) {
 		log.info("Starting EVE ESI Proxy");
-		var relay = DaggerMainComponent.create().createMain().start();
-		var protocol = relay.testProtocol();
-		log.debug("Connected to the ESI over {}", protocol);
+		var component = DaggerMainComponent.create();
+		component.createMain().start();
+		testProtocol(component.createOkHttpClient());
 	}
 
-	public EsiRelay start() {
+	public void start() {
 		log.info("EVE ESI Proxy version {}", version);
 
 		server = WebServer.builder()
@@ -52,8 +57,6 @@ public class EveEsiProxy {
 				.routing(this::routing)
 				.build()
 				.start();
-
-		return esiRelay;
 	}
 
 	public void stop() {
@@ -80,5 +83,23 @@ public class EveEsiProxy {
 					log.warn("Error processing request", ex);
 					res.status(500).send();
 				});
+	}
+
+	@SneakyThrows
+	private static void testProtocol(OkHttpClient client) {
+		var url = new URL(Configs.ESI_BASE_URL.getRequired()) + "latest/status";
+		var request = new Request.Builder()
+				.url(url)
+				.header(HeaderNames.USER_AGENT.lowerCase(), "test")
+				.build();
+		var response = client.newCall(request).execute();
+		if (response.code() != 200) {
+			log.warn(
+					"Received {} from ESI status {}: {}",
+					response.code(),
+					url,
+					response.body().string());
+		}
+		log.info("Connected to the ESI over {}", response.protocol());
 	}
 }

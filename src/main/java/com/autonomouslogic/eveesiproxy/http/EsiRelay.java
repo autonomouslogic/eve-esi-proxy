@@ -5,17 +5,12 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.time.Duration;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -27,40 +22,15 @@ import org.apache.commons.io.IOUtils;
 @Singleton
 @Log4j2
 public class EsiRelay {
+	@Inject
+	protected OkHttpClient client;
+
 	private final URL esiBaseUrl;
-	private final Cache cache;
-	private final OkHttpClient client;
 
 	@Inject
 	@SneakyThrows
-	protected EsiRelay(
-			CacheStatusInterceptor cacheStatusInterceptor,
-			RateLimitInterceptor rateLimitInterceptor,
-			LoggingInterceptor loggingInterceptor,
-			UserAgentInterceptor userAgentInterceptor) {
+	protected EsiRelay() {
 		esiBaseUrl = new URL(Configs.ESI_BASE_URL.getRequired());
-		final File tempDir;
-		var httpCacheDir = Configs.HTTP_CACHE_DIR.get();
-		var httpCacheMaxSize = Configs.HTTP_CACHE_MAX_SIZE.getRequired();
-		if (httpCacheDir.isPresent()) {
-			tempDir = new File(httpCacheDir.get());
-		} else {
-			tempDir = Files.createTempDirectory("eve-esi-proxy-http-cache").toFile();
-		}
-		log.info("Using HTTP cache dir {}", tempDir);
-		cache = new Cache(tempDir, httpCacheMaxSize);
-		client = new OkHttpClient.Builder()
-				.followRedirects(false)
-				.followSslRedirects(false)
-				.connectTimeout(Duration.ofSeconds(5))
-				.readTimeout(Duration.ofSeconds(20))
-				.writeTimeout(Duration.ofSeconds(5))
-				.cache(cache)
-				.addInterceptor(cacheStatusInterceptor)
-				.addInterceptor(userAgentInterceptor)
-				.addInterceptor(loggingInterceptor)
-				.addNetworkInterceptor(rateLimitInterceptor)
-				.build();
 	}
 
 	/**
@@ -120,18 +90,5 @@ public class EsiRelay {
 			return null;
 		}
 		return RequestBody.create(bytes);
-	}
-
-	@SneakyThrows
-	public void clearCache() {
-		cache.evictAll();
-	}
-
-	@SneakyThrows
-	public Protocol testProtocol() {
-		var response = client.newCall(
-						new Request.Builder().url(esiBaseUrl + "latest/status").build())
-				.execute();
-		return response.protocol();
 	}
 }

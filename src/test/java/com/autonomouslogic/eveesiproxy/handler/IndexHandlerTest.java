@@ -6,6 +6,7 @@ import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +18,7 @@ public class IndexHandlerTest {
 	EveEsiProxy proxy;
 
 	@Inject
+	@Named("test")
 	OkHttpClient client;
 
 	@Inject
