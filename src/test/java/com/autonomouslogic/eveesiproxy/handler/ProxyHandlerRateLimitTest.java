@@ -120,13 +120,13 @@ public class ProxyHandlerRateLimitTest {
 		var time = watch.elapsed().toMillis();
 		var rate = count.get() / (time / 1000.0);
 		log.info(String.format("Requests: %s, time: %s, rate: %.2f/s", count.get(), watch.elapsed(), rate));
-		assertTrue(rate > expectedRate, "rate:" + rate);
+		assertTrue(rate > 100.0, "rate:" + rate);
 	}
 
 	public static Stream<Arguments> rateLimitTests() {
 		return Stream.of(
 				Arguments.of("/latest/characters/1452072530/corporationhistory/", 5.0),
-				Arguments.of("/markets/10000002/history/", 10.0),
+				Arguments.of("/latest/markets/10000002/history/?datasource=tranquility&type_id=37", 10.0),
 				Arguments.of("/sovereignty/campaigns/", 20.0));
 	}
 }
