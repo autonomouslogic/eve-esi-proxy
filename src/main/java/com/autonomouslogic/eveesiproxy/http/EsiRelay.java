@@ -1,11 +1,9 @@
 package com.autonomouslogic.eveesiproxy.http;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
-import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.Duration;
-import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Cache;
@@ -30,24 +27,17 @@ import org.apache.commons.io.IOUtils;
 @Singleton
 @Log4j2
 public class EsiRelay {
-	@Inject
-	@Named("version")
-	protected String version;
-
 	private final URL esiBaseUrl;
 	private final Cache cache;
 	private final OkHttpClient client;
-
-	private final Optional<String> configuredUserAgent =
-			Configs.ESI_USER_AGENT.get().map(String::trim).filter(h -> !h.isEmpty());
-	private String versionHeaderPart;
 
 	@Inject
 	@SneakyThrows
 	protected EsiRelay(
 			CacheStatusInterceptor cacheStatusInterceptor,
 			RateLimitInterceptor rateLimitInterceptor,
-			LoggingInterceptor loggingInterceptor) {
+			LoggingInterceptor loggingInterceptor,
+			UserAgentInterceptor userAgentInterceptor) {
 		esiBaseUrl = new URL(Configs.ESI_BASE_URL.getRequired());
 		final File tempDir;
 		var httpCacheDir = Configs.HTTP_CACHE_DIR.get();
@@ -67,19 +57,10 @@ public class EsiRelay {
 				.writeTimeout(Duration.ofSeconds(5))
 				.cache(cache)
 				.addInterceptor(cacheStatusInterceptor)
+				.addInterceptor(userAgentInterceptor)
 				.addInterceptor(loggingInterceptor)
 				.addNetworkInterceptor(rateLimitInterceptor)
 				.build();
-	}
-
-	@Inject
-	protected void init() {
-		if (configuredUserAgent.isPresent()) {
-			if (configuredUserAgent.get().indexOf('@') == -1) {
-				log.warn(Configs.ESI_USER_AGENT.getName() + " should contain an email address");
-			}
-		}
-		versionHeaderPart = "eve-esi-proxy/" + version;
 	}
 
 	/**
@@ -93,9 +74,6 @@ public class EsiRelay {
 	@SneakyThrows
 	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
 		var esiRequestBuilder = createEsiRequest(proxyRequest);
-		if (!handleUserAgent(proxyRequest, res, esiRequestBuilder)) {
-			return;
-		}
 		var esiRequest = esiRequestBuilder.build();
 		var esiResponse = client.newCall(esiRequest).execute();
 		sendResponse(esiResponse, res);
@@ -142,27 +120,6 @@ public class EsiRelay {
 			return null;
 		}
 		return RequestBody.create(bytes);
-	}
-
-	private boolean handleUserAgent(ServerRequest proxyRequest, ServerResponse res, Request.Builder esiRequestBuilder) {
-		var suppliedAgent = Optional.ofNullable(proxyRequest.headers().get(HeaderNames.USER_AGENT))
-				.flatMap(h -> Optional.ofNullable(h.values()))
-				.filter(h -> !h.trim().isEmpty());
-		if (suppliedAgent.isEmpty() && configuredUserAgent.isEmpty()) {
-			res.status(400).send("User agent must be configured or header supplied");
-			return false;
-		}
-		esiRequestBuilder.removeHeader(HeaderNames.USER_AGENT.lowerCase());
-		String userAgent;
-		if (suppliedAgent.isPresent() && configuredUserAgent.isPresent()) {
-			userAgent = suppliedAgent.get() + " " + configuredUserAgent.get() + " " + versionHeaderPart;
-		} else if (suppliedAgent.isPresent()) {
-			userAgent = suppliedAgent.get() + " " + versionHeaderPart;
-		} else {
-			userAgent = configuredUserAgent.get() + " " + versionHeaderPart;
-		}
-		esiRequestBuilder.addHeader(HeaderNames.USER_AGENT.lowerCase(), userAgent);
-		return true;
 	}
 
 	@SneakyThrows
