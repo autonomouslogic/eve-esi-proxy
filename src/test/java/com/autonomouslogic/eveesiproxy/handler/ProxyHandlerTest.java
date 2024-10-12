@@ -62,7 +62,7 @@ public class ProxyHandlerTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"/esi", "/esi/with/multiple/segments"})
+	@ValueSource(strings = {"/esi", "/esi/with/multiple/segments", "/esi?with=query"})
 	@SneakyThrows
 	void shouldProxyGetRequests(String path) {
 		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test response", Map.of("X-Server-Header", "Test server header"));

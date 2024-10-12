@@ -12,11 +12,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -42,7 +44,10 @@ public class EsiRelay {
 
 	@Inject
 	@SneakyThrows
-	protected EsiRelay() {
+	protected EsiRelay(
+			CacheStatusInterceptor cacheStatusInterceptor,
+			RateLimitInterceptor rateLimitInterceptor,
+			LoggingInterceptor loggingInterceptor) {
 		esiBaseUrl = new URL(Configs.ESI_BASE_URL.getRequired());
 		final File tempDir;
 		var httpCacheDir = Configs.HTTP_CACHE_DIR.get();
@@ -57,8 +62,13 @@ public class EsiRelay {
 		client = new OkHttpClient.Builder()
 				.followRedirects(false)
 				.followSslRedirects(false)
+				.connectTimeout(Duration.ofSeconds(5))
+				.readTimeout(Duration.ofSeconds(20))
+				.writeTimeout(Duration.ofSeconds(5))
 				.cache(cache)
-				.addInterceptor(new CacheStatusInterceptor())
+				.addInterceptor(cacheStatusInterceptor)
+				.addInterceptor(loggingInterceptor)
+				.addNetworkInterceptor(rateLimitInterceptor)
 				.build();
 	}
 
@@ -98,11 +108,12 @@ public class EsiRelay {
 	}
 
 	private Request.Builder createEsiRequest(ServerRequest proxyRequest) throws MalformedURLException {
-		var esiUrl = new URL(esiBaseUrl, proxyRequest.path().path());
+		var prologue = proxyRequest.prologue();
+		var esiUrl = new URL(
+				esiBaseUrl, prologue.uriPath().toString() + prologue.query().toString());
 		var esiRequestBody = createRequestBody(proxyRequest);
-		var esiRequestBuilder = new Request.Builder()
-				.url(esiUrl)
-				.method(proxyRequest.prologue().method().toString(), esiRequestBody);
+		var esiRequestBuilder =
+				new Request.Builder().url(esiUrl).method(prologue.method().toString(), esiRequestBody);
 		copyHeaders(proxyRequest, esiRequestBuilder, esiUrl);
 		return esiRequestBuilder;
 	}
@@ -157,5 +168,13 @@ public class EsiRelay {
 	@SneakyThrows
 	public void clearCache() {
 		cache.evictAll();
+	}
+
+	@SneakyThrows
+	public Protocol testProtocol() {
+		var response = client.newCall(
+						new Request.Builder().url(esiBaseUrl + "latest/status").build())
+				.execute();
+		return response.protocol();
 	}
 }

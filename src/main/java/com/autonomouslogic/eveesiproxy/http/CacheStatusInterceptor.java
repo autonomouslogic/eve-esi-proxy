@@ -1,11 +1,17 @@
 package com.autonomouslogic.eveesiproxy.http;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 
+@Singleton
 public class CacheStatusInterceptor implements Interceptor {
+	@Inject
+	protected CacheStatusInterceptor() {}
+
 	@NotNull
 	@Override
 	public Response intercept(@NotNull Interceptor.Chain chain) throws IOException {
