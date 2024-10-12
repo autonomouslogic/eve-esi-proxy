@@ -43,6 +43,7 @@ The proxy is configured via environment variables set via `docker run -e`:
 * `ESI_RATE_LIMIT_PER_S` - The number of requests allowed per second for endpoints without a special rate limit - defaults to `100`
 * `ESI_MARKET_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for market history - defaults to `5` - increasing this is **not recommended**
 * `ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for character corporation history - defaults to `5` - increasing this is **not recommended**
+* `LOG_LEVEL` - How much logging to do - defaults to `INFO` - options are `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, or `FATAL`
 
 ## Overhead
 The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP server stack for Java 21,
