@@ -10,6 +10,7 @@ import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class ProxyHandlerTest {
 	EveEsiProxy proxy;
 
 	@Inject
+	@Named("test")
 	OkHttpClient client;
 
 	MockWebServer mockEsi;

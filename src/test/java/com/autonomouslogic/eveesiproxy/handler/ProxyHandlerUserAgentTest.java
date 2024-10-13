@@ -29,6 +29,7 @@ public class ProxyHandlerUserAgentTest {
 	EveEsiProxy proxy;
 
 	@Inject
+	@Named("test")
 	OkHttpClient client;
 
 	@Inject

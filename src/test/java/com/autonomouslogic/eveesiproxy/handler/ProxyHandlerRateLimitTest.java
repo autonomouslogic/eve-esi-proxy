@@ -12,6 +12,7 @@ import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import com.google.common.base.Stopwatch;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +47,7 @@ public class ProxyHandlerRateLimitTest {
 	EveEsiProxy proxy;
 
 	@Inject
+	@Named("test")
 	OkHttpClient client;
 
 	MockWebServer mockEsi;
