@@ -46,23 +46,32 @@ public class OkHttpModule {
 	@Singleton
 	@SneakyThrows
 	public Cache cache() {
-		final File tempDir;
+		final File cacheDir;
 		var httpCacheDir = Configs.HTTP_CACHE_DIR.get();
 		var httpCacheMaxSize = Configs.HTTP_CACHE_MAX_SIZE.getRequired();
 		if (httpCacheDir.isPresent()) {
-			tempDir = new File(httpCacheDir.get());
-			if (!tempDir.exists()) {
-				log.debug("Creating HTTP cache directory {}", tempDir);
-				if (!tempDir.mkdirs()) {
-					throw new IOException("Failed creating HTTP cache directory " + tempDir);
+			cacheDir = new File(httpCacheDir.get());
+			if (!cacheDir.exists()) {
+				log.debug("Creating HTTP cache directory {}", cacheDir);
+				if (!cacheDir.mkdirs()) {
+					throw new IOException("Failed creating HTTP cache directory " + cacheDir);
 				}
 				log.debug("HTTP Cache directory created");
 			}
 		} else {
 			log.debug("Creating temporary HTTP cache directory");
-			tempDir = Files.createTempDirectory("eve-esi-proxy-http-cache").toFile();
+			cacheDir = Files.createTempDirectory("eve-esi-proxy-http-cache").toFile();
 		}
-		log.info("Using HTTP cache directory {}", tempDir);
-		return new Cache(tempDir, httpCacheMaxSize);
+		if (!cacheDir.setReadable(true, true)) {
+			throw new IOException("Failed setting HTTP cache directory readable " + cacheDir);
+		}
+		if (!cacheDir.setWritable(true, true)) {
+			throw new IOException("Failed setting HTTP cache directory writable " + cacheDir);
+		}
+		if (!cacheDir.setExecutable(true, true)) {
+			throw new IOException("Failed setting HTTP cache directory executable " + cacheDir);
+		}
+		log.info("Using HTTP cache directory {}", cacheDir);
+		return new Cache(cacheDir, httpCacheMaxSize);
 	}
 }
