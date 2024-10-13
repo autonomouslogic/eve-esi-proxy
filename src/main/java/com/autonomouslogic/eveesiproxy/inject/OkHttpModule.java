@@ -56,12 +56,19 @@ public class OkHttpModule {
 				if (!cacheDir.mkdirs()) {
 					throw new IOException("Failed creating HTTP cache directory " + cacheDir);
 				}
+				lockDir(cacheDir);
 				log.debug("HTTP Cache directory created");
 			}
 		} else {
 			log.debug("Creating temporary HTTP cache directory");
 			cacheDir = Files.createTempDirectory("eve-esi-proxy-http-cache").toFile();
+			lockDir(cacheDir);
 		}
+		log.info("Using HTTP cache directory {}", cacheDir);
+		return new Cache(cacheDir, httpCacheMaxSize);
+	}
+
+	private static void lockDir(File cacheDir) throws IOException {
 		if (!cacheDir.setReadable(true, true)) {
 			throw new IOException("Failed setting HTTP cache directory readable " + cacheDir);
 		}
@@ -71,7 +78,5 @@ public class OkHttpModule {
 		if (!cacheDir.setExecutable(true, true)) {
 			throw new IOException("Failed setting HTTP cache directory executable " + cacheDir);
 		}
-		log.info("Using HTTP cache directory {}", cacheDir);
-		return new Cache(cacheDir, httpCacheMaxSize);
 	}
 }
