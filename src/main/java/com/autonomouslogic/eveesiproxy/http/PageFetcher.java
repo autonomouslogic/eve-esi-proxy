@@ -43,7 +43,7 @@ public class PageFetcher {
 		return Optional.ofNullable(esiRequest.url().queryParameter("page"))
 				.filter(s -> !s.isEmpty())
 				.map(Integer::parseInt)
-				.filter(p -> p < 1);
+				.filter(p -> p >= 1);
 	}
 
 	private static int getResponsePages(Response esiResponse) {
@@ -74,8 +74,12 @@ public class PageFetcher {
 				result.addAll((ArrayNode) objectMapper.readTree(in));
 			}
 		}
-		return firstResponse
-				.newBuilder()
+		return new Response.Builder()
+				.request(esiRequest)
+				.protocol(firstResponse.protocol())
+				.message("merged pages")
+				.code(200)
+				.header(ProxyHeaderNames.X_PAGES, Integer.toString(responsePages))
 				.body(ResponseBody.create(objectMapper.writeValueAsBytes(result), MediaType.get("application/json")))
 				.build();
 	}

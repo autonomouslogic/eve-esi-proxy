@@ -73,15 +73,23 @@ public class ProxyHandlerPagesTest {
 		try {
 			TestHttpUtils.assertNoMoreRequests(mockEsi);
 		} finally {
-			proxy.stop();
-			mockEsi.shutdown();
+			try {
+				proxy.stop();
+			}
+			finally {
+				mockEsi.shutdown();
+			}
 		}
 	}
 
 	@ParameterizedTest
 	@ValueSource(
-			strings = {"null"
-				//		, "", "0"
+			strings = {
+				"null"
+						,
+				""
+				,
+				"0"
 			})
 	@SneakyThrows
 	void shouldFetchAllSubPages(String page) {
@@ -100,6 +108,7 @@ public class ProxyHandlerPagesTest {
 			public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) throws InterruptedException {
 				var url = recordedRequest.getRequestUrl();
 				var page = Optional.ofNullable(url.queryParameter("page"))
+					.filter(s -> !s.isEmpty())
 						.map(Integer::parseInt)
 						.orElse(1);
 				return new MockResponse()
@@ -128,14 +137,20 @@ public class ProxyHandlerPagesTest {
 		assertEquals(200, proxyResponse.code());
 		var responseBody = proxyResponse.body();
 		assertNotNull(responseBody);
-		var json = responseBody.string();
-		assertEquals(expectedArray, objectMapper.readTree(json));
+		var suppliedJson = responseBody.string();
+		var suppliedArray = (ArrayNode) objectMapper.readTree(suppliedJson);
+		assertEquals(expectedArray, suppliedArray);
 
 		assertNull(proxyResponse.header(HeaderNames.LAST_MODIFIED.lowerCase()));
 		assertNull(proxyResponse.header(HeaderNames.ETAG.lowerCase()));
 		assertNull(proxyResponse.header(HeaderNames.EXPIRES.lowerCase()));
-		assertNull(Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_PAGES));
+		assertEquals(Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_PAGES));
 		assertNull(proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS));
+
+		for (int i = 0; i < pagesJson.size(); i++) {
+			assertNotNull(TestHttpUtils.takeRequest(mockEsi)
+			);
+		}
 	}
 
 	private ArrayNode createPage(int page) {
@@ -146,8 +161,11 @@ public class ProxyHandlerPagesTest {
 		return array;
 	}
 
+	@SneakyThrows
 	private ObjectNode createEntry(int page, int entry) {
-		return objectMapper.createObjectNode().put("order_id", (page + 1) * 100 + entry);
+		var json = objectMapper.createObjectNode().put("order_id", (page + 1) * 100 + entry);
+		// Re-encode the JSON to ensure the types in the tree are as the client would see them.
+		return (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsBytes(json));
 	}
 
 	@Test
