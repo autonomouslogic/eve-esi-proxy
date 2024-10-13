@@ -50,4 +50,39 @@ public class Configs {
 			.defaultValue(300.0 / 60.0)
 			.type(Double.class)
 			.build();
+
+	/**
+	 * Client ID for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_CLIENT_ID = Config.<String>builder()
+			.name("EVE_OAUTH_CLIENT_ID")
+			.defaultValue("856c4df92a6942489f009a4543aaef7f")
+			.type(String.class)
+			.build();
+
+	/**
+	 * Secret key for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_SECRET_KEY = Config.<String>builder()
+			.name("EVE_OAUTH_SECRET_KEY")
+			.type(String.class)
+			.build();
+
+	/**
+	 * Authorization URL for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_AUTHORIZATION_URL = Config.<String>builder()
+			.name("EVE_OAUTH_AUTHORIZATION_URL")
+			.defaultValue("https://login.eveonline.com/v2/oauth/authorize")
+			.type(String.class)
+			.build();
+
+	/**
+	 * Token URL for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_TOKEN_URL = Config.<String>builder()
+			.name("EVE_OAUTH_TOKEN_URL")
+			.defaultValue("https://login.eveonline.com/v2/oauth/token")
+			.type(String.class)
+			.build();
 }

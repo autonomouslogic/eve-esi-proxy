@@ -53,6 +53,9 @@ dependencies {
 	implementation "com.autonomouslogic.commons:commons-java:1.9.1"
 	implementation "commons-io:commons-io:2.17.0"
 	implementation "com.google.guava:guava:33.3.1-jre"
+	implementation "com.github.scribejava:scribejava-core:8.3.3"
+	implementation "commons-codec:commons-codec:1.17.1"
+	implementation "org.apache.commons:commons-lang3:3.17.0"
 
 	// Tests
 	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.52"
@@ -125,6 +128,11 @@ application {
 			"-XX:MinHeapSize=" + 10 * 1024 * 1024,
 			"-XX:MaxRAMPercentage=80.0"
 	]
+}
+
+run {
+	environment "LOG_LEVEL", "trace"
+	jvmArgs "-client", "-XX:+UseZGC", "-Xmx2g"
 }
 
 wrapper {

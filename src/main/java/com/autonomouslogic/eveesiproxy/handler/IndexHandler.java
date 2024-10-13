@@ -1,5 +1,6 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
+import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -32,6 +33,9 @@ public class IndexHandler implements HttpService, Handler {
 
 	@Override
 	public void handle(ServerRequest req, ServerResponse res) throws Exception {
-		standardHeaders.apply(res).send("EVE ESI Proxy " + version + "\n");
+		standardHeaders
+				.apply(res)
+				.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")
+				.send("EVE ESI Proxy " + version + "\n<a href=\"/login\">Login</a>\n");
 	}
 }
