@@ -24,6 +24,7 @@ With CCP being trigger-happy about banning IPs from accessing the API,
 using this proxy will let you get on with writing your application and not worry about the minutiae of ESI lore.
 
 ## Usage
+Run via Docker ([installation](https://docs.docker.com/engine/install/)):
 ```bash
 docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 2g -e "ESI_USER_AGENT=<your email>" autonomouslogic/eve-esi-proxy:latest
 ```
@@ -52,6 +53,11 @@ The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP server
 and [OkHttp](https://square.github.io/okhttp/), a fast HTTP client for Java.
 It'll easily handle tens of thousands of requests per second without breaking a sweat, way more than you'd ever need.
 See [this ticket](https://github.com/autonomouslogic/eve-esi-proxy/issues/23) for some very basic load testing.
+
+## Resources
+* [Docker repository](https://hub.docker.com/r/autonomouslogic/eve-esi-proxy)
+* [ESI Docs](https://docs.esi.evetech.net/)
+* [ESI API](https://esi.evetech.net/ui/)
 
 ## License
 The EVE ESI Proxy itself is licensed under the [MIT-0 license](https://spdx.org/licenses/MIT-0.html).
