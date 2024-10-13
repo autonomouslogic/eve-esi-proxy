@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
+import org.junitpioneer.jupiter.cartesian.CartesianTest;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
@@ -63,13 +64,21 @@ public class ProxyHandlerTest {
 		}
 	}
 
-	@ParameterizedTest
+	@CartesianTest
 	@ValueSource(strings = {"/esi", "/esi/with/multiple/segments", "/esi?with=query"})
 	@SneakyThrows
-	void shouldProxyGetRequests(String path) {
+	void shouldProxyRequests(
+			@CartesianTest.Values(strings = {"GET", "PUT", "POST", "DELETE"}) String method,
+			@CartesianTest.Values(strings = {"/esi", "/esi/with/multiple/segments", "/esi?with=query"}) String path) {
+		var bodyExpected = method.equals("PUT") || method.equals("POST");
 		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test response", Map.of("X-Server-Header", "Test server header"));
-		var proxyResponse =
-				TestHttpUtils.callProxy(client, proxy, "GET", path, Map.of("X-Client-Header", "Test client header"));
+		var proxyResponse = TestHttpUtils.callProxy(
+				client,
+				proxy,
+				method,
+				path,
+				Map.of("X-Client-Header", "Test client header"),
+				bodyExpected ? "Test request" : null);
 		TestHttpUtils.assertResponse(
 				proxyResponse,
 				200,
@@ -81,7 +90,7 @@ public class ProxyHandlerTest {
 						ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
-		TestHttpUtils.assertRequest(esiRequest, "GET", path, Map.of("X-Client-Header", "Test client header"));
+		TestHttpUtils.assertRequest(esiRequest, method, path, Map.of("X-Client-Header", "Test client header"));
 	}
 
 	@Test
