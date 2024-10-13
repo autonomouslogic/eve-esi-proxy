@@ -28,6 +28,7 @@ public class OkHttpModule {
 			RateLimitInterceptor rateLimitInterceptor,
 			LoggingInterceptor loggingInterceptor,
 			UserAgentInterceptor userAgentInterceptor) {
+		log.trace("Creating HTTP client");
 		return new OkHttpClient.Builder()
 				.followRedirects(false)
 				.followSslRedirects(false)
@@ -46,9 +47,12 @@ public class OkHttpModule {
 	@Singleton
 	@SneakyThrows
 	public Cache cache() {
+		log.trace("Creating HTTP cache");
 		final File cacheDir;
 		var httpCacheDir = Configs.HTTP_CACHE_DIR.get();
+		log.trace("httpCacheDir: {}", httpCacheDir);
 		var httpCacheMaxSize = Configs.HTTP_CACHE_MAX_SIZE.getRequired();
+		log.trace("httpCacheMaxSize: {}", httpCacheMaxSize);
 		if (httpCacheDir.isPresent()) {
 			cacheDir = new File(httpCacheDir.get());
 			if (!cacheDir.exists()) {
@@ -57,7 +61,7 @@ public class OkHttpModule {
 					throw new IOException("Failed creating HTTP cache directory " + cacheDir);
 				}
 				lockDir(cacheDir);
-				log.debug("HTTP Cache directory created");
+				log.trace("HTTP Cache directory created");
 			}
 		} else {
 			log.debug("Creating temporary HTTP cache directory");
