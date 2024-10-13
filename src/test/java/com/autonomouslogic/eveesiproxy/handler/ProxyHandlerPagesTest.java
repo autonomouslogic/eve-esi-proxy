@@ -75,22 +75,14 @@ public class ProxyHandlerPagesTest {
 		} finally {
 			try {
 				proxy.stop();
-			}
-			finally {
+			} finally {
 				mockEsi.shutdown();
 			}
 		}
 	}
 
 	@ParameterizedTest
-	@ValueSource(
-			strings = {
-				"null"
-						,
-				""
-				,
-				"0"
-			})
+	@ValueSource(strings = {"null", "", "0", "-1"})
 	@SneakyThrows
 	void shouldFetchAllSubPages(String page) {
 		List<ArrayNode> pagesJson = new ArrayList<>();
@@ -108,9 +100,13 @@ public class ProxyHandlerPagesTest {
 			public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) throws InterruptedException {
 				var url = recordedRequest.getRequestUrl();
 				var page = Optional.ofNullable(url.queryParameter("page"))
-					.filter(s -> !s.isEmpty())
+						.filter(s -> !s.isEmpty())
 						.map(Integer::parseInt)
 						.orElse(1);
+				if (page < 1) {
+					log.error("Bad page: {}", page);
+					return new MockResponse().setResponseCode(400);
+				}
 				return new MockResponse()
 						.setResponseCode(200)
 						.setBody(pagesJson.get(page - 1).toString())
@@ -139,6 +135,7 @@ public class ProxyHandlerPagesTest {
 		assertNotNull(responseBody);
 		var suppliedJson = responseBody.string();
 		var suppliedArray = (ArrayNode) objectMapper.readTree(suppliedJson);
+		assertEquals(expectedArray.size(), suppliedArray.size());
 		assertEquals(expectedArray, suppliedArray);
 
 		assertNull(proxyResponse.header(HeaderNames.LAST_MODIFIED.lowerCase()));
@@ -148,8 +145,7 @@ public class ProxyHandlerPagesTest {
 		assertNull(proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS));
 
 		for (int i = 0; i < pagesJson.size(); i++) {
-			assertNotNull(TestHttpUtils.takeRequest(mockEsi)
-			);
+			assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 		}
 	}
 

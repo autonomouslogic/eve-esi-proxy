@@ -6,12 +6,12 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import lombok.SneakyThrows;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.jetbrains.annotations.NotNull;
 
 @Singleton
 public class PageFetcher {
@@ -39,11 +39,16 @@ public class PageFetcher {
 		return fetch(esiRequest, esiResponse, responsePages);
 	}
 
-	private static @NotNull Optional<Integer> getRequestedPage(Request esiRequest) {
-		return Optional.ofNullable(esiRequest.url().queryParameter("page"))
+	private static Optional<Integer> getRequestedPage(Request esiRequest) {
+		return getRequestedPage(esiRequest.url());
+	}
+
+	private static Optional<Integer> getRequestedPage(HttpUrl esiUrl) {
+		return Optional.ofNullable(esiUrl.queryParameter("page"))
 				.filter(s -> !s.isEmpty())
 				.map(Integer::parseInt)
-				.filter(p -> p >= 1);
+		//			.filter(p -> p >= 1)
+		;
 	}
 
 	private static int getResponsePages(Response esiResponse) {
@@ -64,7 +69,7 @@ public class PageFetcher {
 			var nextRequest = esiRequest
 					.newBuilder()
 					.url(url.newBuilder()
-							.addQueryParameter("page", Integer.toString(i + 1))
+							.setQueryParameter("page", Integer.toString(i + 1))
 							.build());
 			var nextResponse = client.newCall(nextRequest.build()).execute();
 			if (nextResponse.code() != 200) {
@@ -82,5 +87,13 @@ public class PageFetcher {
 				.header(ProxyHeaderNames.X_PAGES, Integer.toString(responsePages))
 				.body(ResponseBody.create(objectMapper.writeValueAsBytes(result), MediaType.get("application/json")))
 				.build();
+	}
+
+	public HttpUrl removeInvalidPageQueryString(HttpUrl esiUrl) {
+		var page = getRequestedPage(esiUrl);
+		if (page.isPresent() && page.get() < 1) {
+			esiUrl = esiUrl.newBuilder().removeAllQueryParameters("page").build();
+		}
+		return esiUrl;
 	}
 }

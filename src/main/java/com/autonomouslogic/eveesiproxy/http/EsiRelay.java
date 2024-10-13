@@ -1,6 +1,7 @@
 package com.autonomouslogic.eveesiproxy.http;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
+import io.helidon.http.HttpPrologue;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
@@ -10,11 +11,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Handles requests to the ESI API.
@@ -46,8 +49,7 @@ public class EsiRelay {
 	 */
 	@SneakyThrows
 	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
-		var esiRequestBuilder = createEsiRequest(proxyRequest);
-		var esiRequest = esiRequestBuilder.build();
+		var esiRequest = createEsiRequest(proxyRequest).build();
 		var esiResponse = client.newCall(esiRequest).execute();
 		esiResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
 		sendResponse(esiResponse, res);
@@ -61,8 +63,7 @@ public class EsiRelay {
 
 	private Request.Builder createEsiRequest(ServerRequest proxyRequest) throws MalformedURLException {
 		var prologue = proxyRequest.prologue();
-		var esiUrl = new URL(
-				esiBaseUrl, prologue.uriPath().toString() + prologue.query().toString());
+		var esiUrl = createUrl(prologue);
 		var esiRequestBody = createRequestBody(proxyRequest);
 		var esiRequestBuilder =
 				new Request.Builder().url(esiUrl).method(prologue.method().toString(), esiRequestBody);
@@ -70,8 +71,15 @@ public class EsiRelay {
 		return esiRequestBuilder;
 	}
 
-	private static void copyHeaders(ServerRequest proxyRequest, Request.Builder esiRequestBuilder, URL esiUrl) {
-		esiRequestBuilder.header("Host", esiUrl.getHost() + ":" + esiUrl.getPort());
+	private @Nullable HttpUrl createUrl(HttpPrologue prologue) throws MalformedURLException {
+		var esiUrl = HttpUrl.get(new URL(
+				esiBaseUrl, prologue.uriPath().toString() + prologue.query().toString()));
+		esiUrl = pageFetcher.removeInvalidPageQueryString(esiUrl);
+		return esiUrl;
+	}
+
+	private static void copyHeaders(ServerRequest proxyRequest, Request.Builder esiRequestBuilder, HttpUrl esiUrl) {
+		esiRequestBuilder.header("Host", esiUrl.host() + ":" + esiUrl.port());
 		proxyRequest.headers().forEach(header -> {
 			if (header.name().equalsIgnoreCase("Host")) {
 				return;
