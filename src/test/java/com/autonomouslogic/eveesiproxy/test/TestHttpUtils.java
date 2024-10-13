@@ -42,19 +42,13 @@ public class TestHttpUtils {
 		mockWebServer.enqueue(response);
 	}
 
-	public static Request.Builder proxyRequest(EveEsiProxy proxy, String method, String path, String body) {
-		var requestBody = body == null ? null : RequestBody.create(body.getBytes(StandardCharsets.UTF_8));
-		return new Request.Builder().method(method, requestBody).url("http://localhost:" + proxy.port() + path);
-	}
-
-	public static Request.Builder proxyRequest(EveEsiProxy proxy, String method, String path) {
-		return proxyRequest(proxy, method, path, (String) null);
-	}
-
 	public static Request.Builder proxyRequest(
-			EveEsiProxy proxy, String method, String path, Map<String, String> headers) {
-		var req = proxyRequest(proxy, method, path);
-		headers.forEach(req::header);
+			EveEsiProxy proxy, String method, String path, Map<String, String> headers, String body) {
+		var requestBody = body == null ? null : RequestBody.create(body.getBytes(StandardCharsets.UTF_8));
+		var req = new Request.Builder().method(method, requestBody).url("http://localhost:" + proxy.port() + path);
+		if (headers != null) {
+			headers.forEach(req::header);
+		}
 		return req;
 	}
 
@@ -63,17 +57,29 @@ public class TestHttpUtils {
 		return client.newCall(request).execute();
 	}
 
-	public static Response callProxy(
-			OkHttpClient client, EveEsiProxy proxy, String method, String path, Map<String, String> headers) {
-		return callProxy(client, proxyRequest(proxy, method, path, headers).build());
+	public static Response callProxy(OkHttpClient client, EveEsiProxy proxy, String method, String path) {
+		return callProxy(client, proxyRequest(proxy, method, path, null, null).build());
 	}
 
-	public static Response callProxy(OkHttpClient client, EveEsiProxy proxy, String method, String path) {
-		return callProxy(client, proxyRequest(proxy, method, path).build());
+	public static Response callProxy(
+			OkHttpClient client, EveEsiProxy proxy, String method, String path, Map<String, String> headers) {
+		return callProxy(
+				client, proxyRequest(proxy, method, path, headers, null).build());
+	}
+
+	public static Response callProxy(
+			OkHttpClient client,
+			EveEsiProxy proxy,
+			String method,
+			String path,
+			Map<String, String> headers,
+			String body) {
+		return callProxy(
+				client, proxyRequest(proxy, method, path, headers, body).build());
 	}
 
 	public static Response callProxy(OkHttpClient client, EveEsiProxy proxy, String method, String path, String body) {
-		return callProxy(client, proxyRequest(proxy, method, path, body).build());
+		return callProxy(client, proxyRequest(proxy, method, path, null, body).build());
 	}
 
 	@SneakyThrows
@@ -111,11 +117,16 @@ public class TestHttpUtils {
 	}
 
 	public static void assertRequest(RecordedRequest esiRequest, String method, String path) {
-		assertRequest(esiRequest, method, path, null);
+		assertRequest(esiRequest, method, path, null, null);
 	}
 
 	public static void assertRequest(
 			RecordedRequest esiRequest, String method, String path, Map<String, String> headers) {
+		assertRequest(esiRequest, method, path, headers, null);
+	}
+
+	public static void assertRequest(
+			RecordedRequest esiRequest, String method, String path, Map<String, String> headers, String body) {
 		assertNotNull(esiRequest);
 		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
 		assertEquals("Host", esiRequest.getHeaders().name(0));
@@ -124,6 +135,9 @@ public class TestHttpUtils {
 		if (headers != null) {
 			headers.forEach((name, value) -> assertEquals(value, esiRequest.getHeader(name), name));
 		}
-		assertEquals(0, esiRequest.getBody().size());
+		assertEquals(body == null ? 0 : body.length(), esiRequest.getBody().size());
+		if (body != null) {
+			assertEquals(body, esiRequest.getBody().readUtf8());
+		}
 	}
 }
