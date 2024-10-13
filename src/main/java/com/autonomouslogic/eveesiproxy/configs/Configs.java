@@ -51,6 +51,9 @@ public class Configs {
 			.type(Double.class)
 			.build();
 
+	public static final Config<String> CONFIG_DIR =
+			Config.<String>builder().name("CONFIG_DIR").type(String.class).build();
+
 	/**
 	 * Client ID for OAuth2 against EVE Online.
 	 */

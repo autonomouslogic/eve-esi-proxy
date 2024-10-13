@@ -1,5 +1,7 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
+import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
+import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
 import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.Handler;
@@ -10,7 +12,9 @@ import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.binary.Hex;
 
 @Singleton
 @Log4j2
@@ -20,6 +24,9 @@ public class OauthHandler implements HttpService {
 
 	@Inject
 	protected StandardHeaders standardHeaders;
+
+	@Inject
+	protected AuthManager authManager;
 
 	@Inject
 	protected OauthHandler() {}
@@ -54,6 +61,19 @@ public class OauthHandler implements HttpService {
 			log.debug("Callback code: {}, state: {}", code, state);
 			var token = esiAuthHelper.getAccessToken(code);
 			var verify = esiAuthHelper.verify(token.getAccessToken());
+
+			var key = new byte[18];
+			new SecureRandom().nextBytes(key);
+			var keyString = Hex.encodeHexString(key);
+
+			authManager.addAuthedCharacter(AuthedCharacter.builder()
+					.characterId(verify.getCharacterId())
+					.characterName(verify.getCharacterName())
+					.characterOwnerHash(verify.getCharacterOwnerHash())
+					.refreshToken(token.getRefreshToken())
+					.proxyKey(keyString)
+					.scopes(verify.getScopes())
+					.build());
 
 			//			var characterLogin = CharacterLogin.builder()
 			//				.characterId(verify.getCharacterId())

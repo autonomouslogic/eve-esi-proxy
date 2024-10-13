@@ -20,9 +20,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.apache.commons.codec.binary.Hex;
 
-/**
- * @link <a href="https://www.pac4j.org/docs/clients/openid-connect.html">pac4j OpenID Connect</a>
- */
 @Log4j2
 public class EsiAuthHelper {
 	private static final Duration EXPIRATION_BUFFER = Duration.ofMinutes(1);
