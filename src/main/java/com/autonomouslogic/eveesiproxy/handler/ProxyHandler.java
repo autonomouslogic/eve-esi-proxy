@@ -10,6 +10,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 
+/**
+ * Handles the actual relay of request to the ESI server.
+ */
 @Singleton
 @Log4j2
 public class ProxyHandler implements HttpService, Handler {
