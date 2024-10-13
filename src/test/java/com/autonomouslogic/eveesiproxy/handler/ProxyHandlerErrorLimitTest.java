@@ -1,15 +1,21 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
+import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
-import com.autonomouslogic.eveesiproxy.http.EsiLimitExceededInterceptor;
-import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
-import com.autonomouslogic.eveesiproxy.http.ProxyHeaderValues;
+import com.autonomouslogic.eveesiproxy.http.ErrorLimitInterceptor;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
-import com.google.common.base.Stopwatch;
-import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
@@ -22,26 +28,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
-
-import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
@@ -96,17 +84,16 @@ public class ProxyHandlerErrorLimitTest {
 					}
 					if (limitResetTime != null) {
 						response.setHeader(
-							EsiLimitExceededInterceptor.ERROR_LIMIT_RESET,
-							Duration.between(Instant.now(), limitResetTime)
-								.truncatedTo(ChronoUnit.SECONDS)
-								.toSeconds());
+								ErrorLimitInterceptor.ERROR_LIMIT_RESET,
+								Duration.between(Instant.now(), limitResetTime)
+										.truncatedTo(ChronoUnit.SECONDS)
+										.toSeconds());
 					}
 					return response;
 				}
 				return new MockResponse().setResponseCode(200);
 			}
 		});
-
 
 		var threads = new ArrayList<Thread>();
 		var stop = new AtomicBoolean(false);
@@ -143,7 +130,7 @@ public class ProxyHandlerErrorLimitTest {
 					break;
 				case "text":
 					limitStatus = 200;
-					limitBody = EsiLimitExceededInterceptor.ESI_420_TEXT;
+					limitBody = ErrorLimitInterceptor.ESI_420_TEXT;
 					break;
 			}
 			isLimited = true;

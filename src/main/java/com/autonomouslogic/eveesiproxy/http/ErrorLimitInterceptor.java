@@ -2,6 +2,11 @@ package com.autonomouslogic.eveesiproxy.http;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -10,18 +15,12 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * Handles global stop if 420 responses are received.
  */
 @Singleton
 @Log4j2
-public class EsiLimitExceededInterceptor implements Interceptor {
+public class ErrorLimitInterceptor implements Interceptor {
 	public static final String ESI_420_TEXT = "This software has exceeded the error limit for ESI.";
 	public static final String ERROR_LIMIT_RESET = "x-esi-error-limit-reset";
 	public static final String ERROR_LIMIT_REMAIN = "x-esi-error-limit-remain";
@@ -29,7 +28,7 @@ public class EsiLimitExceededInterceptor implements Interceptor {
 	private static final AtomicBoolean globalStop = new AtomicBoolean();
 
 	@Inject
-	protected EsiLimitExceededInterceptor() {}
+	protected ErrorLimitInterceptor() {}
 
 	@NotNull
 	@Override
