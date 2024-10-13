@@ -25,7 +25,7 @@ using this proxy will let you get on with writing your application and not worry
 
 ## Usage
 ```bash
-docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 512m -e "ESI_USER_AGENT=<your email>" autonomouslogic/eve-esi-proxy:latest
+docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 2g -e "ESI_USER_AGENT=<your email>" autonomouslogic/eve-esi-proxy:latest
 ```
 
 Then you request data as you would on the ESI, just from localhost instead:

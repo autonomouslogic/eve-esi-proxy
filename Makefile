@@ -32,7 +32,14 @@ docker-push: docker
 	docker push $(DOCKER_TAG_LATEST)
 
 docker-run: docker
-	docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 512m -e "ESI_USER_AGENT=test" $(DOCKER_TAG)
+	docker run \
+		-it \
+		-v eve-esi-proxy:/data \
+		-p 8182:8182 \
+		-m 2g \
+		-e "ESI_USER_AGENT=test" \
+		-e "LOG_LEVEL=trace" \
+		$(DOCKER_TAG)
 
 clean:
 	./gradlew clean --stacktrace
