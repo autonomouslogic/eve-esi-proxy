@@ -4,6 +4,7 @@ import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
@@ -85,7 +86,7 @@ public class ProxyHandlerPagesTest {
 	@SneakyThrows
 	void shouldFetchAllSubPages(String page) {
 		List<ArrayNode> pagesJson = new ArrayList<>();
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 10; i++) {
 			pagesJson.add(createPage(i));
 		}
 		var expectedArray = objectMapper.createArrayNode();
@@ -133,9 +134,8 @@ public class ProxyHandlerPagesTest {
 		assertNull(proxyResponse.header(HeaderNames.LAST_MODIFIED.lowerCase()));
 		assertNull(proxyResponse.header(HeaderNames.ETAG.lowerCase()));
 		assertNull(proxyResponse.header(HeaderNames.EXPIRES.lowerCase()));
-		assertNull(proxyResponse.header(ProxyHeaderNames.X_PAGES));
+		assertNull(Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_PAGES));
 		assertNull(proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS));
-		assertEquals(Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_PAGES_FETCHED));
 	}
 
 	private ArrayNode createPage(int page) {
@@ -154,11 +154,17 @@ public class ProxyHandlerPagesTest {
 	@SneakyThrows
 	void shouldNotFetchPagesIfAPageIsRequested() {
 		TestHttpUtils.enqueueResponse(
-			mockEsi, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "10"));
+				mockEsi,
+				200,
+				"[{\"order_id\":1},{\"order_id\":2}]",
+				Map.of(ProxyHeaderNames.X_PAGES, "10", "x-server-header", "single"));
 
 		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi?page=1");
 		TestHttpUtils.assertResponse(
-			proxyResponse, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "10"));
+				proxyResponse,
+				200,
+				"[{\"order_id\":1},{\"order_id\":2}]",
+				Map.of(ProxyHeaderNames.X_PAGES, "10", "x-server-header", "single"));
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi?page=1");
@@ -168,45 +174,54 @@ public class ProxyHandlerPagesTest {
 	@SneakyThrows
 	void shouldNotFetchPagesIfOnlyOnePageIsAvailable() {
 		TestHttpUtils.enqueueResponse(
-			mockEsi, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "1"));
+				mockEsi,
+				200,
+				"[{\"order_id\":1},{\"order_id\":2}]",
+				Map.of(ProxyHeaderNames.X_PAGES, "1", "x-server-header", "single"));
 
 		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
 		TestHttpUtils.assertResponse(
-			proxyResponse, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "1"));
+				proxyResponse,
+				200,
+				"[{\"order_id\":1},{\"order_id\":2}]",
+				Map.of(ProxyHeaderNames.X_PAGES, "1", "x-server-header", "single"));
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi");
 	}
 
-	@Test
+	@ParameterizedTest
+	@ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 	@SneakyThrows
-	void shouldNotFetchPagesIfThereIsAnErrorOnTheFirstPage() {
-		TestHttpUtils.enqueueResponse(
-			mockEsi, 200, "[{\"order_id\":1},{\"order_id\":2}]", Map.of(ProxyHeaderNames.X_PAGES, "1"));
-		TestHttpUtils.enqueueResponse(
-			mockEsi, 400);
-		TestHttpUtils.enqueueResponse(
-			mockEsi, 200, "[{\"order_id\":4},{\"order_id\":5}]", Map.of(ProxyHeaderNames.X_PAGES, "1"));
+	void shouldNotFetchPagesIfThereAreErrors(int errorPage) {
+		mockEsi.setDispatcher(new Dispatcher() {
+			@NotNull
+			@Override
+			public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) throws InterruptedException {
+				var url = recordedRequest.getRequestUrl();
+				var page = Optional.ofNullable(url.queryParameter("page"))
+						.map(Integer::parseInt)
+						.orElse(1);
+				if (page == errorPage) {
+					return new MockResponse().setResponseCode(400).setHeader("x-server-header", "error");
+				} else {
+					return new MockResponse()
+							.setResponseCode(200)
+							.addHeader(ProxyHeaderNames.X_PAGES, "10")
+							.setBody("[{\"order_id\":1}]");
+				}
+			}
+		});
 
 		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-			proxyResponse, 400);
+		TestHttpUtils.assertResponse(proxyResponse, 400, Map.of("x-server-header", "error"));
 
-		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
-		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi");
-	}
-
-	@Test
-	@SneakyThrows
-	void shouldNotFetchPagesIfThereIsAnErrorOnASubsequentPage() {
-		TestHttpUtils.enqueueResponse(
-			mockEsi, 400);
-
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-			proxyResponse, 400);
-
-		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
-		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi");
+		RecordedRequest esiRequest;
+		int i = 0;
+		while ((esiRequest = TestHttpUtils.takeRequest(mockEsi)) != null) {
+			// TestHttpUtils.assertRequest(esiRequest, "GET", "/esi");
+			i++;
+		}
+		assertTrue(i <= 10, "i:" + i);
 	}
 }

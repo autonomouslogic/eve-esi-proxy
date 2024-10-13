@@ -2,12 +2,11 @@ package com.autonomouslogic.eveesiproxy.http;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.util.Optional;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 @Singleton
 public class PageFetcher {
@@ -34,15 +33,15 @@ public class PageFetcher {
 
 	private static @NotNull Optional<Integer> getRequestedPage(Request esiRequest) {
 		return Optional.ofNullable(esiRequest.url().queryParameter("page"))
-			.filter(s -> !s.isEmpty())
-			.map(Integer::parseInt)
-			.filter(p -> p < 1);
+				.filter(s -> !s.isEmpty())
+				.map(Integer::parseInt)
+				.filter(p -> p < 1);
 	}
 
 	private static int getResponsePages(Response esiResponse) {
 		return Optional.ofNullable(esiResponse.header(ProxyHeaderNames.X_PAGES))
-			.filter(s -> !s.isEmpty())
-			.map(Integer::parseInt)
-			.orElse(1);
+				.filter(s -> !s.isEmpty())
+				.map(Integer::parseInt)
+				.orElse(1);
 	}
 }

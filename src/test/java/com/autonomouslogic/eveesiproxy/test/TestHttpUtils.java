@@ -114,7 +114,8 @@ public class TestHttpUtils {
 		assertRequest(esiRequest, method, path, null);
 	}
 
-	public static void assertRequest(RecordedRequest esiRequest, String method, String path, Map<String, String> headers) {
+	public static void assertRequest(
+			RecordedRequest esiRequest, String method, String path, Map<String, String> headers) {
 		assertNotNull(esiRequest);
 		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
 		assertEquals("Host", esiRequest.getHeaders().name(0));
