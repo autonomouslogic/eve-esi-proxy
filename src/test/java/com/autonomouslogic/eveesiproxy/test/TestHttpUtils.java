@@ -117,11 +117,16 @@ public class TestHttpUtils {
 	}
 
 	public static void assertRequest(RecordedRequest esiRequest, String method, String path) {
-		assertRequest(esiRequest, method, path, null);
+		assertRequest(esiRequest, method, path, null, null);
 	}
 
 	public static void assertRequest(
 			RecordedRequest esiRequest, String method, String path, Map<String, String> headers) {
+		assertRequest(esiRequest, method, path, headers, null);
+	}
+
+	public static void assertRequest(
+			RecordedRequest esiRequest, String method, String path, Map<String, String> headers, String body) {
 		assertNotNull(esiRequest);
 		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
 		assertEquals("Host", esiRequest.getHeaders().name(0));
@@ -130,6 +135,9 @@ public class TestHttpUtils {
 		if (headers != null) {
 			headers.forEach((name, value) -> assertEquals(value, esiRequest.getHeader(name), name));
 		}
-		assertEquals(0, esiRequest.getBody().size());
+		assertEquals(body == null ? 0 : body.length(), esiRequest.getBody().size());
+		if (body != null) {
+			assertEquals(body, esiRequest.getBody().readUtf8());
+		}
 	}
 }

@@ -71,14 +71,10 @@ public class ProxyHandlerTest {
 			@CartesianTest.Values(strings = {"GET", "PUT", "POST", "DELETE"}) String method,
 			@CartesianTest.Values(strings = {"/esi", "/esi/with/multiple/segments", "/esi?with=query"}) String path) {
 		var bodyExpected = method.equals("PUT") || method.equals("POST");
+		var requestBody = bodyExpected ? "Test request" : null;
 		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test response", Map.of("X-Server-Header", "Test server header"));
 		var proxyResponse = TestHttpUtils.callProxy(
-				client,
-				proxy,
-				method,
-				path,
-				Map.of("X-Client-Header", "Test client header"),
-				bodyExpected ? "Test request" : null);
+				client, proxy, method, path, Map.of("X-Client-Header", "Test client header"), requestBody);
 		TestHttpUtils.assertResponse(
 				proxyResponse,
 				200,
@@ -90,7 +86,8 @@ public class ProxyHandlerTest {
 						ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
-		TestHttpUtils.assertRequest(esiRequest, method, path, Map.of("X-Client-Header", "Test client header"));
+		TestHttpUtils.assertRequest(
+				esiRequest, method, path, Map.of("X-Client-Header", "Test client header"), requestBody);
 	}
 
 	@Test

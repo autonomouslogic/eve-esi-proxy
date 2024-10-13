@@ -29,6 +29,7 @@ public class ProxyHandler implements HttpService, Handler {
 		httpRules.put(this);
 		httpRules.post(this);
 		httpRules.delete(this);
+		httpRules.any(StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
 	}
 
 	@Override
