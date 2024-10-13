@@ -1,14 +1,12 @@
 package com.autonomouslogic.eveesiproxy;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
+import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
 import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
 import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
-import com.autonomouslogic.eveesiproxy.http.EsiRelay;
 import com.autonomouslogic.eveesiproxy.inject.DaggerMainComponent;
 import io.helidon.http.HeaderNames;
-import io.helidon.webserver.ConnectionConfig;
 import io.helidon.webserver.WebServer;
-import io.helidon.webserver.http.HttpRouting;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.net.URL;
@@ -29,19 +27,20 @@ public class EveEsiProxy {
 	protected ProxyHandler proxyHandler;
 
 	@Inject
-	protected EsiRelay esiRelay;
+	protected ErrorHandler errorHandler;
 
 	@Inject
 	@Named("version")
 	protected String version;
 
-	private WebServer server;
+	@Inject
+	protected WebServer server;
 
 	@Inject
 	protected EveEsiProxy() {}
 
 	public static void main(String[] args) {
-		log.info("Starting EVE ESI Proxy");
+		log.debug("Starting proxy");
 		var component = DaggerMainComponent.create();
 		component.createMain().start();
 		testProtocol(component.createOkHttpClient());
@@ -49,14 +48,7 @@ public class EveEsiProxy {
 
 	public void start() {
 		log.info("EVE ESI Proxy version {}", version);
-
-		server = WebServer.builder()
-				.host(Configs.PROXY_HOST.getRequired())
-				.port(Configs.PROXY_PORT.getRequired())
-				.connectionConfig(connectionConfig())
-				.routing(this::routing)
-				.build()
-				.start();
+		server.start();
 	}
 
 	public void stop() {
@@ -69,20 +61,6 @@ public class EveEsiProxy {
 
 	public boolean isRunning() {
 		return server.isRunning();
-	}
-
-	private ConnectionConfig connectionConfig() {
-		return ConnectionConfig.builder().keepAlive(true).tcpNoDelay(true).build();
-	}
-
-	private void routing(HttpRouting.Builder routing) {
-		routing.get("/", indexHandler)
-				.any("/", (req, res) -> res.status(405).send())
-				.any(proxyHandler)
-				.error(Exception.class, (req, res, ex) -> {
-					log.warn("Error processing request", ex);
-					res.status(500).send();
-				});
 	}
 
 	@SneakyThrows
