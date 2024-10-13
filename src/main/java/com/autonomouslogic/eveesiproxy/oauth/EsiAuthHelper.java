@@ -1,10 +1,12 @@
 package com.autonomouslogic.eveesiproxy.oauth;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
+import com.autonomouslogic.eveesiproxy.http.UserAgentInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import io.helidon.http.HeaderNames;
 import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -25,11 +27,7 @@ import org.apache.commons.codec.binary.Hex;
 public class EsiAuthHelper {
 	private static final Duration EXPIRATION_BUFFER = Duration.ofMinutes(1);
 	private static final List<String> SCOPES = List.of( // @todo should be configurable when logging in
-			"esi-universe.read_structures.v1",
-			"esi-markets.structure_markets.v1",
-			"esi-wallet.read_character_wallet.v1",
-			"esi-wallet.read_corporation_wallet.v1",
-			"esi-wallet.read_corporation_wallets.v1");
+			"publicData");
 
 	@Inject
 	protected OkHttpClient client;
@@ -37,7 +35,12 @@ public class EsiAuthHelper {
 	@Inject
 	protected ObjectMapper objectMapper;
 
+	@Inject
+	protected UserAgentInterceptor userAgentInterceptor;
+
 	private final String esiBaseUrl = Configs.ESI_BASE_URL.getRequired();
+
+	private final String callbackUrl = Configs.EVE_OAUTH_CALLBACK_URL.getRequired();
 
 	//	private final Cache<String, Pair<OAuth2AccessToken, Instant>> tokenCache =
 	//			CacheBuilder.newBuilder().expireAfterAccess(Duration.ofMinutes(1)).build();
@@ -50,7 +53,7 @@ public class EsiAuthHelper {
 		var secretKey = Configs.EVE_OAUTH_SECRET_KEY.get();
 		var serviceBuilder = new ServiceBuilder(clientId)
 				.defaultScope(String.join(" ", SCOPES))
-				.callback("http://localhost:8182/login/callback"); // @todo auto-detect from request
+				.callback(callbackUrl);
 		secretKey.ifPresent(serviceBuilder::apiSecret);
 		service = serviceBuilder.build(new EsiApi20());
 	}
@@ -78,12 +81,17 @@ public class EsiAuthHelper {
 		var request = new Request.Builder()
 				.get()
 				.url(url)
+				.header(HeaderNames.USER_AGENT.lowerCase(), userAgentInterceptor.getVersionHeaderPart())
 				.header("Authorization", "Bearer " + token)
 				.build();
 		EsiVerifyResponse verify;
 		try (var response = client.newCall(request).execute()) {
-			try (var in = response.body().byteStream()) {
-				verify = objectMapper.readValue(in, EsiVerifyResponse.class);
+			var b = response.body().string();
+			try {
+				verify = objectMapper.readValue(b, EsiVerifyResponse.class);
+			} catch (Exception e) {
+				log.warn("Failed to parse verify response: {}", b, e);
+				throw e;
 			}
 		}
 		return verify;

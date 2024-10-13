@@ -68,6 +68,12 @@ public class Configs {
 			.type(String.class)
 			.build();
 
+	public static final Config<String> EVE_OAUTH_CALLBACK_URL = Config.<String>builder()
+			.name("EVE_OAUTH_CALLBACK_URL")
+			.defaultValue("http://localhost:8182/login/callback")
+			.type(String.class)
+			.build();
+
 	/**
 	 * Authorization URL for OAuth2 against EVE Online.
 	 */

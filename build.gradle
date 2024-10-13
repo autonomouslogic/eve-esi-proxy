@@ -12,6 +12,10 @@ group = "com.autonomouslogic.esiproxy"
 
 ext {
 	mainClassName = "com.autonomouslogic.eveesiproxy.EveEsiProxy"
+	envProperties = new Properties()
+	if (file("local.env").exists()) {
+		file("local.env").withInputStream { envProperties.load(it) }
+	}
 }
 
 repositories {
@@ -133,6 +137,7 @@ application {
 run {
 	environment "LOG_LEVEL", "trace"
 	jvmArgs "-client", "-XX:+UseZGC", "-Xmx2g"
+	environment envProperties
 }
 
 wrapper {

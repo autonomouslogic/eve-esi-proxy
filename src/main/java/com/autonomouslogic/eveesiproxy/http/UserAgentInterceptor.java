@@ -37,7 +37,11 @@ public class UserAgentInterceptor implements Interceptor {
 		if (configuredUserAgent.isEmpty() || configuredUserAgent.get().indexOf('@') == -1) {
 			log.warn(Configs.ESI_USER_AGENT.getName() + " should contain an email address");
 		}
-		versionHeaderPart = "eve-esi-proxy/" + version;
+		versionHeaderPart = getVersionHeaderPart();
+	}
+
+	public String getVersionHeaderPart() {
+		return "eve-esi-proxy/" + version;
 	}
 
 	@NotNull
