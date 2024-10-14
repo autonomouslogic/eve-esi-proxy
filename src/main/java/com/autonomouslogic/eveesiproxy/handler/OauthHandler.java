@@ -59,7 +59,7 @@ public class OauthHandler implements HttpService {
 			var code = query.getRaw("code");
 			var state = query.getRaw("state");
 			log.debug("Callback code: {}, state: {}", code, state);
-			var token = esiAuthHelper.getAccessToken(code);
+			var token = esiAuthHelper.getAccessToken(state, code);
 			var verify = esiAuthHelper.verify(token.getAccessToken());
 
 			var key = new byte[18];
