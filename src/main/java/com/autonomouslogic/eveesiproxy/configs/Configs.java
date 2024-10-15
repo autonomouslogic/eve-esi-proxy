@@ -65,7 +65,7 @@ public class Configs {
 	 */
 	public static final Config<String> EVE_OAUTH_CLIENT_ID = Config.<String>builder()
 			.name("EVE_OAUTH_CLIENT_ID")
-			.defaultValue("856c4df92a6942489f009a4543aaef7f")
+			.defaultValue("89f0127100b74c28a5247d75e5f31d5e")
 			.type(String.class)
 			.build();
 
