@@ -62,16 +62,12 @@ public class OauthHandler implements HttpService {
 			var token = esiAuthHelper.getAccessToken(state, code);
 			var verify = esiAuthHelper.verify(token.getAccessToken());
 
-			var key = new byte[18];
-			new SecureRandom().nextBytes(key);
-			var keyString = Hex.encodeHexString(key);
-
 			authManager.addAuthedCharacter(AuthedCharacter.builder()
 					.characterId(verify.getCharacterId())
 					.characterName(verify.getCharacterName())
 					.characterOwnerHash(verify.getCharacterOwnerHash())
 					.refreshToken(token.getRefreshToken())
-					.proxyKey(keyString)
+					.proxyKey(authManager.generateProxyKey())
 					.scopes(verify.getScopes())
 					.build());
 
