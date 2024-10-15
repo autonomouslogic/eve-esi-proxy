@@ -3,6 +3,12 @@ package com.autonomouslogic.eveesiproxy.configs;
 import com.autonomouslogic.commons.config.Config;
 
 public class Configs {
+	public static final Config<String> LOG_LEVEL = Config.<String>builder()
+			.name("LOG_LEVEL")
+			.type(String.class)
+			.defaultValue("INFO")
+			.build();
+
 	public static final Config<Integer> PROXY_PORT = Config.<Integer>builder()
 			.name("PROXY_PORT")
 			.type(Integer.class)

@@ -107,7 +107,7 @@ gitSemVer {
 }
 
 test {
-	environment "LOG_LEVEL", "trace"
+	environment "LOG_LEVEL", "TRACE"
 	jvmArgs "-client", "-XX:+UseG1GC", "-Xmx8g"
 
 	useJUnitPlatform()
@@ -135,7 +135,7 @@ application {
 }
 
 run {
-	environment "LOG_LEVEL", "trace"
+	environment "LOG_LEVEL", "TRACE"
 	jvmArgs "-client", "-XX:+UseZGC", "-Xmx2g"
 	environment envProperties
 }

@@ -1,5 +1,7 @@
 package com.autonomouslogic.eveesiproxy.oauth;
 
+import static com.autonomouslogic.eveesiproxy.configs.Configs.LOG_LEVEL;
+
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.http.UserAgentInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +15,6 @@ import io.helidon.http.HeaderNames;
 import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +28,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.apache.commons.codec.binary.Hex;
 
+/**
+ * @link <a href="https://docs.esi.evetech.net/docs/sso/native_sso_flow.html">OAuth 2.0 for Mobile or Desktop Applications</a>
+ * @link <a href="https://docs.esi.evetech.net/docs/sso/web_based_sso_flow.html">OAuth 2.0 for Web Based Applications</a>
+ * @link <a href="https://auth0.com/docs/get-started/authentication-and-authorization-flow/which-oauth-2-0-flow-should-i-use">Which OAuth 2.0 Flow Should I Use?</a>
+ * @link <a href="https://docs.esi.evetech.net/docs/sso/revoking_refresh_tokens.html">Revoking Refresh Tokens</a>
+ */
 @Log4j2
 public class EsiAuthHelper {
-	private static final Duration EXPIRATION_BUFFER = Duration.ofMinutes(1);
 	private static final List<String> SCOPES = List.of( // @todo should be configurable when logging in
 			"publicData");
 
@@ -42,8 +48,8 @@ public class EsiAuthHelper {
 	@Inject
 	protected UserAgentInterceptor userAgentInterceptor;
 
+	private final String clientId = Configs.EVE_OAUTH_CLIENT_ID.getRequired();
 	private final String esiBaseUrl = Configs.ESI_BASE_URL.getRequired();
-
 	private final String callbackUrl = Configs.EVE_OAUTH_CALLBACK_URL.getRequired();
 
 	//	private final Cache<String, Pair<OAuth2AccessToken, Instant>> tokenCache =
@@ -56,12 +62,14 @@ public class EsiAuthHelper {
 
 	@Inject
 	protected EsiAuthHelper() {
-		var clientId = Configs.EVE_OAUTH_CLIENT_ID.getRequired();
 		var secretKey = Configs.EVE_OAUTH_SECRET_KEY.get();
 		var serviceBuilder = new ServiceBuilder(clientId)
 				.defaultScope(String.join(" ", SCOPES))
-				.callback(callbackUrl)
-				.debug();
+				.callback(callbackUrl);
+		var logLevel = LOG_LEVEL.getRequired().toUpperCase();
+		if (logLevel.equals("TRACE") || logLevel.equals("DEBUG")) {
+			serviceBuilder.debug();
+		}
 		if (secretKey.isPresent()) {
 			serviceBuilder.apiSecret(secretKey.get());
 			authFlow = AuthFlow.CODE;
@@ -101,6 +109,7 @@ public class EsiAuthHelper {
 			var pkce = loginState.getAuthorizationUrlBuilder().getPkce();
 			logPkceForState(state, pkce);
 			params.pkceCodeVerifier(pkce.getCodeVerifier());
+			params.addExtraParameter("client_id", clientId);
 		}
 		return service.getAccessToken(params);
 	}
