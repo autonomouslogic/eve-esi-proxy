@@ -135,7 +135,7 @@ public class ProxyHandlerTest {
 	@ParameterizedTest
 	@ValueSource(strings = {"private", "no-store", "no-cache", "max-age=0"})
 	@SneakyThrows
-	void shouldNotCacheUncachableResponses(String cacheControl) {
+	void shouldNotCacheResponsesWithUncachableCacheControls(String cacheControl) {
 		for (int i = 0; i < 2; i++) {
 			TestHttpUtils.enqueueResponse(mockEsi, 200, "Test body " + i, Map.of("Cache-Control", cacheControl));
 		}
@@ -151,7 +151,7 @@ public class ProxyHandlerTest {
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 
-		// Second proxy response should be served from cache.
+		// Second proxy response should not be served from cache.
 		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
 		TestHttpUtils.assertResponse(
 				proxyResponse2,
@@ -160,6 +160,31 @@ public class ProxyHandlerTest {
 				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 
 		// A second request to the ESI should be made.
+		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = {400, 404, 500, 502, 503, 504})
+	@SneakyThrows
+	void shouldNotCacheUncachableResponseCodes(int responseCode) {
+		TestHttpUtils.enqueueResponse(mockEsi, responseCode);
+		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test body");
+
+		// First proxy response.
+		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+				proxyResponse1,
+				responseCode,
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
+
+		// Second proxy response should not be served from cache.
+		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		TestHttpUtils.assertResponse(
+				proxyResponse2,
+				200,
+				"Test body",
+				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 	}
 
