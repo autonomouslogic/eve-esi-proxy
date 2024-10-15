@@ -12,9 +12,7 @@ import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.codec.binary.Hex;
 
 @Singleton
 @Log4j2

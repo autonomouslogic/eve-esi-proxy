@@ -44,20 +44,20 @@ public class EsiAuthHelper {
 
 	private static final List<String> SCOPES = List.of( // @todo should be configurable when logging in
 			"publicData",
-		"esi-characters.read_agents_research.v1",
-		"esi-characters.read_blueprints.v1",
-		"esi-characters.read_chat_channels.v1",
-		"esi-characters.read_contacts.v1",
-		"esi-characters.read_corporation_roles.v1",
-		"esi-characters.read_fatigue.v1",
-		"esi-characters.read_fw_stats.v1",
-		"esi-characters.read_loyalty.v1",
-		"esi-characters.read_medals.v1",
-		"esi-characters.read_notifications.v1",
-		"esi-characters.read_opportunities.v1",
-		"esi-characters.read_standings.v1",
-		"esi-characters.read_titles.v1",
-		"esi-characters.write_contacts.v1");
+			"esi-characters.read_agents_research.v1",
+			"esi-characters.read_blueprints.v1",
+			"esi-characters.read_chat_channels.v1",
+			"esi-characters.read_contacts.v1",
+			"esi-characters.read_corporation_roles.v1",
+			"esi-characters.read_fatigue.v1",
+			"esi-characters.read_fw_stats.v1",
+			"esi-characters.read_loyalty.v1",
+			"esi-characters.read_medals.v1",
+			"esi-characters.read_notifications.v1",
+			"esi-characters.read_opportunities.v1",
+			"esi-characters.read_standings.v1",
+			"esi-characters.read_titles.v1",
+			"esi-characters.write_contacts.v1");
 
 	@Inject
 	protected OkHttpClient client;
@@ -72,8 +72,8 @@ public class EsiAuthHelper {
 	private final String esiBaseUrl = Configs.ESI_BASE_URL.getRequired();
 	private final String callbackUrl = Configs.EVE_OAUTH_CALLBACK_URL.getRequired();
 
-		private final Cache<String, Pair<OAuth2AccessToken, Instant>> tokenCache =
-				CacheBuilder.newBuilder().expireAfterAccess(Duration.ofMinutes(5)).build();
+	private final Cache<String, Pair<OAuth2AccessToken, Instant>> tokenCache =
+			CacheBuilder.newBuilder().expireAfterAccess(Duration.ofMinutes(5)).build();
 
 	private final Map<String, LoginState> stateMemory = new ConcurrentHashMap<>();
 
@@ -129,7 +129,6 @@ public class EsiAuthHelper {
 			var pkce = loginState.getAuthorizationUrlBuilder().getPkce();
 			logPkceForState(state, pkce);
 			params.pkceCodeVerifier(pkce.getCodeVerifier());
-			params.addExtraParameter("client_id", clientId);
 		}
 		return service.getAccessToken(params);
 	}
@@ -180,24 +179,23 @@ public class EsiAuthHelper {
 	//				.flatMap(r -> Maybe.fromOptional(Optional.ofNullable(r.item())));
 	//	}
 
-		public OAuth2AccessToken getAccessToken(AuthedCharacter authedCharacter) {
-			var cached = tokenCache.getIfPresent(authedCharacter.getCharacterOwnerHash());
-			if (cached != null) {
-				var issued = cached.getRight();
-				var expiresIn = cached.getLeft().getExpiresIn();
-				var expiration = issued.plusSeconds(expiresIn).minus(EXPIRATION_BUFFER);
-				if (Instant.now().isBefore(expiration)) {
-					log.trace("Found cached token for characterId {} expired", authedCharacter.getCharacterId());
-					return cached.getLeft();
-				}
-				else {
-					log.trace("Token for characterId {} expired", authedCharacter.getCharacterId());
-				}
+	public OAuth2AccessToken getAccessToken(AuthedCharacter authedCharacter) {
+		var cached = tokenCache.getIfPresent(authedCharacter.getCharacterOwnerHash());
+		if (cached != null) {
+			var issued = cached.getRight();
+			var expiresIn = cached.getLeft().getExpiresIn();
+			var expiration = issued.plusSeconds(expiresIn).minus(EXPIRATION_BUFFER);
+			if (Instant.now().isBefore(expiration)) {
+				log.trace("Using cached token for characterId {}", authedCharacter.getCharacterId());
+				return cached.getLeft();
+			} else {
+				log.trace("Cached token expired for characterId {}", authedCharacter.getCharacterId());
 			}
-			var token = refreshAccessToken(authedCharacter.getCharacterId(), authedCharacter.getRefreshToken());
-			tokenCache.put(authedCharacter.getCharacterOwnerHash(), Pair.of(token, Instant.now()));
-			return token;
 		}
+		var token = refreshAccessToken(authedCharacter.getCharacterId(), authedCharacter.getRefreshToken());
+		tokenCache.put(authedCharacter.getCharacterOwnerHash(), Pair.of(token, Instant.now()));
+		return token;
+	}
 
 	//	public Single<String> getTokenStringForOwnerHash(String ownerHash) {
 	//		return getTokenForOwnerHash(ownerHash)

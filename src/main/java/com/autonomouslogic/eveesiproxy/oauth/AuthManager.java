@@ -13,8 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
-
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Hex;
@@ -80,6 +78,8 @@ public class AuthManager {
 	}
 
 	public Optional<AuthedCharacter> getCharacterForProxyKey(String key) {
-		return authedCharacters.values().stream().filter(c -> key.equals(c.getProxyKey())).findFirst();
+		return authedCharacters.values().stream()
+				.filter(c -> key.equals(c.getProxyKey()))
+				.findFirst();
 	}
 }

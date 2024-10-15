@@ -32,8 +32,8 @@ public class OkHttpModule {
 			LoggingInterceptor loggingInterceptor,
 			UserAgentInterceptor userAgentInterceptor,
 			ErrorLimitInterceptor errorLimitInterceptor,
-		ProxyKeyInterceptor proxyKeyInterceptor,
-		TokenAuthorizationInterceptor tokenAuthorizationInterceptor) {
+			ProxyKeyInterceptor proxyKeyInterceptor,
+			TokenAuthorizationInterceptor tokenAuthorizationInterceptor) {
 		log.trace("Creating HTTP client");
 		return new OkHttpClient.Builder()
 				.followRedirects(false)
