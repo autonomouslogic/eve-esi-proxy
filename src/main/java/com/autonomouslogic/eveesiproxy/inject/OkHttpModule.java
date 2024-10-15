@@ -46,8 +46,8 @@ public class OkHttpModule {
 				.addInterceptor(userAgentInterceptor)
 				.addInterceptor(tokenAuthorizationInterceptor)
 				.addInterceptor(proxyKeyInterceptor)
+				.addInterceptor(errorLimitInterceptor)
 				.addInterceptor(loggingInterceptor)
-				.addNetworkInterceptor(errorLimitInterceptor)
 				.addNetworkInterceptor(rateLimitInterceptor)
 				.build();
 	}
