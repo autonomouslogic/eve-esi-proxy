@@ -11,7 +11,7 @@ Join us on [Discord](https://everef.net/discord).
 Fly safe o7
 
 ## Features
-* **Character login** is supported and OAuth is handled automatically, see below
+* **Character login** is supported and OAuth is handled automatically, [see below](#character-login)
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
 * **Conditional requests**
 * **Rate limiting** requests to help avoid being banned, including different limits for the endpoints which have special undocumented limits
