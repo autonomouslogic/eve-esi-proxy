@@ -71,7 +71,7 @@ Refresh tokens are stored unencrypted on disk in a Docker volume.
 If you want the proxy to use your own client ID and secret, you can configure them via `EVE_OAUTH_CLIENT_ID` and `EVE_OAUTH_SECRET_KEY`.
 You will have to do this if you want to use a port other than 8182.
 
-To create an application, log in to the [EVE Developer Portal](https://developers.eveonline.com/):
+Create an application in the the [EVE Developer Portal](https://developers.eveonline.com/):
 * Select "Authentication & API Access"
 * Select whatever scopes you want to use
 * Set the callback URL to `http://localhost:8182/login/callback` - be sure to change the port number if you're not using the default
