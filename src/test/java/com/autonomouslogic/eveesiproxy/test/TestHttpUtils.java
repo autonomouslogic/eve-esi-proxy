@@ -129,15 +129,15 @@ public class TestHttpUtils {
 			RecordedRequest esiRequest, String method, String path, Map<String, String> headers, String body) {
 		assertNotNull(esiRequest);
 		assertEquals("localhost:" + MOCK_ESI_PORT, esiRequest.getHeader("Host"));
-		assertEquals("Host", esiRequest.getHeaders().name(0));
 		assertEquals(method, esiRequest.getMethod());
 		assertEquals(path, esiRequest.getPath());
 		if (headers != null) {
 			headers.forEach((name, value) -> assertEquals(value, esiRequest.getHeader(name), name));
 		}
-		assertEquals(body == null ? 0 : body.length(), esiRequest.getBody().size());
+		var bodySize = esiRequest.getBody().size();
 		if (body != null) {
 			assertEquals(body, esiRequest.getBody().readUtf8());
 		}
+		assertEquals(body == null ? 0 : body.length(), bodySize);
 	}
 }

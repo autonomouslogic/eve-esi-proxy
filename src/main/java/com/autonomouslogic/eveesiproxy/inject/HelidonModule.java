@@ -3,6 +3,7 @@ package com.autonomouslogic.eveesiproxy.inject;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
 import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
+import com.autonomouslogic.eveesiproxy.handler.OauthHandler;
 import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
 import dagger.Module;
 import dagger.Provides;
@@ -17,13 +18,17 @@ import lombok.extern.log4j.Log4j2;
 public class HelidonModule {
 	@Provides
 	@Singleton
-	public WebServer webServer(IndexHandler indexHandler, ProxyHandler proxyHandler, ErrorHandler errorHandler) {
+	public WebServer webServer(
+			IndexHandler indexHandler,
+			ProxyHandler proxyHandler,
+			OauthHandler oauthHandler,
+			ErrorHandler errorHandler) {
 		log.trace("Creating Helidon server");
 		return WebServer.builder()
 				.host(Configs.PROXY_HOST.getRequired())
 				.port(Configs.PROXY_PORT.getRequired())
 				.connectionConfig(connectionConfig())
-				.routing(routing -> routing(routing, indexHandler, proxyHandler, errorHandler))
+				.routing(routing -> routing(routing, indexHandler, proxyHandler, oauthHandler, errorHandler))
 				.build();
 	}
 
@@ -36,7 +41,11 @@ public class HelidonModule {
 			HttpRouting.Builder routing,
 			IndexHandler indexHandler,
 			ProxyHandler proxyHandler,
+			OauthHandler oauthHandler,
 			ErrorHandler errorHandler) {
-		routing.register(indexHandler).register(proxyHandler).error(Exception.class, errorHandler);
+		routing.register(indexHandler)
+				.register(oauthHandler)
+				.register(proxyHandler)
+				.error(Exception.class, errorHandler);
 	}
 }
