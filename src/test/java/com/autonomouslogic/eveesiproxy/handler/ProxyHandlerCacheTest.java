@@ -104,10 +104,7 @@ public class ProxyHandlerCacheTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(
-			strings = {"private"
-				//		, "no-store", "no-cache", "max-age=0"
-			})
+	@ValueSource(strings = {"private", "no-store", "no-cache", "max-age=0"})
 	@SneakyThrows
 	void shouldNotCacheResponsesWithUncachableCacheControls(String cacheControl) {
 		var expires = HttpDate.format(ZonedDateTime.now().plusSeconds(60));
