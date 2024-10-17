@@ -42,7 +42,8 @@ import org.apache.commons.lang3.tuple.Pair;
 public class EsiAuthHelper {
 	private static final Duration EXPIRATION_BUFFER = Duration.ofMinutes(1);
 
-	private static final List<String> SCOPES = List.of( // @todo should be configurable when logging in
+	@Deprecated
+	public static final List<String> SCOPES = List.of( // @todo should be configurable when logging in
 			"publicData",
 			"esi-characters.read_agents_research.v1",
 			"esi-characters.read_blueprints.v1",
