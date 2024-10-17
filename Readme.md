@@ -52,8 +52,8 @@ The proxy is configured via environment variables set via `docker run -e`:
 * `EVE_OAUTH_CLIENT_ID` - The client ID of the application you created on the EVE Developer Portal
 * `EVE_OAUTH_SECRET_KEY` - The secret key of the application you created on the EVE Developer Portal
 * `EVE_OAUTH_CALLBACK_URL` - The callback URL of the application you created on the EVE Developer Portal - defaults to `http://localhost:8182/login/callback`
-* `EVE_OAUTH_AUTHORIZATION_URL`
-* `EVE_OAUTH_TOKEN_URL`
+* `EVE_OAUTH_AUTHORIZATION_URL` - defaults to `https://login.eveonline.com/v2/oauth/authorize`
+* `EVE_OAUTH_TOKEN_URL` - defaults to `https://login.eveonline.com/v2/oauth/token`
 
 ## Character login
 To login with a character, open the proxy interface at http://localhost:8182/ and click "Log in".
