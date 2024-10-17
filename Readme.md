@@ -56,22 +56,30 @@ The proxy is configured via environment variables set via `docker run -e`:
 * `EVE_OAUTH_TOKEN_URL`
 
 ## Character login
-In order to access character-specific data, you need to log in with the character.
-First create an application on the [EVE Developer Portal](https://developers.eveonline.com/):
+To login with a character, open the proxy interface at http://localhost:8182/ and click "Log in".
+After a successful login, you'll be shown a "Proxy key".
+Use this key in-place of your normal OAuth access token, like:
+```bash
+curl "http://localhost:8182/latest/characters/{character_id}/blueprints/?token=<proxy key>"
+```
+The proxy will request an OAuth access token in the background and use that for you.
+
+**The proxy does not send any auth data to anyone other than EVE Online.**
+Refresh tokens are stored unencrypted on disk in a Docker volume.
+
+### Custom ESI application
+If you want the proxy to use your own client ID and secret, you can configure them via `EVE_OAUTH_CLIENT_ID` and `EVE_OAUTH_SECRET_KEY`.
+You will have to do this if you want to use a port other than 8182.
+
+To create an application, log in to the [EVE Developer Portal](https://developers.eveonline.com/):
 * Select "Authentication & API Access"
 * Select whatever scopes you want to use
 * Set the callback URL to `http://localhost:8182/login/callback` - be sure to change the port number if you're not using the default
 
 Copy the "Client ID" and "Secret Key" and set them on the `EVE_OAUTH_CLIENT_ID` and `EVE_OAUTH_SECRET_KEY` environment variables respectively.
-For instance: `docker run -e "EVE_OAUTH_CLIENT_ID=<your client id>" -e "EVE_OAUTH_CLIENT_SECRET=<your secret key>"`.
-
-To log in, start the proxy with the above settings and visit `http://localhost:8182/` and click log in.
-Once complete, you will be shown a "Proxy auth key".
-Use this in place of the normal OAuth token in your requests.
-The proxy will, in the background, take care of all the OAuth stuff.
 For instance:
 ```bash
-TODO
+docker run -e "EVE_OAUTH_CLIENT_ID=<your client id>" -e "EVE_OAUTH_CLIENT_SECRET=<your secret key>"
 ```
 
 ## Overhead
