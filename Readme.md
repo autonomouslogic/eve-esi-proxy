@@ -46,8 +46,8 @@ The proxy is configured via environment variables set via `docker run -e`:
 * `HTTP_CACHE_DIR` - The directory to store cached responses in
 * `HTTP_CACHE_MAX_SIZE` - The maximum size of the cache in bytes - defaults to 1 GiB
 * `ESI_RATE_LIMIT_PER_S` - The number of requests allowed per second for endpoints without a special rate limit - defaults to `100`
-* `ESI_MARKET_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for market history - defaults to `5` - increasing this is **not recommended**
-* `ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for character corporation history - defaults to `5` - increasing this is **not recommended**
+* `ESI_MARKET_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for market history - defaults to `5` - **increasing this could get you banned**
+* `ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for character corporation history - defaults to `5` - **increasing this could get you banned**
 * `LOG_LEVEL` - How much logging to do - defaults to `INFO` - options are `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, or `FATAL`
 * `EVE_OAUTH_CLIENT_ID` - The client ID of the application you created on the EVE Developer Portal
 * `EVE_OAUTH_SECRET_KEY` - The secret key of the application you created on the EVE Developer Portal
