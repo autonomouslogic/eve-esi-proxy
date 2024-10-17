@@ -11,13 +11,13 @@ Join us on [Discord](https://everef.net/discord).
 Fly safe o7
 
 ## Features
+* **Character login** is supported and OAuth is handled automatically, see below
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself
 * **Conditional requests**
 * **Rate limiting** requests to help avoid being banned, including different limits for the endpoints which have special undocumented limits
 * **Handle ESI error limit headers** to stop all requests if the limit is reached
 * **User agent header** is automatically handled
-* **Fetching multiple pages** if no page is set in the request, all pages will be automatically fetched and the result merged
-* **Character login** is handled automatically, see below
+* **Fetching multiple pages** if no page (or page 0) is set in the request, all pages will be automatically fetched and the result merged
 * _More planned, see milestone_
 
 The ESI API is a great resource, but can be difficult to work with.
