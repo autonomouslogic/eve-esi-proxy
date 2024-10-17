@@ -314,30 +314,44 @@ public class ProxyHandlerCacheTest {
 	@Test
 	@SneakyThrows
 	void shouldNotCacheAuthedResponses() {
-		// authed responses come back from the ESI with cache-control: private, but for extra measure we'll also check
-		// the request.
-		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test body");
+		// Authed responses come back from the ESI with cache-control: private,
+		// but for extra measure, we'll also check the request.
+		var expiresString = HttpDate.format(ZonedDateTime.now().plusSeconds(60));
+		for (int i = 0; i < 2; i++) {
+			TestHttpUtils.enqueueResponse(
+					mockEsi, 200, "Test body " + i, Map.of(HeaderNames.EXPIRES.lowerCase(), expiresString));
+		}
 
 		// First proxy response.
-		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		var proxyResponse1 = TestHttpUtils.callProxy(
+				client, proxy, "GET", "/esi", Map.of(HeaderNames.AUTHORIZATION.lowerCase(), "some-token"));
 		TestHttpUtils.assertResponse(
 				proxyResponse1,
 				200,
-				"Test body",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+				"Test body 0",
+				Map.of(
+						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderValues.CACHE_STATUS_MISS,
+						HeaderNames.CACHE_CONTROL.lowerCase(),
+						"no-store"));
 
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 
-		// Second proxy response should be served from cache.
-		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
+		// Second proxy response.
+		var proxyResponse2 = TestHttpUtils.callProxy(
+				client, proxy, "GET", "/esi", Map.of(HeaderNames.AUTHORIZATION.lowerCase(), "some-token"));
 		TestHttpUtils.assertResponse(
 				proxyResponse2,
 				200,
-				"Test body",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+				"Test body 1",
+				Map.of(
+						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
+						ProxyHeaderValues.CACHE_STATUS_MISS,
+						HeaderNames.CACHE_CONTROL.lowerCase(),
+						"no-store"));
 
-		// A second request to the ESI should never be made.
-		TestHttpUtils.assertNoMoreRequests(mockEsi);
+		// A second request to the ESI should be made.
+		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 	}
 }

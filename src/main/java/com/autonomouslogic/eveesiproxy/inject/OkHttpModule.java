@@ -1,6 +1,7 @@
 package com.autonomouslogic.eveesiproxy.inject;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
+import com.autonomouslogic.eveesiproxy.http.AuthorizationNoStoreCacheInterceptor;
 import com.autonomouslogic.eveesiproxy.http.CacheStatusInterceptor;
 import com.autonomouslogic.eveesiproxy.http.ErrorLimitInterceptor;
 import com.autonomouslogic.eveesiproxy.http.LoggingInterceptor;
@@ -35,7 +36,8 @@ public class OkHttpModule {
 			ErrorLimitInterceptor errorLimitInterceptor,
 			ProxyKeyInterceptor proxyKeyInterceptor,
 			TokenAuthorizationInterceptor tokenAuthorizationInterceptor,
-			PrivateCacheInterceptor privateCacheInterceptor) {
+			PrivateCacheInterceptor privateCacheInterceptor,
+			AuthorizationNoStoreCacheInterceptor authorizationNoStoreCacheInterceptor) {
 		log.trace("Creating HTTP client");
 		return new OkHttpClient.Builder()
 				.followRedirects(false)
@@ -51,6 +53,7 @@ public class OkHttpModule {
 				.addInterceptor(errorLimitInterceptor)
 				.addInterceptor(loggingInterceptor)
 				.addNetworkInterceptor(rateLimitInterceptor)
+				.addNetworkInterceptor(authorizationNoStoreCacheInterceptor)
 				.addNetworkInterceptor(privateCacheInterceptor)
 				.build();
 	}
