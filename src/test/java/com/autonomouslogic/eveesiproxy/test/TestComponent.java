@@ -1,6 +1,7 @@
 package com.autonomouslogic.eveesiproxy.test;
 
 import com.autonomouslogic.eveesiproxy.handler.IndexHandlerTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerCacheTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerErrorLimitTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerPagesTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerRateLimitTest;
@@ -26,6 +27,8 @@ public interface TestComponent {
 	void inject(IndexHandlerTest test);
 
 	void inject(ProxyHandlerTest test);
+
+	void inject(ProxyHandlerCacheTest test);
 
 	void inject(ProxyHandlerUserAgentTest test);
 

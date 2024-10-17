@@ -108,6 +108,7 @@ gitSemVer {
 
 test {
 	environment "LOG_LEVEL", "TRACE"
+	environment "CONFIG_DIR", "/tmp"
 	jvmArgs "-client", "-XX:+UseG1GC", "-Xmx8g"
 
 	useJUnitPlatform()
