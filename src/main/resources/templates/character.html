@@ -20,22 +20,26 @@
             <div>
                 Character ID: <span style="font-family: monospace" th:text="${character.characterId}"></span>
             </div>
+            <div>
+                Owner hash: <span style="font-family: monospace" th:text="${character.characterOwnerHash}"></span>
+            </div>
         </span>
     </div>
 
-    <ul>
-        <li>
-            Owner hash: <span style="font-family: monospace" th:text="${character.characterOwnerHash}"></span>
-        </li>
-        <li>
-            Scopes: <span th:text="${character.scopes.size()}"></span>
-            <ul>
-                <li th:each="scope : ${character.scopes}">
-                    <span th:text="${scope}"></span>
-                </li>
-            </ul>
-        </li>
-    </ul>
+    <div>
+        <h3>Example query</h3>
+        <pre th:text="${exampleCurl}"></pre>
+    </div>
+
+    <div>
+        <h3>Scopes</h3>
+        <span th:text="${character.scopes.size()}"></span> scopes authorized:
+        <ul>
+            <li th:each="scope : ${character.scopes}">
+                <span th:text="${scope}"></span>
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
 </html>

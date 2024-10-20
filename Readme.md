@@ -56,6 +56,10 @@ The proxy is configured via environment variables set via `docker run -e`:
 * `EVE_OAUTH_CALLBACK_URL` - The callback URL of the application you created on the EVE Developer Portal - defaults to `http://localhost:8182/esiproxy/login/callback`
 * `EVE_OAUTH_AUTHORIZATION_URL` - defaults to `https://login.eveonline.com/v2/oauth/authorize`
 * `EVE_OAUTH_TOKEN_URL` - defaults to `https://login.eveonline.com/v2/oauth/token`
+* `HTTP_CONNECT_TIMEOUT` - defaults to `PT5S`
+* `HTTP_READ_TIMEOUT` - defaults to `PT60S`
+* `HTTP_WRITE_TIMEOUT` - defaults to `PT60S`
+* `HTTP_CALL_TIMEOUT` - defaults to `PT60S`
 
 ## Character login
 To login with a character, open the proxy interface at http://localhost:8182/ and click "Log in".

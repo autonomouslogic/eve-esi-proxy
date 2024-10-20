@@ -102,6 +102,30 @@ public class Configs {
 			.type(String.class)
 			.build();
 
+	public static final Config<Duration> HTTP_CONNECT_TIMEOUT = Config.<Duration>builder()
+			.name("HTTP_CONNECT_TIMEOUT")
+			.defaultValue(Duration.parse("PT5S"))
+			.type(Duration.class)
+			.build();
+
+	public static final Config<Duration> HTTP_READ_TIMEOUT = Config.<Duration>builder()
+			.name("HTTP_READ_TIMEOUT")
+			.defaultValue(Duration.parse("PT60S"))
+			.type(Duration.class)
+			.build();
+
+	public static final Config<Duration> HTTP_WRITE_TIMEOUT = Config.<Duration>builder()
+			.name("HTTP_WRITE_TIMEOUT")
+			.defaultValue(Duration.parse("PT60S"))
+			.type(Duration.class)
+			.build();
+
+	public static final Config<Duration> HTTP_CALL_TIMEOUT = Config.<Duration>builder()
+			.name("HTTP_CALL_TIMEOUT")
+			.defaultValue(Duration.parse("PT60S"))
+			.type(Duration.class)
+			.build();
+
 	public static final Config<Integer> HTTP_MAX_TRIES = Config.<Integer>builder()
 			.name("HTTP_MAX_TRIES")
 			.defaultValue(3)
