@@ -7,11 +7,22 @@
 </head>
 <body>
 <div>
-    <header>
-        <h1>EVE ESI Proxy</h1>
-        <p>
-            <a href="/esiproxy">&laquo; Home</a>
-        </p>
+    <header style="display: flex">
+        <span>
+            <img th:src="'data:image/webp;base64,' + ${logoImageBase64}" alt="EVE Ref logo"
+                 style="width: 128px; height: 128px; border-radius: 50%; margin-right: 1rem;"/>
+        </span>
+        <span>
+            <span style="display: flex">
+                <h1 style="margin-right: 0.5rem;">EVE ESI Proxy</h1>
+                <span style="line-height: 4.25rem;">by
+                    <a href="https://everef.net/">EVE Ref</a>
+                </span>
+            </span>
+            <p>
+                <a href="/esiproxy">&laquo; Home</a>
+            </p>
+        </span>
     </header>
 
     <div class="container">
@@ -19,21 +30,15 @@
     </div>
 
     <footer>
-        <p>
+        <div>
             Version:
             <span style="font-family: monospace" th:text="${proxyVersion}"></span>
-        </p>
-        <p>
-        <div>
-            <a href="https://everef.net/discord">Discord</a>
         </div>
         <div>
-            <a href="https://patreon.com/everef">Patreon</a>
-        </div>
-        <div>
+            <a href="https://everef.net/discord">Discord</a> |
+            <a href="https://patreon.com/everef">Patreon</a> |
             <a href="https://github.com/autonomouslogic/eve-esi-proxy/">Github</a>
         </div>
-        </p>
         <div>
             <img th:src="'data:image/webp;base64,' + ${evePartnerImageBase64}" alt="EVE Partner"
                  style="width: 400px; height: 168px;"/>

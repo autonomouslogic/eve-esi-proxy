@@ -8,7 +8,7 @@ header {
 }
 
 header, .container, footer {
-    padding: 1rem 0.5rem;
+    padding: 3rem 1rem;
 }
 
 a {

@@ -15,7 +15,7 @@ import org.thymeleaf.context.Context;
 
 @Singleton
 public class TemplateUtil {
-	private static final String logoImageBase64 = loadBase64("logo.png");
+	private static final String logoImageBase64 = loadBase64("logo-small.webp");
 	private static final String evePartnerImageBase64 = loadBase64("PartnerBadge2-small.webp");
 	private static final String loginImageBase64 = loadBase64("eve-sso-login-white-large.png");
 
