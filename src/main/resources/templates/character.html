@@ -23,6 +23,11 @@
         </span>
     </div>
 
+    <div>
+        Example query:
+        <pre th:text="curl -s 'http://localhost:8182/latest/characters/'++'/blueprints/?datasource=tranquility&page=1&token=' + ${character.proxyKey}"></pre>
+    </div>
+
     <ul>
         <li>
             Owner hash: <span style="font-family: monospace" th:text="${character.characterOwnerHash}"></span>
