@@ -1,6 +1,7 @@
 package com.autonomouslogic.eveesiproxy.configs;
 
 import com.autonomouslogic.commons.config.Config;
+import java.time.Duration;
 
 public class Configs {
 	public static final Config<String> LOG_LEVEL = Config.<String>builder()
@@ -99,5 +100,17 @@ public class Configs {
 			.name("EVE_OAUTH_TOKEN_URL")
 			.defaultValue("https://login.eveonline.com/v2/oauth/token")
 			.type(String.class)
+			.build();
+
+	public static final Config<Integer> HTTP_MAX_TRIES = Config.<Integer>builder()
+			.name("HTTP_MAX_TRIES")
+			.defaultValue(3)
+			.type(Integer.class)
+			.build();
+
+	public static final Config<Duration> HTTP_RETRY_DELAY = Config.<Duration>builder()
+			.name("HTTP_RETRY_DELAY")
+			.defaultValue(Duration.parse("PT2S"))
+			.type(Duration.class)
 			.build();
 }

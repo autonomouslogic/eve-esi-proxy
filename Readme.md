@@ -45,6 +45,8 @@ The proxy is configured via environment variables set via `docker run -e`:
 * `ESI_USER_AGENT` - The user agent to use when making requests to the ESI API - if this is not set and no user agent is supplied on the request, the proxy will return a `400 Bad Request`
 * `HTTP_CACHE_DIR` - The directory to store cached responses in
 * `HTTP_CACHE_MAX_SIZE` - The maximum size of the cache in bytes - defaults to 1 GiB
+* `HTTP_MAX_TRIES` - Maximum number of times to try a single request - defaults to `3`
+* `HTTP_RETRY_DELAY` - Delay between retries - defaults to `PT2S`
 * `ESI_RATE_LIMIT_PER_S` - The number of requests allowed per second for endpoints without a special rate limit - defaults to `100`
 * `ESI_MARKET_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for market history - defaults to `5` - **increasing this could get you banned**
 * `ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S` - The number of requests allowed per second for character corporation history - defaults to `5` - **increasing this could get you banned**
