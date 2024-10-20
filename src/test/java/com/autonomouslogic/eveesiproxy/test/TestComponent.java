@@ -11,6 +11,7 @@ import com.autonomouslogic.eveesiproxy.handler.ProxyServiceUserAgentTest;
 import com.autonomouslogic.eveesiproxy.inject.HelidonModule;
 import com.autonomouslogic.eveesiproxy.inject.JacksonModule;
 import com.autonomouslogic.eveesiproxy.inject.OkHttpModule;
+import com.autonomouslogic.eveesiproxy.inject.ThymeleafModule;
 import com.autonomouslogic.eveesiproxy.inject.VersionModule;
 import dagger.Component;
 import jakarta.inject.Singleton;
@@ -21,7 +22,8 @@ import jakarta.inject.Singleton;
 			TestOkHttpClientProvider.class,
 			OkHttpModule.class,
 			JacksonModule.class,
-			HelidonModule.class
+			HelidonModule.class,
+			ThymeleafModule.class
 		})
 @Singleton
 public interface TestComponent {

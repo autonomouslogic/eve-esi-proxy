@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head>
+    <title>Task List</title>
+</head>
+<body>
+<!-- /* Content of this page will be decorated by the elements of layout.html (task/layout) */ -->
+<div layout:fragment="content">
+    <h2>Characters</h2>
+    <ul>
+        <li th:each="character : ${authedCharacters}">
+            <a th:href="'/esiproxy/characters/'+${character.characterId}">
+                <span th:text="${character.characterName}"></span>
+            </a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

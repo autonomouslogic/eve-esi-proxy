@@ -60,6 +60,8 @@ dependencies {
 	implementation "com.github.scribejava:scribejava-core:8.3.3"
 	implementation "commons-codec:commons-codec:1.17.1"
 	implementation "org.apache.commons:commons-lang3:3.17.0"
+	implementation "org.thymeleaf:thymeleaf:3.1.2.RELEASE"
+	implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0"
 
 	// Tests
 	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.52"

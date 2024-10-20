@@ -1,6 +1,7 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
+import com.autonomouslogic.eveesiproxy.ui.TemplateUtil;
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
@@ -11,6 +12,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -29,6 +31,9 @@ public class UiService implements HttpService {
 	@Inject
 	@Named("version")
 	protected String version;
+
+	@Inject
+	protected TemplateUtil templateUtil;
 
 	@Inject
 	protected UiService() {}
@@ -65,6 +70,9 @@ public class UiService implements HttpService {
 			%s
 			"""
 					.formatted(version, BASE_PATH, authedCharactersHtml);
+
+			html = templateUtil.render("index", Map.of("authedCharacters", authedCharacters));
+
 			standardHeaders
 					.apply(res)
 					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")
@@ -100,6 +108,9 @@ public class UiService implements HttpService {
 									characterId,
 									authedCharacter.getProxyKey(),
 									scopes);
+
+			html = templateUtil.render("character", Map.of("character", authedCharacter));
+
 			standardHeaders
 					.apply(res)
 					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")
