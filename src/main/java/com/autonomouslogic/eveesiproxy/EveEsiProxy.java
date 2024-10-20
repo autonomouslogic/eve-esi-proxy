@@ -21,15 +21,6 @@ import okhttp3.Request;
 @Log4j2
 public class EveEsiProxy {
 	@Inject
-	protected IndexService indexService;
-
-	@Inject
-	protected ProxyService proxyService;
-
-	@Inject
-	protected ErrorHandler errorHandler;
-
-	@Inject
 	@Named("version")
 	protected String version;
 

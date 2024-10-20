@@ -32,8 +32,8 @@ public class OauthService implements HttpService {
 	@Override
 	public void routing(HttpRules httpRules) {
 		log.trace("Configuring routing for {}", this.getClass().getSimpleName());
-		httpRules.get("/login", new LoginHandler());
-		httpRules.get("/login/callback", new CallbackHandler());
+		httpRules.get("/", new LoginHandler());
+		httpRules.get("/callback", new CallbackHandler());
 	}
 
 	private class LoginHandler implements Handler {

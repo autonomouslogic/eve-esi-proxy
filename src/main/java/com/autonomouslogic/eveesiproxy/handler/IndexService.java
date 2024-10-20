@@ -2,6 +2,7 @@ package com.autonomouslogic.eveesiproxy.handler;
 
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import io.helidon.http.HeaderNames;
+import io.helidon.http.Status;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -38,23 +39,10 @@ public class IndexService implements HttpService, Handler {
 
 	@Override
 	public void handle(ServerRequest req, ServerResponse res) throws Exception {
-		// https://images.evetech.net/characters/1338057886/portrait
-		var authedCharacters = authManager.getAuthedCharacters();
-		var authedCharactersHtml = authedCharacters.isEmpty()
-				? "<i>No characters logged in</i>"
-				: "<ul>"
-						+ authedCharacters.stream()
-								.map(ac -> "<li>%s [%d] - proxy key: <pre>%s</pre></li>"
-										.formatted(ac.getCharacterName(), ac.getCharacterId(), ac.getProxyKey()))
-								.collect(Collectors.joining("\n"))
-						+ "</ul>";
-		var html = """
-			<h1>EVE ESI Proxy %s</h1>
-			%s
-			""".formatted(version, authedCharactersHtml);
 		standardHeaders
 				.apply(res)
-				.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")
-				.send(html);
+				.status(Status.TEMPORARY_REDIRECT_307)
+				.header(HeaderNames.LOCATION.lowerCase(), UiService.BASE_PATH)
+				.send();
 	}
 }

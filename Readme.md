@@ -51,7 +51,7 @@ The proxy is configured via environment variables set via `docker run -e`:
 * `LOG_LEVEL` - How much logging to do - defaults to `INFO` - options are `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, or `FATAL`
 * `EVE_OAUTH_CLIENT_ID` - The client ID of the application you created on the EVE Developer Portal
 * `EVE_OAUTH_SECRET_KEY` - The secret key of the application you created on the EVE Developer Portal
-* `EVE_OAUTH_CALLBACK_URL` - The callback URL of the application you created on the EVE Developer Portal - defaults to `http://localhost:8182/login/callback`
+* `EVE_OAUTH_CALLBACK_URL` - The callback URL of the application you created on the EVE Developer Portal - defaults to `http://localhost:8182/esiproxy/login/callback`
 * `EVE_OAUTH_AUTHORIZATION_URL` - defaults to `https://login.eveonline.com/v2/oauth/authorize`
 * `EVE_OAUTH_TOKEN_URL` - defaults to `https://login.eveonline.com/v2/oauth/token`
 
@@ -74,7 +74,7 @@ You will have to do this if you want to use a port other than 8182.
 Create an application in the the [EVE Developer Portal](https://developers.eveonline.com/):
 * Select "Authentication & API Access"
 * Select whatever scopes you want to use
-* Set the callback URL to `http://localhost:8182/login/callback` - be sure to change the port number if you're not using the default
+* Set the callback URL to `http://localhost:8182/esiproxy/login/callback` - be sure to change the port number if you're not using the default
 
 Copy the "Client ID" and "Secret Key" and set them on the `EVE_OAUTH_CLIENT_ID` and `EVE_OAUTH_SECRET_KEY` environment variables respectively.
 For instance:
