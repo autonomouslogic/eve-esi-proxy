@@ -112,7 +112,9 @@ public class LoginService implements HttpService {
 			standardHeaders
 					.apply(res)
 					.status(Status.TEMPORARY_REDIRECT_307)
-					.header(HeaderNames.LOCATION.lowerCase(), "/")
+					.header(
+							HeaderNames.LOCATION.lowerCase(),
+							UiService.BASE_PATH + "/characters/" + verify.getCharacterId())
 					.send();
 			//					.send(body.getBytes(StandardCharsets.UTF_8));
 		}
