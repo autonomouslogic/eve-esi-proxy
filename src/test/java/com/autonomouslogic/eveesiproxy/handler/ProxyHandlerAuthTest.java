@@ -17,10 +17,13 @@ import com.autonomouslogic.eveesiproxy.oauth.EsiVerifyResponse;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.scribejava.core.base64.Base64;
+import com.google.common.hash.Hashing;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -191,7 +194,11 @@ public class ProxyHandlerAuthTest {
 						"&",
 					tokenRequestParameters),
 				tokenRequestBody);
-		// @todo test PKCE codes
+		if (authFlow == AuthFlow.PKCE) {
+			var hash = Hashing.sha256().hashString(codeVerifier.get(), StandardCharsets.UTF_8);
+			var encoded = Base64.encodeUrlWithoutPadding(hash.asBytes());
+			assertEquals(codeChallenge, encoded);
+		}
 
 		// Verify request.
 		TestHttpUtils.assertRequest(
