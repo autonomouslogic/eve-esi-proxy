@@ -8,12 +8,12 @@
         <span th:text="${authedCharacters.size()}"></span> characters logged in.
         <a href="/esiproxy/login">Login &raquo;</a>
     </p>
-    <ul class="character-list">
-        <li th:each="character : ${authedCharacters}" class="character">
+    <ul>
+        <li th:each="character : ${authedCharacters}" style="display: flex;">
             <img class="portrait"
                  th:src="'https://images.evetech.net/characters/' + ${character.characterId} + '/portrait?size=32'"
                  alt="Portrait" style="width: 32px; height: 32px;"/>
-            <span class="name">
+            <span style="align-content: center; margin-left: 0.5rem;">
                 <a th:href="'/esiproxy/characters/'+${character.characterId}">
                     <span th:text="${character.characterName}"></span>
                 </a>
