@@ -249,19 +249,21 @@ public class ProxyHandlerAuthTest {
 		var oauthRequest = TestHttpUtils.takeRequest(mockEsi);
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 
+		var tokenRequestParameters = new ArrayList<String>();
+		tokenRequestParameters.add("client_id=client-id-1");
+		if (authFlow == AuthFlow.CODE) {
+			tokenRequestParameters.add("client_secret=client-secret-1");
+		}
+		tokenRequestParameters.addAll(List.of(
+				"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
+				"refresh_token=refresh-token-1",
+				"grant_type=refresh_token"));
 		assertRequest(
 				oauthRequest,
 				"POST",
 				"/v2/oauth/token",
 				Map.of(HeaderNames.CONTENT_TYPE.lowerCase(), "application/x-www-form-urlencoded"),
-				String.join(
-						"&",
-						List.of(
-								"client_id=client-id-1",
-								"client_secret=client-secret-1",
-								"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
-								"refresh_token=refresh-token-1",
-								"grant_type=refresh_token")));
+				String.join("&", tokenRequestParameters));
 
 		assertRequest(
 				esiRequest, "GET", "/esi", Map.of(HeaderNames.AUTHORIZATION.lowerCase(), "Bearer access-token-1"));
