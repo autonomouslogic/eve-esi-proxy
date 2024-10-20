@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
+import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.SneakyThrows;
@@ -41,7 +42,8 @@ public class IndexServiceTest {
 	@SneakyThrows
 	void shouldRespondToRequests() {
 		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/");
-		assertEquals(200, proxyResponse.code());
+		assertEquals(307, proxyResponse.code());
+		assertEquals("/esiproxy", proxyResponse.header(HeaderNames.LOCATION.lowerCase()));
 	}
 
 	@Test
