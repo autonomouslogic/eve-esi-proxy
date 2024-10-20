@@ -5,7 +5,6 @@ import dagger.Provides;
 import jakarta.inject.Singleton;
 import java.time.Duration;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
-import org.jetbrains.annotations.NotNull;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;

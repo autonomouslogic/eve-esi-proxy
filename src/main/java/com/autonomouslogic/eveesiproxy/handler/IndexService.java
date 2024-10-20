@@ -9,7 +9,6 @@ import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 
@@ -21,10 +20,6 @@ public class IndexService implements HttpService, Handler {
 
 	@Inject
 	protected AuthManager authManager;
-
-	@Inject
-	@Named("version")
-	protected String version;
 
 	@Inject
 	protected IndexService() {}

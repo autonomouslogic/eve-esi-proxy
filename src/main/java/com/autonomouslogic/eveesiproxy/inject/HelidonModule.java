@@ -5,6 +5,7 @@ import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
 import com.autonomouslogic.eveesiproxy.handler.IndexService;
 import com.autonomouslogic.eveesiproxy.handler.LoginService;
 import com.autonomouslogic.eveesiproxy.handler.ProxyService;
+import com.autonomouslogic.eveesiproxy.handler.StaticService;
 import com.autonomouslogic.eveesiproxy.handler.UiService;
 import dagger.Module;
 import dagger.Provides;
@@ -24,13 +25,15 @@ public class HelidonModule {
 			ProxyService proxyService,
 			LoginService loginService,
 			UiService uiService,
+			StaticService staticService,
 			ErrorHandler errorHandler) {
 		log.trace("Creating Helidon server");
 		return WebServer.builder()
 				.host(Configs.PROXY_HOST.getRequired())
 				.port(Configs.PROXY_PORT.getRequired())
 				.connectionConfig(connectionConfig())
-				.routing(routing -> routing(routing, indexService, proxyService, loginService, uiService, errorHandler))
+				.routing(routing -> routing(
+						routing, indexService, proxyService, loginService, uiService, staticService, errorHandler))
 				.build();
 	}
 
@@ -45,10 +48,12 @@ public class HelidonModule {
 			ProxyService proxyService,
 			LoginService loginService,
 			UiService uiService,
+			StaticService staticService,
 			ErrorHandler errorHandler) {
 		routing.register(indexService)
 				.register(UiService.BASE_PATH + "/login", loginService)
 				.register(UiService.BASE_PATH, uiService)
+				.register(staticService)
 				.register(proxyService)
 				.error(Exception.class, errorHandler);
 	}
