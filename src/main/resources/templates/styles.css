@@ -51,8 +51,12 @@ p, ul {
     margin-bottom: 0.5rem;
 }
 
-.character-list {
+ul {
     margin-left: 1rem;
+    list-style-type: circle;
+}
+
+.character-list {
 }
 .character-list .character {
 }

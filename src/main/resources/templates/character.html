@@ -6,7 +6,36 @@
 <body>
 <!-- /* Content of this page will be decorated by the elements of layout.html (task/layout) */ -->
 <div layout:fragment="content">
-    <h2 th:text="${character.characterName}"></h2>
+    <div style="display: flex">
+        <span>
+            <img class="portrait"
+                 th:src="'https://images.evetech.net/characters/' + ${character.characterId} + '/portrait?size=128'"
+                 alt="Portrait" style="width: 128px; height: 128px;"/>
+        </span>
+        <span>
+            <h2 th:text="${character.characterName}"></h2>
+            <div>
+                 Proxy key: <span style="font-family: monospace" th:text="${character.proxyKey}"></span>
+            </div>
+            <div>
+                Character ID: <span style="font-family: monospace" th:text="${character.characterId}"></span>
+            </div>
+        </span>
+    </div>
+
+    <ul>
+        <li>
+            Owner hash: <span style="font-family: monospace" th:text="${character.characterOwnerHash}"></span>
+        </li>
+        <li>
+            Scopes: <span th:text="${character.scopes.size()}"></span>
+            <ul>
+                <li th:each="scope : ${character.scopes}">
+                    <span th:text="${scope}"></span>
+                </li>
+            </ul>
+        </li>
+    </ul>
 </div>
 </body>
 </html>

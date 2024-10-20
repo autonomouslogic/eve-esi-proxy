@@ -14,13 +14,9 @@
         </p>
     </header>
 
-
-
     <div class="container">
         <div layout:fragment="content"></div>
     </div>
-
-
 
     <footer>
         <p>
@@ -28,18 +24,19 @@
             <span style="font-family: monospace" th:text="${proxyVersion}"></span>
         </p>
         <p>
-            <div>
-                <a href="https://everef.net/discord">Discord</a>
-            </div>
-            <div>
-                <a href="https://patreon.com/everef">Patreon</a>
-            </div>
-            <div>
-                <a href="https://github.com/autonomouslogic/eve-esi-proxy/">Github</a>
-            </div>
+        <div>
+            <a href="https://everef.net/discord">Discord</a>
+        </div>
+        <div>
+            <a href="https://patreon.com/everef">Patreon</a>
+        </div>
+        <div>
+            <a href="https://github.com/autonomouslogic/eve-esi-proxy/">Github</a>
+        </div>
         </p>
         <div>
-            <img th:src="'data:image/webp;base64,' + ${evePartnerImageBase64}" alt="EVE Partner" style="width: 400px; height: 168px;" />
+            <img th:src="'data:image/webp;base64,' + ${evePartnerImageBase64}" alt="EVE Partner"
+                 style="width: 400px; height: 168px;"/>
         </div>
     </footer>
 </div>
