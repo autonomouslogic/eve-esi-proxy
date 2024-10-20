@@ -6,6 +6,7 @@ import com.autonomouslogic.eveesiproxy.handler.ProxyServiceCacheTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceErrorLimitTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServicePagesTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceRateLimitTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceRetryTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceUserAgentTest;
 import com.autonomouslogic.eveesiproxy.inject.HelidonModule;
@@ -29,17 +30,19 @@ import jakarta.inject.Singleton;
 public interface TestComponent {
 	void inject(IndexServiceTest test);
 
-	void inject(ProxyServiceTest test);
+	void inject(ProxyServiceAuthTest test);
 
 	void inject(ProxyServiceCacheTest test);
 
-	void inject(ProxyServiceUserAgentTest test);
-
-	void inject(ProxyServiceRateLimitTest test);
+	void inject(ProxyServiceErrorLimitTest test);
 
 	void inject(ProxyServicePagesTest test);
 
-	void inject(ProxyServiceErrorLimitTest test);
+	void inject(ProxyServiceRateLimitTest test);
 
-	void inject(ProxyServiceAuthTest test);
+	void inject(ProxyServiceRetryTest test);
+
+	void inject(ProxyServiceTest test);
+
+	void inject(ProxyServiceUserAgentTest test);
 }
