@@ -1,6 +1,7 @@
 body {
     background-color: #09080a;
     color: #d1d5db;
+    font-family: sans-serif;
 }
 
 header {
@@ -54,15 +55,4 @@ p, ul {
 ul {
     margin-left: 1rem;
     list-style-type: circle;
-}
-
-.character-list {
-}
-.character-list .character {
-}
-.character-list .character .portrait {
-    display: inline-block;
-}
-.character-list .character .portrait {
-    display: inline-block;
 }
