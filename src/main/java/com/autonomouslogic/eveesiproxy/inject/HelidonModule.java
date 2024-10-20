@@ -3,7 +3,7 @@ package com.autonomouslogic.eveesiproxy.inject;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
 import com.autonomouslogic.eveesiproxy.handler.IndexService;
-import com.autonomouslogic.eveesiproxy.handler.OauthService;
+import com.autonomouslogic.eveesiproxy.handler.LoginService;
 import com.autonomouslogic.eveesiproxy.handler.ProxyService;
 import com.autonomouslogic.eveesiproxy.handler.UiService;
 import dagger.Module;
@@ -14,8 +14,6 @@ import io.helidon.webserver.http.HttpRouting;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 
-import java.awt.desktop.QuitHandler;
-
 @Module
 @Log4j2
 public class HelidonModule {
@@ -24,7 +22,7 @@ public class HelidonModule {
 	public WebServer webServer(
 			IndexService indexService,
 			ProxyService proxyService,
-			OauthService oauthService,
+			LoginService loginService,
 		UiService uiService,
 			ErrorHandler errorHandler) {
 		log.trace("Creating Helidon server");
@@ -32,7 +30,7 @@ public class HelidonModule {
 				.host(Configs.PROXY_HOST.getRequired())
 				.port(Configs.PROXY_PORT.getRequired())
 				.connectionConfig(connectionConfig())
-				.routing(routing -> routing(routing, indexService, proxyService, oauthService,uiService, errorHandler))
+				.routing(routing -> routing(routing, indexService, proxyService, loginService,uiService, errorHandler))
 				.build();
 	}
 
@@ -45,11 +43,11 @@ public class HelidonModule {
 			HttpRouting.Builder routing,
 			IndexService indexService,
 			ProxyService proxyService,
-			OauthService oauthService,
+			LoginService loginService,
 			UiService uiService,
 			ErrorHandler errorHandler) {
 		routing.register(indexService)
-				.register(UiService.BASE_PATH + "/login", oauthService)
+				.register(UiService.BASE_PATH + "/login", loginService)
 				.register(UiService.BASE_PATH, uiService)
 				.register(proxyService)
 				.error(Exception.class, errorHandler);
