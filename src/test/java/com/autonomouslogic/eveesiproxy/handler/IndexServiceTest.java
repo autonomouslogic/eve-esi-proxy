@@ -13,7 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class IndexHandlerTest {
+public class IndexServiceTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -22,7 +22,7 @@ public class IndexHandlerTest {
 	OkHttpClient client;
 
 	@Inject
-	protected IndexHandlerTest() {}
+	protected IndexServiceTest() {}
 
 	@BeforeEach
 	@SneakyThrows

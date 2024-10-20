@@ -1,13 +1,13 @@
 package com.autonomouslogic.eveesiproxy.test;
 
-import com.autonomouslogic.eveesiproxy.handler.IndexHandlerTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerAuthTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerCacheTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerErrorLimitTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerPagesTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerRateLimitTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandlerUserAgentTest;
+import com.autonomouslogic.eveesiproxy.handler.IndexServiceTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceAuthTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceCacheTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceErrorLimitTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServicePagesTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceRateLimitTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceUserAgentTest;
 import com.autonomouslogic.eveesiproxy.inject.HelidonModule;
 import com.autonomouslogic.eveesiproxy.inject.JacksonModule;
 import com.autonomouslogic.eveesiproxy.inject.OkHttpModule;
@@ -25,19 +25,19 @@ import jakarta.inject.Singleton;
 		})
 @Singleton
 public interface TestComponent {
-	void inject(IndexHandlerTest test);
+	void inject(IndexServiceTest test);
 
-	void inject(ProxyHandlerTest test);
+	void inject(ProxyServiceTest test);
 
-	void inject(ProxyHandlerCacheTest test);
+	void inject(ProxyServiceCacheTest test);
 
-	void inject(ProxyHandlerUserAgentTest test);
+	void inject(ProxyServiceUserAgentTest test);
 
-	void inject(ProxyHandlerRateLimitTest test);
+	void inject(ProxyServiceRateLimitTest test);
 
-	void inject(ProxyHandlerPagesTest test);
+	void inject(ProxyServicePagesTest test);
 
-	void inject(ProxyHandlerErrorLimitTest test);
+	void inject(ProxyServiceErrorLimitTest test);
 
-	void inject(ProxyHandlerAuthTest test);
+	void inject(ProxyServiceAuthTest test);
 }

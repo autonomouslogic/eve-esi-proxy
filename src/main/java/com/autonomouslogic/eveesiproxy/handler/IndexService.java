@@ -15,7 +15,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Singleton
 @Log4j2
-public class IndexHandler implements HttpService, Handler {
+public class IndexService implements HttpService, Handler {
 	@Inject
 	protected StandardHeaders standardHeaders;
 
@@ -27,7 +27,7 @@ public class IndexHandler implements HttpService, Handler {
 	protected String version;
 
 	@Inject
-	protected IndexHandler() {}
+	protected IndexService() {}
 
 	@Override
 	public void routing(HttpRules httpRules) {

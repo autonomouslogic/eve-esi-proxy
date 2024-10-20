@@ -35,7 +35,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
 @Timeout(30)
 @Log4j2
-public class ProxyHandlerErrorLimitTest {
+public class ProxyServiceErrorLimitTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -51,7 +51,7 @@ public class ProxyHandlerErrorLimitTest {
 	Instant limitResetTime;
 
 	@Inject
-	protected ProxyHandlerErrorLimitTest() {}
+	protected ProxyServiceErrorLimitTest() {}
 
 	@BeforeEach
 	@SneakyThrows

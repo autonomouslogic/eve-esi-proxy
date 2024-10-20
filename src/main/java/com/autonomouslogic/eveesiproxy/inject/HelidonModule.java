@@ -2,9 +2,9 @@ package com.autonomouslogic.eveesiproxy.inject;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
-import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
-import com.autonomouslogic.eveesiproxy.handler.OauthHandler;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
+import com.autonomouslogic.eveesiproxy.handler.IndexService;
+import com.autonomouslogic.eveesiproxy.handler.OauthService;
+import com.autonomouslogic.eveesiproxy.handler.ProxyService;
 import dagger.Module;
 import dagger.Provides;
 import io.helidon.webserver.ConnectionConfig;
@@ -19,16 +19,16 @@ public class HelidonModule {
 	@Provides
 	@Singleton
 	public WebServer webServer(
-			IndexHandler indexHandler,
-			ProxyHandler proxyHandler,
-			OauthHandler oauthHandler,
+			IndexService indexService,
+			ProxyService proxyService,
+			OauthService oauthService,
 			ErrorHandler errorHandler) {
 		log.trace("Creating Helidon server");
 		return WebServer.builder()
 				.host(Configs.PROXY_HOST.getRequired())
 				.port(Configs.PROXY_PORT.getRequired())
 				.connectionConfig(connectionConfig())
-				.routing(routing -> routing(routing, indexHandler, proxyHandler, oauthHandler, errorHandler))
+				.routing(routing -> routing(routing, indexService, proxyService, oauthService, errorHandler))
 				.build();
 	}
 
@@ -39,13 +39,13 @@ public class HelidonModule {
 
 	private void routing(
 			HttpRouting.Builder routing,
-			IndexHandler indexHandler,
-			ProxyHandler proxyHandler,
-			OauthHandler oauthHandler,
+			IndexService indexService,
+			ProxyService proxyService,
+			OauthService oauthService,
 			ErrorHandler errorHandler) {
-		routing.register(indexHandler)
-				.register(oauthHandler)
-				.register(proxyHandler)
+		routing.register(indexService)
+				.register(oauthService)
+				.register(proxyService)
 				.error(Exception.class, errorHandler);
 	}
 }

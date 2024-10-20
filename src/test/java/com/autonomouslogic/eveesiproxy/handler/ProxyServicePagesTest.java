@@ -42,7 +42,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
 @Timeout(30)
 @Log4j2
-public class ProxyHandlerPagesTest {
+public class ProxyServicePagesTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -56,7 +56,7 @@ public class ProxyHandlerPagesTest {
 	MockWebServer mockEsi;
 
 	@Inject
-	protected ProxyHandlerPagesTest() {}
+	protected ProxyServicePagesTest() {}
 
 	@BeforeEach
 	@SneakyThrows

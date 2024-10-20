@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Singleton
 @Log4j2
-public class OauthHandler implements HttpService {
+public class OauthService implements HttpService {
 	@Inject
 	protected EsiAuthHelper esiAuthHelper;
 
@@ -27,7 +27,7 @@ public class OauthHandler implements HttpService {
 	protected AuthManager authManager;
 
 	@Inject
-	protected OauthHandler() {}
+	protected OauthService() {}
 
 	@Override
 	public void routing(HttpRules httpRules) {

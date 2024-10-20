@@ -27,7 +27,7 @@ import org.junitpioneer.jupiter.cartesian.CartesianTest;
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
 @Timeout(30)
 @Log4j2
-public class ProxyHandlerTest {
+public class ProxyServiceTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -38,7 +38,7 @@ public class ProxyHandlerTest {
 	MockWebServer mockEsi;
 
 	@Inject
-	protected ProxyHandlerTest() {}
+	protected ProxyServiceTest() {}
 
 	@BeforeEach
 	@SneakyThrows

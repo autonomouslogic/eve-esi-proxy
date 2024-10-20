@@ -47,7 +47,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "EVE_OAUTH_TOKEN_URL", value = "http://localhost:" + MOCK_ESI_PORT + "/v2/oauth/token")
 @Timeout(30)
 @Log4j2
-public class ProxyHandlerAuthTest {
+public class ProxyServiceAuthTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -64,7 +64,7 @@ public class ProxyHandlerAuthTest {
 	MockWebServer mockEsi;
 
 	@Inject
-	protected ProxyHandlerAuthTest() {}
+	protected ProxyServiceAuthTest() {}
 
 	@BeforeEach
 	@SneakyThrows

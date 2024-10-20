@@ -15,7 +15,7 @@ import lombok.extern.log4j.Log4j2;
  */
 @Singleton
 @Log4j2
-public class ProxyHandler implements HttpService, Handler {
+public class ProxyService implements HttpService, Handler {
 	@Inject
 	protected StandardHeaders standardHeaders;
 
@@ -23,7 +23,7 @@ public class ProxyHandler implements HttpService, Handler {
 	protected EsiRelay esiRelay;
 
 	@Inject
-	protected ProxyHandler() {}
+	protected ProxyService() {}
 
 	@Override
 	public void routing(HttpRules httpRules) {
