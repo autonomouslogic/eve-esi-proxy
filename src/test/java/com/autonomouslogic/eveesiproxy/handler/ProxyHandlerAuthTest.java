@@ -4,7 +4,6 @@ import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
 import static com.autonomouslogic.eveesiproxy.test.TestHttpUtils.assertRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
@@ -17,12 +16,12 @@ import com.autonomouslogic.eveesiproxy.oauth.EsiVerifyResponse;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.scribejava.core.base64.Base64;
 import com.google.common.hash.Hashing;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,11 +147,14 @@ public class ProxyHandlerAuthTest {
 		TestHttpUtils.enqueueResponse(
 				mockEsi,
 				200,
-				objectMapper.writeValueAsString(EsiVerifyResponse.builder()
-						.characterId(characterId)
-						.characterName("Test Character")
-						.characterOwnerHash("owner-hash-1")
-						.build()));
+				((ObjectNode) objectMapper.valueToTree(EsiVerifyResponse.builder()
+								.characterId(characterId)
+								.characterName("Test Character")
+								.characterOwnerHash("owner-hash-1")
+								.build()))
+						.put("ExpiresOn", "2021-01-01T00:00:00")
+						.put("Scopes", String.join(" ", EsiAuthHelper.SCOPES))
+						.toString());
 
 		// Execute callback.
 		var callbackResponse =
@@ -181,19 +183,14 @@ public class ProxyHandlerAuthTest {
 			tokenRequestParameters.add("client_secret=client-secret-1");
 		}
 		tokenRequestParameters.addAll(List.of(
-			"code=auth-code-1",
-			"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Flogin%2Fcallback",
-			"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
-			"grant_type=authorization_code"
-		));
+				"code=auth-code-1",
+				"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Flogin%2Fcallback",
+				"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
+				"grant_type=authorization_code"));
 		if (authFlow == AuthFlow.PKCE) {
 			tokenRequestParameters.add("code_verifier=" + codeVerifier.get());
 		}
-		assertEquals(
-				String.join(
-						"&",
-					tokenRequestParameters),
-				tokenRequestBody);
+		assertEquals(String.join("&", tokenRequestParameters), tokenRequestBody);
 		if (authFlow == AuthFlow.PKCE) {
 			var hash = Hashing.sha256().hashString(codeVerifier.get(), StandardCharsets.UTF_8);
 			var encoded = Base64.encodeUrlWithoutPadding(hash.asBytes());
@@ -213,20 +210,20 @@ public class ProxyHandlerAuthTest {
 		assertEquals("Test Character", authedCharacter.getCharacterName());
 		assertEquals("owner-hash-1", authedCharacter.getCharacterOwnerHash());
 		assertNotNull(authedCharacter.getProxyKey());
-		//		assertEquals(EsiAuthHelper.SCOPES, authedCharacter.getScopes()); @todo
+		assertEquals(EsiAuthHelper.SCOPES, authedCharacter.getScopes());
 	}
 
 	@Test
 	@SneakyThrows
 	@SetEnvironmentVariable(key = "EVE_OAUTH_SECRET_KEY", value = "client-secret-1")
 	void shouldRequestAndTranslateOAuthTokensForProxyKeysForCodeFlow() {
-		testLoginFlow(AuthFlow.CODE);
+		testProxyKeyTranslation(AuthFlow.CODE);
 	}
 
 	@Test
 	@SneakyThrows
 	void shouldRequestAndTranslateOAuthTokensForProxyKeysForPkceFlow() {
-		testLoginFlow(AuthFlow.PKCE);
+		testProxyKeyTranslation(AuthFlow.PKCE);
 	}
 
 	void testProxyKeyTranslation(AuthFlow authFlow) {
