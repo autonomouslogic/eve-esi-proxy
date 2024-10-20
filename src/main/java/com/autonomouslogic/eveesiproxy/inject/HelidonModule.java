@@ -23,14 +23,14 @@ public class HelidonModule {
 			IndexService indexService,
 			ProxyService proxyService,
 			LoginService loginService,
-		UiService uiService,
+			UiService uiService,
 			ErrorHandler errorHandler) {
 		log.trace("Creating Helidon server");
 		return WebServer.builder()
 				.host(Configs.PROXY_HOST.getRequired())
 				.port(Configs.PROXY_PORT.getRequired())
 				.connectionConfig(connectionConfig())
-				.routing(routing -> routing(routing, indexService, proxyService, loginService,uiService, errorHandler))
+				.routing(routing -> routing(routing, indexService, proxyService, loginService, uiService, errorHandler))
 				.build();
 	}
 

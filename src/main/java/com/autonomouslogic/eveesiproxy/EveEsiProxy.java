@@ -1,9 +1,6 @@
 package com.autonomouslogic.eveesiproxy;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
-import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
-import com.autonomouslogic.eveesiproxy.handler.IndexService;
-import com.autonomouslogic.eveesiproxy.handler.ProxyService;
 import com.autonomouslogic.eveesiproxy.inject.DaggerMainComponent;
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.WebServer;
