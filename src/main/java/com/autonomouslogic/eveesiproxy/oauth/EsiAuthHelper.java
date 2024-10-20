@@ -166,18 +166,6 @@ public class EsiAuthHelper {
 		return Hex.encodeHexString(state);
 	}
 
-	//	@SneakyThrows
-	//	public Completable putCharacterLogin(CharacterLogin characterLogin) {
-	//		return Completable.defer(() -> Rx3Util.toSingle(dynamoAsyncMapper.putItemFromKeyObject(characterLogin))
-	//				.ignoreElement());
-	//	}
-
-	//	@SneakyThrows
-	//	public Maybe<CharacterLogin> getCharacterLogin(String ownerHash) {
-	//		return Rx3Util.toMaybe(dynamoAsyncMapper.getItemFromPrimaryKey(ownerHash, CharacterLogin.class))
-	//				.flatMap(r -> Maybe.fromOptional(Optional.ofNullable(r.item())));
-	//	}
-
 	public OAuth2AccessToken getAccessToken(AuthedCharacter authedCharacter) {
 		var cached = tokenCache.getIfPresent(authedCharacter.getCharacterOwnerHash());
 		if (cached != null) {
@@ -195,14 +183,6 @@ public class EsiAuthHelper {
 		tokenCache.put(authedCharacter.getCharacterOwnerHash(), Pair.of(token, Instant.now()));
 		return token;
 	}
-
-	//	public Single<String> getTokenStringForOwnerHash(String ownerHash) {
-	//		return getTokenForOwnerHash(ownerHash)
-	//				.map(token -> token.getAccessToken())
-	//				.switchIfEmpty((Maybe.defer(() -> Maybe.error(
-	//						new RuntimeException(String.format("Login not found for owner hash: %s", ownerHash))))))
-	//				.toSingle();
-	//	}
 
 	private static void logPkceForState(String state, PKCE pkce) {
 		log.trace(
