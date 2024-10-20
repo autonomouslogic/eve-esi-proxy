@@ -16,7 +16,6 @@ import jakarta.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Duration;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Cache;
@@ -42,9 +41,10 @@ public class OkHttpModule {
 		return new OkHttpClient.Builder()
 				.followRedirects(false)
 				.followSslRedirects(false)
-				.connectTimeout(Duration.ofSeconds(5))
-				.readTimeout(Duration.ofSeconds(20))
-				.writeTimeout(Duration.ofSeconds(5))
+				.connectTimeout(Configs.HTTP_CONNECT_TIMEOUT.getRequired())
+				.readTimeout(Configs.HTTP_READ_TIMEOUT.getRequired())
+				.writeTimeout(Configs.HTTP_WRITE_TIMEOUT.getRequired())
+				.callTimeout(Configs.HTTP_CALL_TIMEOUT.getRequired())
 				.cache(cache)
 				.addInterceptor(cacheStatusInterceptor)
 				.addInterceptor(userAgentInterceptor)
