@@ -1,6 +1,7 @@
 package com.autonomouslogic.eveesiproxy.configs;
 
 import com.autonomouslogic.commons.config.Config;
+import java.time.Duration;
 
 public class Configs {
 	public static final Config<String> LOG_LEVEL = Config.<String>builder()
@@ -99,5 +100,29 @@ public class Configs {
 			.name("EVE_OAUTH_TOKEN_URL")
 			.defaultValue("https://login.eveonline.com/v2/oauth/token")
 			.type(String.class)
+			.build();
+
+	public static final Config<Duration> HTTP_CONNECT_TIMEOUT = Config.<Duration>builder()
+			.name("HTTP_CONNECT_TIMEOUT")
+			.defaultValue(Duration.parse("PT5S"))
+			.type(Duration.class)
+			.build();
+
+	public static final Config<Duration> HTTP_READ_TIMEOUT = Config.<Duration>builder()
+			.name("HTTP_READ_TIMEOUT")
+			.defaultValue(Duration.parse("PT60S"))
+			.type(Duration.class)
+			.build();
+
+	public static final Config<Duration> HTTP_WRITE_TIMEOUT = Config.<Duration>builder()
+			.name("HTTP_WRITE_TIMEOUT")
+			.defaultValue(Duration.parse("PT60S"))
+			.type(Duration.class)
+			.build();
+
+	public static final Config<Duration> HTTP_CALL_TIMEOUT = Config.<Duration>builder()
+			.name("HTTP_CALL_TIMEOUT")
+			.defaultValue(Duration.parse("PT60S"))
+			.type(Duration.class)
 			.build();
 }
