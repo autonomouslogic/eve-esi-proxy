@@ -10,6 +10,8 @@ import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 
@@ -83,14 +85,21 @@ public class UiService implements HttpService {
 						.send("Character %s not found".formatted(characterId));
 				return;
 			}
+			var scopes = String.join(
+					", ", Optional.ofNullable(authedCharacter.getScopes()).orElse(List.of()));
 			var html =
 					"""
 			<h1>%s</h1>
 			<p>Character ID: %s</p>
 			<p>Proxy key: <pre>%s</pre></p>
+			<p>Scopes: %s</p>
 			<p><a href="/">Home</a></p>
 			"""
-							.formatted(authedCharacter.getCharacterName(), characterId, authedCharacter.getProxyKey());
+							.formatted(
+									authedCharacter.getCharacterName(),
+									characterId,
+									authedCharacter.getProxyKey(),
+									scopes);
 			standardHeaders
 					.apply(res)
 					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")

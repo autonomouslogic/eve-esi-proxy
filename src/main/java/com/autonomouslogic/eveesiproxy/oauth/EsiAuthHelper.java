@@ -2,6 +2,7 @@ package com.autonomouslogic.eveesiproxy.oauth;
 
 import static com.autonomouslogic.eveesiproxy.configs.Configs.LOG_LEVEL;
 
+import com.autonomouslogic.commons.ResourceUtil;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.http.UserAgentInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
@@ -30,6 +32,7 @@ import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -42,23 +45,18 @@ import org.apache.commons.lang3.tuple.Pair;
 public class EsiAuthHelper {
 	private static final Duration EXPIRATION_BUFFER = Duration.ofMinutes(1);
 
-	@Deprecated
-	public static final List<String> SCOPES = List.of( // @todo should be configurable when logging in
-			"publicData",
-			"esi-characters.read_agents_research.v1",
-			"esi-characters.read_blueprints.v1",
-			"esi-characters.read_chat_channels.v1",
-			"esi-characters.read_contacts.v1",
-			"esi-characters.read_corporation_roles.v1",
-			"esi-characters.read_fatigue.v1",
-			"esi-characters.read_fw_stats.v1",
-			"esi-characters.read_loyalty.v1",
-			"esi-characters.read_medals.v1",
-			"esi-characters.read_notifications.v1",
-			"esi-characters.read_opportunities.v1",
-			"esi-characters.read_standings.v1",
-			"esi-characters.read_titles.v1",
-			"esi-characters.write_contacts.v1");
+	// @todo should be configurable when logging in
+	public static final List<String> SCOPES;
+
+	static {
+		try (var in = ResourceUtil.loadResource("/esi-scopes")) {
+			SCOPES = IOUtils.readLines(in, StandardCharsets.UTF_8).stream()
+					.filter(e -> !e.isEmpty())
+					.toList();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Inject
 	protected OkHttpClient client;
