@@ -4,6 +4,7 @@ import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
 import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
 import io.helidon.http.HeaderNames;
+import io.helidon.http.Status;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -11,7 +12,6 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.nio.charset.StandardCharsets;
 import lombok.extern.log4j.Log4j2;
 
 @Singleton
@@ -78,42 +78,43 @@ public class OauthHandler implements HttpService {
 			//				.build();
 			// esiAuthHelper.putCharacterLogin(characterLogin).blockingAwait();
 
-			var body = String.format(
-					"""
-				<h1>EVE Ref Login</h1>
-				<h2>OAuth2</h2>
-				<ul>
-					<li>accessToken: <code>%s</code></li>
-					<li>tokenType: <code>%s</code></li>
-					<li>expiresIn: <code>%s</code></li>
-					<li>refreshToken: <code>%s</code></li>
-					<li>scope: <code>%s</code></li>
-				</ul>
-				<h2>EVE Online</h2>
-				<ul>
-					<li>characterId: <code>%s</code></li>
-					<li>characterName: <code>%s</code></li>
-					<li>characterOwnerHash: <code>%s</code></li>
-					<li>expiresOn: <code>%s</code></li>
-					<li>scopes: <code>%s</code></li>
-				</ul>
-				""",
-					token.getAccessToken(),
-					token.getTokenType(),
-					token.getExpiresIn(),
-					token.getRefreshToken(),
-					token.getScope(),
-					verify.getCharacterId(),
-					verify.getCharacterName(),
-					verify.getCharacterOwnerHash(),
-					verify.getExpiresOn(),
-					verify.getScopes());
+			//			var body = String.format(
+			//					"""
+			//				<h1>EVE Ref Login</h1>
+			//				<h2>OAuth2</h2>
+			//				<ul>
+			//					<li>accessToken: <code>%s</code></li>
+			//					<li>tokenType: <code>%s</code></li>
+			//					<li>expiresIn: <code>%s</code></li>
+			//					<li>refreshToken: <code>%s</code></li>
+			//					<li>scope: <code>%s</code></li>
+			//				</ul>
+			//				<h2>EVE Online</h2>
+			//				<ul>
+			//					<li>characterId: <code>%s</code></li>
+			//					<li>characterName: <code>%s</code></li>
+			//					<li>characterOwnerHash: <code>%s</code></li>
+			//					<li>expiresOn: <code>%s</code></li>
+			//					<li>scopes: <code>%s</code></li>
+			//				</ul>
+			//				""",
+			//					token.getAccessToken(),
+			//					token.getTokenType(),
+			//					token.getExpiresIn(),
+			//					token.getRefreshToken(),
+			//					token.getScope(),
+			//					verify.getCharacterId(),
+			//					verify.getCharacterName(),
+			//					verify.getCharacterOwnerHash(),
+			//					verify.getExpiresOn(),
+			//					verify.getScopes());
 
 			standardHeaders
 					.apply(res)
-					.status(200)
-					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")
-					.send(body.getBytes(StandardCharsets.UTF_8));
+					.status(Status.TEMPORARY_REDIRECT_307)
+					.header(HeaderNames.LOCATION.lowerCase(), "/")
+					.send();
+			//					.send(body.getBytes(StandardCharsets.UTF_8));
 		}
 	}
 }

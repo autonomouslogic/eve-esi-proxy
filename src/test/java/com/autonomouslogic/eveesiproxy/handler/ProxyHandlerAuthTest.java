@@ -146,12 +146,10 @@ public class ProxyHandlerAuthTest {
 						.build()));
 
 		// Execute callback.
-		var code = "auth-code-1";
 		var callbackResponse =
-				TestHttpUtils.callProxy(client, proxy, "GET", "/login/callback?code=" + code + "&state=" + state);
-		//		assertEquals(307, callbackResponse.code()); @todo
-		//		var callbackRedirect = HttpUrl.parse(callbackResponse.header("location"));
-		//		assertEquals("/", callbackRedirect.encodedPath());
+				TestHttpUtils.callProxy(client, proxy, "GET", "/login/callback?code=auth-code-1&state=" + state);
+		assertEquals(307, callbackResponse.code());
+		assertEquals("/", callbackResponse.header(HeaderNames.LOCATION.lowerCase()));
 
 		// Token request.
 		var tokenRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -172,7 +170,7 @@ public class ProxyHandlerAuthTest {
 						List.of(
 								"client_id=client-id-1",
 								//								"client_secret=client-secret-1",
-								"code=" + code,
+								"code=auth-code-1",
 								"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Flogin%2Fcallback",
 								"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
 								"grant_type=authorization_code",
