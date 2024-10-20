@@ -22,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 @Jacksonized
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class EsiVerifyResponse {
-	@JsonProperty("CharacterID")
+	@JsonProperty(value = "CharacterID")
 	long characterId;
 
 	@JsonProperty
