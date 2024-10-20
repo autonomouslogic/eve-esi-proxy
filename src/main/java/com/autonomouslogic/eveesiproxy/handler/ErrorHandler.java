@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @Singleton
 @Log4j2
@@ -23,6 +24,6 @@ public class ErrorHandler implements io.helidon.webserver.http.ErrorHandler<Exce
 	@Override
 	public void handle(ServerRequest serverRequest, ServerResponse serverResponse, Exception e) {
 		log.warn("Error processing request", e);
-		serverResponse.status(500).send();
+		serverResponse.status(500).send(ExceptionUtils.getMessage(e));
 	}
 }

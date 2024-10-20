@@ -22,6 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,9 +52,14 @@ public class EsiAuthHelper {
 
 	static {
 		try (var in = ResourceUtil.loadResource("/esi-scopes")) {
-			SCOPES = IOUtils.readLines(in, StandardCharsets.UTF_8).stream()
+			var scopes = new ArrayList<>(IOUtils.readLines(in, StandardCharsets.UTF_8).stream()
 					.filter(e -> !e.isEmpty())
-					.toList();
+					.limit(66)
+					.toList());
+			if (!scopes.contains("publicData")) {
+				scopes.add("publicData");
+			}
+			SCOPES = Collections.unmodifiableList(scopes);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -140,6 +147,7 @@ public class EsiAuthHelper {
 
 	@SneakyThrows
 	public EsiVerifyResponse verify(@NonNull String token) {
+		log.trace("Verifying token: {}", token);
 		var url = new URL(new URL(esiBaseUrl), "/verify/");
 		var request = new Request.Builder()
 				.get()
@@ -149,6 +157,10 @@ public class EsiAuthHelper {
 				.build();
 		EsiVerifyResponse verify;
 		try (var response = client.newCall(request).execute()) {
+			if (!response.isSuccessful()) {
+				log.warn("Failed to verify token: {}", response);
+				throw new RuntimeException("Failed to verify token");
+			}
 			var b = response.body().string();
 			try {
 				verify = objectMapper.readValue(b, EsiVerifyResponse.class);

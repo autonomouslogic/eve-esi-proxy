@@ -37,7 +37,7 @@ docker-run: docker
 		-v eve-esi-proxy:/data \
 		-p 8182:8182 \
 		-m 2g \
-		-e "ESI_USER_AGENT=test" \
+		-e "ESI_USER_AGENT=test@example.com" \
 		-e "LOG_LEVEL=trace" \
 		$(DOCKER_TAG)
 
