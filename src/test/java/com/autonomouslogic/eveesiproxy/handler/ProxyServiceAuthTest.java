@@ -113,7 +113,7 @@ public class ProxyServiceAuthTest {
 		var characterId = 283764238;
 
 		// Login redirect to EVE auth.
-		var loginResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/login");
+		var loginResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esiproxy/login");
 		assertEquals(307, loginResponse.code());
 		var loginRedirect = HttpUrl.parse(loginResponse.header("location"));
 		var codeChallenge = loginRedirect.queryParameter("code_challenge");
@@ -125,7 +125,7 @@ public class ProxyServiceAuthTest {
 			assertEquals("S256", loginRedirect.queryParameter("code_challenge_method"));
 		}
 		assertEquals("client-id-1", loginRedirect.queryParameter("client_id"));
-		assertEquals("http://localhost:8182/login/callback", loginRedirect.queryParameter("redirect_uri"));
+		assertEquals("http://localhost:8182/esiproxy/login/callback", loginRedirect.queryParameter("redirect_uri"));
 		assertEquals(
 				EsiAuthHelper.SCOPES,
 				List.of(loginRedirect.queryParameter("scope").split(" ")));
@@ -157,10 +157,10 @@ public class ProxyServiceAuthTest {
 						.toString());
 
 		// Execute callback.
-		var callbackResponse =
-				TestHttpUtils.callProxy(client, proxy, "GET", "/login/callback?code=auth-code-1&state=" + state);
+		var callbackResponse = TestHttpUtils.callProxy(
+				client, proxy, "GET", "/esiproxy/login/callback?code=auth-code-1&state=" + state);
 		assertEquals(307, callbackResponse.code());
-		assertEquals("/", callbackResponse.header(HeaderNames.LOCATION.lowerCase()));
+		assertEquals("/esiproxy/characters/" + characterId, callbackResponse.header(HeaderNames.LOCATION.lowerCase()));
 
 		// Token request.
 		var tokenRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -184,7 +184,7 @@ public class ProxyServiceAuthTest {
 		}
 		tokenRequestParameters.addAll(List.of(
 				"code=auth-code-1",
-				"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Flogin%2Fcallback",
+				"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Fesiproxy%2Flogin%2Fcallback",
 				"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
 				"grant_type=authorization_code"));
 		if (authFlow == AuthFlow.PKCE) {
