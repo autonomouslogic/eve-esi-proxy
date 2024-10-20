@@ -3,6 +3,12 @@ package com.autonomouslogic.eveesiproxy.configs;
 import com.autonomouslogic.commons.config.Config;
 
 public class Configs {
+	public static final Config<String> LOG_LEVEL = Config.<String>builder()
+			.name("LOG_LEVEL")
+			.type(String.class)
+			.defaultValue("INFO")
+			.build();
+
 	public static final Config<Integer> PROXY_PORT = Config.<Integer>builder()
 			.name("PROXY_PORT")
 			.type(Integer.class)
@@ -49,5 +55,49 @@ public class Configs {
 			.name("ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S")
 			.defaultValue(300.0 / 60.0)
 			.type(Double.class)
+			.build();
+
+	public static final Config<String> CONFIG_DIR =
+			Config.<String>builder().name("CONFIG_DIR").type(String.class).build();
+
+	/**
+	 * Client ID for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_CLIENT_ID = Config.<String>builder()
+			.name("EVE_OAUTH_CLIENT_ID")
+			.defaultValue("89f0127100b74c28a5247d75e5f31d5e")
+			.type(String.class)
+			.build();
+
+	/**
+	 * Secret key for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_SECRET_KEY = Config.<String>builder()
+			.name("EVE_OAUTH_SECRET_KEY")
+			.type(String.class)
+			.build();
+
+	public static final Config<String> EVE_OAUTH_CALLBACK_URL = Config.<String>builder()
+			.name("EVE_OAUTH_CALLBACK_URL")
+			.defaultValue("http://localhost:8182/esiproxy/login/callback")
+			.type(String.class)
+			.build();
+
+	/**
+	 * Authorization URL for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_AUTHORIZATION_URL = Config.<String>builder()
+			.name("EVE_OAUTH_AUTHORIZATION_URL")
+			.defaultValue("https://login.eveonline.com/v2/oauth/authorize")
+			.type(String.class)
+			.build();
+
+	/**
+	 * Token URL for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_TOKEN_URL = Config.<String>builder()
+			.name("EVE_OAUTH_TOKEN_URL")
+			.defaultValue("https://login.eveonline.com/v2/oauth/token")
+			.type(String.class)
 			.build();
 }

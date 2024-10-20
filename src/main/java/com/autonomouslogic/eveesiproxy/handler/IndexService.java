@@ -1,5 +1,8 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
+import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
+import io.helidon.http.HeaderNames;
+import io.helidon.http.Status;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
@@ -12,16 +15,19 @@ import lombok.extern.log4j.Log4j2;
 
 @Singleton
 @Log4j2
-public class IndexHandler implements HttpService, Handler {
+public class IndexService implements HttpService, Handler {
 	@Inject
 	protected StandardHeaders standardHeaders;
+
+	@Inject
+	protected AuthManager authManager;
 
 	@Inject
 	@Named("version")
 	protected String version;
 
 	@Inject
-	protected IndexHandler() {}
+	protected IndexService() {}
 
 	@Override
 	public void routing(HttpRules httpRules) {
@@ -32,6 +38,10 @@ public class IndexHandler implements HttpService, Handler {
 
 	@Override
 	public void handle(ServerRequest req, ServerResponse res) throws Exception {
-		standardHeaders.apply(res).send("EVE ESI Proxy " + version + "\n");
+		standardHeaders
+				.apply(res)
+				.status(Status.TEMPORARY_REDIRECT_307)
+				.header(HeaderNames.LOCATION.lowerCase(), UiService.BASE_PATH)
+				.send();
 	}
 }

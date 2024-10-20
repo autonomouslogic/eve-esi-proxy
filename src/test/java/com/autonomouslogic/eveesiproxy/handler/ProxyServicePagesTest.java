@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
+import com.autonomouslogic.eveesiproxy.http.HttpDate;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
@@ -17,7 +18,6 @@ import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
 @Timeout(30)
 @Log4j2
-public class ProxyHandlerPagesTest {
+public class ProxyServicePagesTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -56,7 +56,7 @@ public class ProxyHandlerPagesTest {
 	MockWebServer mockEsi;
 
 	@Inject
-	protected ProxyHandlerPagesTest() {}
+	protected ProxyServicePagesTest() {}
 
 	@BeforeEach
 	@SneakyThrows
@@ -112,13 +112,10 @@ public class ProxyHandlerPagesTest {
 						.setBody(pagesJson.get(page - 1).toString())
 						.addHeader(HeaderNames.CONTENT_TYPE.lowerCase(), "application/json")
 						.addHeader(ProxyHeaderNames.X_PAGES, Integer.toString(pagesJson.size()))
-						.addHeader(
-								HeaderNames.LAST_MODIFIED.lowerCase(),
-								DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()))
+						.addHeader(HeaderNames.LAST_MODIFIED.lowerCase(), HttpDate.format(ZonedDateTime.now()))
 						.addHeader(
 								HeaderNames.EXPIRES.lowerCase(),
-								DateTimeFormatter.RFC_1123_DATE_TIME.format(
-										ZonedDateTime.now().plusHours(1)))
+								HttpDate.format(ZonedDateTime.now().plusHours(1)))
 						.addHeader(HeaderNames.ETAG.lowerCase(), "hash-" + page);
 			}
 		});

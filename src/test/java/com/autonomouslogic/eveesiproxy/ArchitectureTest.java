@@ -4,6 +4,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.constructors;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noConstructors;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noFields;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.properties.CanBeAnnotated;
@@ -33,9 +34,18 @@ public class ArchitectureTest {
 	}
 
 	@Test
-	public void javaxInjectShouldNotBeUsed() {
+	public void javaxInjectShouldNotBeUsedOnClasses() {
 		classes().should().notBeAnnotatedWith(javax.inject.Singleton.class).check(proxyClasses);
+	}
+
+	@Test
+	public void javaxInjectShouldNotBeUsedConstructors() {
 		noConstructors().should().beAnnotatedWith(javax.inject.Inject.class).check(proxyClasses);
+	}
+
+	@Test
+	public void javaxInjectShouldNotBeUsedOnFields() {
+		noFields().should().beAnnotatedWith(javax.inject.Inject.class).check(proxyClasses);
 	}
 
 	@Test

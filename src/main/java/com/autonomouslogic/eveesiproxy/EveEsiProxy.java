@@ -1,9 +1,6 @@
 package com.autonomouslogic.eveesiproxy;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
-import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
-import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
 import com.autonomouslogic.eveesiproxy.inject.DaggerMainComponent;
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.WebServer;
@@ -20,15 +17,6 @@ import okhttp3.Request;
  */
 @Log4j2
 public class EveEsiProxy {
-	@Inject
-	protected IndexHandler indexHandler;
-
-	@Inject
-	protected ProxyHandler proxyHandler;
-
-	@Inject
-	protected ErrorHandler errorHandler;
-
 	@Inject
 	@Named("version")
 	protected String version;

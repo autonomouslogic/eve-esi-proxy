@@ -10,9 +10,12 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 
+/**
+ * Handles the actual relay of request to the ESI server.
+ */
 @Singleton
 @Log4j2
-public class ProxyHandler implements HttpService, Handler {
+public class ProxyService implements HttpService, Handler {
 	@Inject
 	protected StandardHeaders standardHeaders;
 
@@ -20,7 +23,7 @@ public class ProxyHandler implements HttpService, Handler {
 	protected EsiRelay esiRelay;
 
 	@Inject
-	protected ProxyHandler() {}
+	protected ProxyService() {}
 
 	@Override
 	public void routing(HttpRules httpRules) {

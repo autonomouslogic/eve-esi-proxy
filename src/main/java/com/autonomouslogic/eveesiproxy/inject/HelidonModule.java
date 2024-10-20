@@ -2,8 +2,10 @@ package com.autonomouslogic.eveesiproxy.inject;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
-import com.autonomouslogic.eveesiproxy.handler.IndexHandler;
-import com.autonomouslogic.eveesiproxy.handler.ProxyHandler;
+import com.autonomouslogic.eveesiproxy.handler.IndexService;
+import com.autonomouslogic.eveesiproxy.handler.LoginService;
+import com.autonomouslogic.eveesiproxy.handler.ProxyService;
+import com.autonomouslogic.eveesiproxy.handler.UiService;
 import dagger.Module;
 import dagger.Provides;
 import io.helidon.webserver.ConnectionConfig;
@@ -17,13 +19,18 @@ import lombok.extern.log4j.Log4j2;
 public class HelidonModule {
 	@Provides
 	@Singleton
-	public WebServer webServer(IndexHandler indexHandler, ProxyHandler proxyHandler, ErrorHandler errorHandler) {
+	public WebServer webServer(
+			IndexService indexService,
+			ProxyService proxyService,
+			LoginService loginService,
+			UiService uiService,
+			ErrorHandler errorHandler) {
 		log.trace("Creating Helidon server");
 		return WebServer.builder()
 				.host(Configs.PROXY_HOST.getRequired())
 				.port(Configs.PROXY_PORT.getRequired())
 				.connectionConfig(connectionConfig())
-				.routing(routing -> routing(routing, indexHandler, proxyHandler, errorHandler))
+				.routing(routing -> routing(routing, indexService, proxyService, loginService, uiService, errorHandler))
 				.build();
 	}
 
@@ -34,9 +41,15 @@ public class HelidonModule {
 
 	private void routing(
 			HttpRouting.Builder routing,
-			IndexHandler indexHandler,
-			ProxyHandler proxyHandler,
+			IndexService indexService,
+			ProxyService proxyService,
+			LoginService loginService,
+			UiService uiService,
 			ErrorHandler errorHandler) {
-		routing.register(indexHandler).register(proxyHandler).error(Exception.class, errorHandler);
+		routing.register(indexService)
+				.register(UiService.BASE_PATH + "/login", loginService)
+				.register(UiService.BASE_PATH, uiService)
+				.register(proxyService)
+				.error(Exception.class, errorHandler);
 	}
 }

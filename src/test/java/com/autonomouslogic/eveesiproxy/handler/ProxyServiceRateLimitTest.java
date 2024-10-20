@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
+import com.autonomouslogic.eveesiproxy.http.HttpDate;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderValues;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
@@ -15,7 +16,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -42,7 +42,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S", value = "5")
 @Timeout(30)
 @Log4j2
-public class ProxyHandlerRateLimitTest {
+public class ProxyServiceRateLimitTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -55,15 +55,14 @@ public class ProxyHandlerRateLimitTest {
 	final Duration duration = Duration.ofSeconds(5);
 
 	@Inject
-	protected ProxyHandlerRateLimitTest() {}
+	protected ProxyServiceRateLimitTest() {}
 
 	@BeforeEach
 	@SneakyThrows
 	void setup() {
 		DaggerTestComponent.builder().build().inject(this);
 		mockEsi = new MockWebServer();
-		var expires =
-				DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now().plusHours(1));
+		var expires = HttpDate.format(ZonedDateTime.now().plusHours(1));
 		mockEsi.setDispatcher(new Dispatcher() {
 			@NotNull
 			@Override
