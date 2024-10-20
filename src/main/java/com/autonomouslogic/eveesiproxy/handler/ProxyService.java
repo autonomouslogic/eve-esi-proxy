@@ -28,6 +28,8 @@ public class ProxyService implements HttpService, Handler {
 	@Override
 	public void routing(HttpRules httpRules) {
 		log.trace("Configuring routing for {}", this.getClass().getSimpleName());
+		httpRules.options(this);
+		httpRules.head(this);
 		httpRules.get(this);
 		httpRules.put(this);
 		httpRules.post(this);
