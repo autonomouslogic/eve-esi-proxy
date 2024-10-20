@@ -64,22 +64,30 @@ public class ProxyServiceTest {
 	@ValueSource(strings = {"/esi", "/esi/with/multiple/segments", "/esi?with=query"})
 	@SneakyThrows
 	void shouldProxyRequests(
-			@CartesianTest.Values(strings = {"GET", "PUT", "POST", "DELETE"}) String method,
+			@CartesianTest.Values(strings = {"HEAD", "GET", "PUT", "POST", "DELETE", "OPTIONS"}) String method,
 			@CartesianTest.Values(strings = {"/esi", "/esi/with/multiple/segments", "/esi?with=query"}) String path) {
-		var bodyExpected = method.equals("PUT") || method.equals("POST");
-		var requestBody = bodyExpected ? "Test request" : null;
-		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test response", Map.of("X-Server-Header", "Test server header"));
+		var requestBodyExpected = method.equals("PUT") || method.equals("POST");
+		var requestBody = requestBodyExpected ? "Test request" : null;
+		var responseBodyExpected = !method.equals("HEAD");
+		if (responseBodyExpected) {
+			TestHttpUtils.enqueueResponse(
+					mockEsi, 200, "Test response", Map.of("X-Server-Header", "Test server header"));
+		} else {
+			TestHttpUtils.enqueueResponse(mockEsi, 200, Map.of("X-Server-Header", "Test server header"));
+		}
 		var proxyResponse = TestHttpUtils.callProxy(
 				client, proxy, method, path, Map.of("X-Client-Header", "Test client header"), requestBody);
+		//		if (responseBodyExpected) {
 		TestHttpUtils.assertResponse(
 				proxyResponse,
 				200,
-				"Test response",
+				responseBodyExpected ? "Test response" : null,
 				Map.of(
 						"X-Server-Header",
 						"Test server header",
 						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
 						ProxyHeaderValues.CACHE_STATUS_MISS));
+		//		}
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 		TestHttpUtils.assertRequest(
