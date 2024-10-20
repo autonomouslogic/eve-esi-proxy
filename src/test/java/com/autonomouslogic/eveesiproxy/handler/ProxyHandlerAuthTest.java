@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderValues;
+import com.autonomouslogic.eveesiproxy.oauth.AuthFlow;
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
 import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
@@ -19,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -94,17 +97,18 @@ public class ProxyHandlerAuthTest {
 	@SneakyThrows
 	@SetEnvironmentVariable(key = "EVE_OAUTH_SECRET_KEY", value = "client-secret-1")
 	void shouldHandleCodeFlowLogins() {
-		fail();
+		testLoginFlow(AuthFlow.CODE);
 	}
 
 	@Test
 	@SneakyThrows
 	void shouldHandlePkceFlowLogins() {
+		testLoginFlow(AuthFlow.PKCE);
+	}
+
+	@SneakyThrows
+	void testLoginFlow(AuthFlow authFlow) {
 		var characterId = 283764238;
-		// /login redirect:
-		// https://login.eveonline.com/v2/oauth/authorize?code_challenge=OWuqPWZI_ZNf9wDzj5hrIVYEjsQ4MoX5cd42DfXUcCM&code_challenge_method=S256&response_type=code&client_id=89f0127100b74c28a5247d75e5f31d5e&redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Flogin%2Fcallback&scope=publicData%20esi-characters.read_agents_research.v1%20esi-characters.read_blueprints.v1%20esi-characters.read_chat_channels.v1%20esi-characters.read_contacts.v1%20esi-characters.read_corporation_roles.v1%20esi-characters.read_fatigue.v1%20esi-characters.read_fw_stats.v1%20esi-characters.read_loyalty.v1%20esi-characters.read_medals.v1%20esi-characters.read_notifications.v1%20esi-characters.read_opportunities.v1%20esi-characters.read_standings.v1%20esi-characters.read_titles.v1%20esi-characters.write_contacts.v1&state=0c788750a26e0e345c22d9e2ce3e1419
-		// Callback:
-		// http://localhost:8182/login/callback?code=wxqZfYyJJ06pt0EJ0XNmJg&state=0c788750a26e0e345c22d9e2ce3e1419
 
 		// Login redirect to EVE auth.
 		var loginResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/login");
@@ -115,7 +119,9 @@ public class ProxyHandlerAuthTest {
 		assertEquals("localhost", loginRedirect.host());
 		assertEquals(MOCK_ESI_PORT, loginRedirect.port());
 		assertEquals("/v2/oauth/authorize", loginRedirect.encodedPath());
-		assertEquals("S256", loginRedirect.queryParameter("code_challenge_method"));
+		if (authFlow == AuthFlow.PKCE) {
+			assertEquals("S256", loginRedirect.queryParameter("code_challenge_method"));
+		}
 		assertEquals("client-id-1", loginRedirect.queryParameter("client_id"));
 		assertEquals("http://localhost:8182/login/callback", loginRedirect.queryParameter("redirect_uri"));
 		assertEquals(
@@ -157,25 +163,35 @@ public class ProxyHandlerAuthTest {
 		var codeVerifier = Stream.of(tokenRequestBody.split("&"))
 				.filter(e -> e.startsWith("code_verifier="))
 				.map(e -> e.substring("code_verifier=".length()))
-				.findFirst()
-				.orElseThrow();
+				.findFirst();
+		if (authFlow == AuthFlow.PKCE) {
+			codeVerifier.orElseThrow();
+		}
 		assertRequest(
 				tokenRequest,
 				"POST",
 				"/v2/oauth/token",
 				Map.of(HeaderNames.CONTENT_TYPE.lowerCase(), "application/x-www-form-urlencoded"));
+		var tokenRequestParameters = new ArrayList<String>();
+		tokenRequestParameters.add("client_id=client-id-1");
+		if (authFlow == AuthFlow.CODE) {
+			tokenRequestParameters.add("client_secret=client-secret-1");
+		}
+		tokenRequestParameters.addAll(List.of(
+			"code=auth-code-1",
+			"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Flogin%2Fcallback",
+			"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
+			"grant_type=authorization_code"
+		));
+		if (authFlow == AuthFlow.PKCE) {
+			tokenRequestParameters.add("code_verifier=" + codeVerifier.get());
+		}
 		assertEquals(
 				String.join(
 						"&",
-						List.of(
-								"client_id=client-id-1",
-								//								"client_secret=client-secret-1",
-								"code=auth-code-1",
-								"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Flogin%2Fcallback",
-								"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
-								"grant_type=authorization_code",
-								"code_verifier=" + codeVerifier)),
+					tokenRequestParameters),
 				tokenRequestBody);
+		// @todo test PKCE codes
 
 		// Verify request.
 		TestHttpUtils.assertRequest(
@@ -196,7 +212,17 @@ public class ProxyHandlerAuthTest {
 	@Test
 	@SneakyThrows
 	@SetEnvironmentVariable(key = "EVE_OAUTH_SECRET_KEY", value = "client-secret-1")
-	void shouldRequestAndTranslateOAuthTokensForProxyKeysUsingCodeFlow() {
+	void shouldRequestAndTranslateOAuthTokensForProxyKeysForCodeFlow() {
+		testLoginFlow(AuthFlow.CODE);
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldRequestAndTranslateOAuthTokensForProxyKeysForPkceFlow() {
+		testLoginFlow(AuthFlow.PKCE);
+	}
+
+	void testProxyKeyTranslation(AuthFlow authFlow) {
 		// Token response.
 		TestHttpUtils.enqueueResponse(
 				mockEsi,

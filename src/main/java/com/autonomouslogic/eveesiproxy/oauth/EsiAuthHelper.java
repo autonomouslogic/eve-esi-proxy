@@ -215,11 +215,6 @@ public class EsiAuthHelper {
 				pkce.getCodeVerifier());
 	}
 
-	private enum AuthFlow {
-		CODE,
-		PKCE
-	}
-
 	@Value
 	private static class LoginState {
 		Instant created;
