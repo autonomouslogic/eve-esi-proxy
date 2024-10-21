@@ -3,10 +3,13 @@ package com.autonomouslogic.eveesiproxy.http;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Maybe;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.SneakyThrows;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -70,21 +73,34 @@ public class PageFetcher {
 			var array = (ArrayNode) objectMapper.readTree(in);
 			pageResults.put(0, array);
 		}
-		for (int i = 1; i < responsePages; i++) {
-			var nextRequest = esiRequest
-					.newBuilder()
-					.url(url.newBuilder()
-							.setQueryParameter("page", Integer.toString(i + 1))
-							.build());
-			var nextResponse = client.newCall(nextRequest.build()).execute();
-			if (nextResponse.code() != 200) {
-				return nextResponse;
-			}
-			try (var in = nextResponse.body().byteStream()) {
-				var array = (ArrayNode) objectMapper.readTree(in);
-				pageResults.put(i, array);
-			}
-		}
+
+		var failure = new AtomicBoolean(false);
+		var failedResponses = Flowable.range(1, responsePages - 1)
+				//			.takeWhile(i -> !failure.get())
+				.flatMapMaybe(
+						i -> {
+							var nextRequest = esiRequest
+									.newBuilder()
+									.url(url.newBuilder()
+											.setQueryParameter("page", Integer.toString(i + 1))
+											.build());
+							var nextResponse =
+									client.newCall(nextRequest.build()).execute();
+							if (nextResponse.code() != 200) {
+								failure.set(true);
+								return Maybe.just(nextResponse);
+							}
+							try (var in = nextResponse.body().byteStream()) {
+								var array = (ArrayNode) objectMapper.readTree(in);
+								pageResults.put(i, array);
+							}
+							return Maybe.empty();
+						},
+						false,
+						maxConcurrent)
+				.toList()
+				.blockingGet();
+
 		var result = objectMapper.createArrayNode();
 		for (int i = 0; i < responsePages; i++) {
 			result.addAll(pageResults.get(i));
