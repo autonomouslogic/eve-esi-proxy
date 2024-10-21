@@ -115,6 +115,6 @@ EVE Online and all assets related to it are owned by [CCP hf.](https://www.ccpga
 | Codecov      | [![codecov](https://codecov.io/gh/autonomouslogic/eve-esi-proxy/graph/badge.svg?token=MXwjEUJRPk)](https://codecov.io/gh/autonomouslogic/eve-esi-proxy)                                                                                                                                                                                                                                                               |
 
 ## Similar projects
-* [ESI-Proxy](https://github.com/EVE-KILL/ESI-Proxy)
-* [esi-ws-proxy](https://github.com/TrueBrain/esi-ws-proxy/)
-* [orbital-esi-proxy](https://github.com/OrbitalEnterprises/orbital-esi-proxy)
+* [ESI-Proxy](https://github.com/EVE-KILL/ESI-Proxy) ![GitHub last commit](https://img.shields.io/github/last-commit/EVE-KILL/ESI-Proxy)
+* [esi-ws-proxy](https://github.com/TrueBrain/esi-ws-proxy/) ![GitHub last commit](https://img.shields.io/github/last-commit/TrueBrain/esi-ws-proxy)
+* [orbital-esi-proxy](https://github.com/OrbitalEnterprises/orbital-esi-proxy) ![GitHub last commit](https://img.shields.io/github/last-commit/OrbitalEnterprises/orbital-esi-proxy)
