@@ -69,12 +69,12 @@ public class PageFetcher {
 	}
 
 	@SneakyThrows
-	private Response fetch(Request firstRequest, Response firstResponse, int responsePages) {
-		final var pageResults = new ConcurrentHashMap<Integer, ArrayNode>(responsePages + 1);
+	private Response fetch(Request firstRequest, Response firstResponse, int pages) {
+		final var pageResults = new ConcurrentHashMap<Integer, ArrayNode>(pages);
 		readResponse(firstResponse, 1, pageResults);
 
 		var failure = new AtomicBoolean(false);
-		var failedResponses = Flowable.range(2, responsePages - 1)
+		var failedResponses = Flowable.range(2, pages - 1)
 				.takeWhile(i -> !failure.get())
 				.parallel(maxConcurrentPages, 1)
 				.runOn(VirtualThreads.SCHEDULER)
@@ -99,14 +99,14 @@ public class PageFetcher {
 			return failedResponse.get();
 		}
 
-		var result = mergePages(responsePages, pageResults);
+		var result = mergePages(pages, pageResults);
 
 		return new Response.Builder()
 				.request(firstRequest)
 				.protocol(firstResponse.protocol())
 				.message("merged pages")
 				.code(200)
-				.header(ProxyHeaderNames.X_PAGES, Integer.toString(responsePages))
+				.header(ProxyHeaderNames.X_PAGES, Integer.toString(pages))
 				.body(ResponseBody.create(objectMapper.writeValueAsBytes(result), MediaType.get("application/json")))
 				.build();
 	}
