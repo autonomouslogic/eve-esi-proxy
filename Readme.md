@@ -10,7 +10,7 @@ An HTTP proxy specifically designed for the [ESI API](https://esi.evetech.net/ui
 [![CodeClimate Maintainability](https://api.codeclimate.com/v1/badges/a71c017cbcce32d7a595/maintainability)](https://codeclimate.com/github/autonomouslogic/eve-esi-proxy/maintainability)
 
 The ESI API is a great resource, but can be difficult to work with.
-The feature-list below are all things you have to be acutely aware of.
+The features below are all things you have to be acutely aware of.
 With CCP being trigger-happy about banning IPs from accessing the API,
 using this proxy will let you get on with writing your application and not worry about the minutiae of ESI lore.
 
@@ -20,13 +20,13 @@ Fly safe o7
 
 ## Features
 * **Character login** is supported and OAuth is handled automatically, [see below](#character-login)
-* **Cache responses** to disk to improve request times and reduce load on the ESI itself. Authed requests are not cached
-* **Conditional requests**
-* **Rate limiting** requests to help avoid being banned, including different limits for the endpoints which have special undocumented limits
+* **Cache responses** to disk to improve request times and reduce load on the ESI itself. Authed requests are not currently cached
+* **Conditional requests** to refresh objects in the cache
+* **Rate limiting** to help avoid being banned, including different limits for the endpoints which have special undocumented limits
 * **Handle ESI error limit headers** to stop all requests if the limit is reached
 * **Retry failed requests** if a 5xx is returned
 * **User agent header** is automatically handled
-* **Fetching multiple pages** if no page (or page 0) is set in the request, all pages will be automatically fetched and the result merged
+* **Fetching multiple pages** if no page (or page 0) is set in the request, merging all pages into a single response
 
 Caching, rate limiting, retries, etc. are all handled transparently.
 
