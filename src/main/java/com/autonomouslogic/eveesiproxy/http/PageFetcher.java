@@ -106,7 +106,7 @@ public class PageFetcher {
 				.protocol(firstResponse.protocol())
 				.message("merged pages")
 				.code(200)
-				.header(ProxyHeaderNames.X_PAGES, Integer.toString(pages))
+				.header(ProxyHeaderNames.X_EVE_ESI_PAGES_FETCHED, Integer.toString(pages))
 				.body(ResponseBody.create(objectMapper.writeValueAsBytes(result), MediaType.get("application/json")))
 				.build();
 	}

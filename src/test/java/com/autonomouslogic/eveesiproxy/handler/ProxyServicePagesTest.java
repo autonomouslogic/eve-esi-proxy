@@ -139,7 +139,8 @@ public class ProxyServicePagesTest {
 		assertNull(proxyResponse.header(HeaderNames.LAST_MODIFIED.lowerCase()));
 		assertNull(proxyResponse.header(HeaderNames.ETAG.lowerCase()));
 		assertNull(proxyResponse.header(HeaderNames.EXPIRES.lowerCase()));
-		assertEquals(Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_PAGES));
+		assertEquals(Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PAGES_FETCHED));
+		assertNull(proxyResponse.header(ProxyHeaderNames.X_PAGES));
 		assertNull(proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS));
 
 		for (int i = 0; i < pagesJson.size(); i++) {
