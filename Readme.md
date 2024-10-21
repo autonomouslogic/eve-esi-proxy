@@ -39,7 +39,11 @@ docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 2g -e "ESI_USER_AGENT=<you
 
 Then you request data as you would on the ESI, just from localhost instead:
 ```bash
-curl http://localhost:8182/latest/status/
+curl "http://localhost:8182/latest/status/"
+```
+or
+```bash
+curl "http://localhost:8182/latest/markets/10000002/orders/?order_type=all"
 ```
 
 ## Config
