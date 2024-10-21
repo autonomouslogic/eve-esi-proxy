@@ -3,6 +3,7 @@ An HTTP proxy specifically designed for the [ESI API](https://esi.evetech.net/ui
 
 ![GitHub branch status](https://img.shields.io/github/checks-status/autonomouslogic/eve-esi-proxy/main)
 ![Latest Release](https://img.shields.io/github/v/release/autonomouslogic/eve-esi-proxy)
+![GitHub last commit](https://img.shields.io/github/last-commit/autonomouslogic/eve-esi-proxy)
 ![License](https://img.shields.io/github/license/autonomouslogic/eve-esi-proxy)
 ![Docker Pulls](https://img.shields.io/docker/pulls/autonomouslogic/eve-esi-proxy)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/autonomouslogic/eve-esi-proxy)
