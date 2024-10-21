@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.core.Flowable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,6 +20,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
 
 @Singleton
 @Log4j2
@@ -67,65 +69,87 @@ public class PageFetcher {
 	}
 
 	@SneakyThrows
-	private Response fetch(Request esiRequest, Response firstResponse, int responsePages) {
-		var url = esiRequest.url();
-		var pageResults = new ConcurrentHashMap<Integer, ArrayNode>(responsePages + 1);
-		try (var in = firstResponse.body().byteStream()) {
-			var array = (ArrayNode) objectMapper.readTree(in);
-			pageResults.put(0, array);
-		}
+	private Response fetch(Request firstRequest, Response firstResponse, int responsePages) {
+		final var pageResults = new ConcurrentHashMap<Integer, ArrayNode>(responsePages + 1);
+		readResponse(firstResponse, 1, pageResults);
 
 		var failure = new AtomicBoolean(false);
-		var failedResponses = Flowable.range(1, responsePages - 1)
+		var failedResponses = Flowable.range(2, responsePages - 1)
 				.takeWhile(i -> !failure.get())
 				.parallel(maxConcurrentPages, 1)
 				.runOn(VirtualThreads.SCHEDULER)
-				.flatMapIterable(i -> {
+				.flatMapIterable(page -> {
 					if (failure.get()) {
 						return List.of();
 					}
-					var nextRequest = esiRequest
-							.newBuilder()
-							.url(url.newBuilder()
-									.setQueryParameter("page", Integer.toString(i + 1))
-									.build());
-					var nextResponse = client.newCall(nextRequest.build()).execute();
+					var nextResponse = nextRequest(firstRequest, page);
 					if (nextResponse.code() != 200) {
 						failure.set(true);
 						return List.of(nextResponse);
 					}
-					try (var in = nextResponse.body().byteStream()) {
-						var array = (ArrayNode) objectMapper.readTree(in);
-						pageResults.put(i, array);
-					}
+					readResponse(nextResponse, page, pageResults);
 					return List.of();
 				})
 				.sequential()
 				.toList()
 				.blockingGet();
 
-		if (!failedResponses.isEmpty()) {
-			if (failedResponses.size() > 1) {
-				for (int i = 1; i < failedResponses.size(); i++) {
-					failedResponses.get(i).close();
-				}
-			}
-			return failedResponses.getFirst();
+		var failedResponse = getFailedResponse(failedResponses);
+		if (failedResponse.isPresent()) {
+			return failedResponse.get();
 		}
 
-		var result = objectMapper.createArrayNode();
-		for (int i = 0; i < responsePages; i++) {
-			result.addAll(pageResults.get(i));
-		}
+		var result = mergePages(responsePages, pageResults);
 
 		return new Response.Builder()
-				.request(esiRequest)
+				.request(firstRequest)
 				.protocol(firstResponse.protocol())
 				.message("merged pages")
 				.code(200)
 				.header(ProxyHeaderNames.X_PAGES, Integer.toString(responsePages))
 				.body(ResponseBody.create(objectMapper.writeValueAsBytes(result), MediaType.get("application/json")))
 				.build();
+	}
+
+	private ArrayNode mergePages(int responsePages, Map<Integer, ArrayNode> pageResults) {
+		var result = objectMapper.createArrayNode();
+		for (int i = 0; i < responsePages; i++) {
+			result.addAll(pageResults.get(i));
+		}
+		return result;
+	}
+
+	private static Optional<Response> getFailedResponse(List<Response> failedResponses) {
+		if (!failedResponses.isEmpty()) {
+			if (failedResponses.size() > 1) {
+				for (int i = 1; i < failedResponses.size(); i++) {
+					failedResponses.get(i).close();
+				}
+			}
+			return Optional.of(failedResponses.getFirst());
+		}
+		return Optional.empty();
+	}
+
+	@SneakyThrows
+	private @NotNull Response nextRequest(Request firstRequest, Integer page) {
+		var nextRequest = firstRequest
+				.newBuilder()
+				.url(firstRequest
+						.url()
+						.newBuilder()
+						.setQueryParameter("page", Integer.toString(page))
+						.build());
+		var nextResponse = client.newCall(nextRequest.build()).execute();
+		return nextResponse;
+	}
+
+	@SneakyThrows
+	private void readResponse(Response response, int page, Map<Integer, ArrayNode> pageResults) {
+		try (var in = response.body().byteStream()) {
+			var array = (ArrayNode) objectMapper.readTree(in);
+			pageResults.put(page - 1, array);
+		}
 	}
 
 	public HttpUrl removeInvalidPageQueryString(HttpUrl esiUrl) {

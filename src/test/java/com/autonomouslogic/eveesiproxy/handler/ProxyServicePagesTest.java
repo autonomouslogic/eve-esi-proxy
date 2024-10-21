@@ -104,9 +104,9 @@ public class ProxyServicePagesTest {
 						.filter(s -> !s.isEmpty())
 						.map(Integer::parseInt)
 						.orElse(1);
-				if (page < 1) {
+				if (page < 1 || page > pagesJson.size()) {
 					log.error("Bad page: {}", page);
-					return new MockResponse().setResponseCode(400);
+					return new MockResponse().setResponseCode(404).setBody("Page does not exist");
 				}
 				return new MockResponse()
 						.setResponseCode(200)
