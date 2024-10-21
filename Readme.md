@@ -1,10 +1,19 @@
 # EVE ESI Proxy
 An HTTP proxy specifically designed for the [ESI API](https://esi.evetech.net/ui/) for [EVE Online](https://www.eveonline.com/).
 
-_This project is currently in development.
-See the [First version](https://github.com/autonomouslogic/eve-esi-proxy/milestone/1) milestone for progress.
-Breaking changes may occur at any time.
-Contributions welcome._
+![GitHub branch status](https://img.shields.io/github/checks-status/autonomouslogic/eve-esi-proxy/main)
+![Latest Release](https://img.shields.io/github/v/release/autonomouslogic/eve-esi-proxy)
+![GitHub last commit](https://img.shields.io/github/last-commit/autonomouslogic/eve-esi-proxy)
+![License](https://img.shields.io/github/license/autonomouslogic/eve-esi-proxy)
+![Docker Pulls](https://img.shields.io/docker/pulls/autonomouslogic/eve-esi-proxy)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/autonomouslogic/eve-esi-proxy)
+[![Code Coverage](https://codecov.io/gh/autonomouslogic/eve-esi-proxy/graph/badge.svg?token=MXwjEUJRPk)](https://codecov.io/gh/autonomouslogic/eve-esi-proxy)
+[![CodeClimate Maintainability](https://api.codeclimate.com/v1/badges/a71c017cbcce32d7a595/maintainability)](https://codeclimate.com/github/autonomouslogic/eve-esi-proxy/maintainability)
+
+The ESI API is a great resource, but can be difficult to work with.
+The features below are all things you have to be acutely aware of.
+With CCP being trigger-happy about banning IPs from accessing the API,
+using this proxy will let you get on with writing your application and not worry about the minutiae of ESI lore.
 
 Join us on [Discord](https://everef.net/discord).
 
@@ -12,18 +21,15 @@ Fly safe o7
 
 ## Features
 * **Character login** is supported and OAuth is handled automatically, [see below](#character-login)
-* **Cache responses** to disk to improve request times and reduce load on the ESI itself
-* **Conditional requests**
-* **Rate limiting** requests to help avoid being banned, including different limits for the endpoints which have special undocumented limits
+* **Cache responses** to disk to improve request times and reduce load on the ESI itself. Authed requests are not currently cached
+* **Conditional requests** to refresh objects in the cache
+* **Rate limiting** to help avoid being banned, including different limits for the endpoints which have special undocumented limits
 * **Handle ESI error limit headers** to stop all requests if the limit is reached
+* **Retry failed requests** if a 5xx is returned
 * **User agent header** is automatically handled
-* **Fetching multiple pages concurrently** if no page (or page 0) is set in the request, all pages will be automatically fetched and the result merged
-* _More planned, see milestone_
+* **Fetching multiple pages concurrently** if no page (or page 0) is set in the request, merging all pages into a single response
 
-The ESI API is a great resource, but can be difficult to work with.
-The above are all things you have to be acutely aware of.
-With CCP being trigger-happy about banning IPs from accessing the API,
-using this proxy will let you get on with writing your application and not worry about the minutiae of ESI lore.
+Caching, rate limiting, retries, etc. are all handled transparently.
 
 ## Usage
 Run via Docker ([installation](https://docs.docker.com/engine/install/)):
@@ -33,7 +39,11 @@ docker run -it -v eve-esi-proxy:/data -p 8182:8182 -m 2g -e "ESI_USER_AGENT=<you
 
 Then you request data as you would on the ESI, just from localhost instead:
 ```bash
-curl http://localhost:8182/latest/status/
+curl "http://localhost:8182/latest/status/"
+```
+or
+```bash
+curl "http://localhost:8182/latest/markets/10000002/orders/?order_type=all"
 ```
 
 ## Config
@@ -107,15 +117,8 @@ EVE Online and all assets related to it are owned by [CCP hf.](https://www.ccpga
 * [Third-Party Developer License Agreement](https://developers.eveonline.com/license-agreement)
 * [End-user License Agreement](https://community.eveonline.com/support/policies/eve-eula-en/)
 
-## Status
-
-| Type         | Status                                                                                                                                                                                                                                                                                                                                                                                                                |
-|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Code Climate | [![Maintainability](https://api.codeclimate.com/v1/badges/a71c017cbcce32d7a595/maintainability)](https://codeclimate.com/github/autonomouslogic/eve-esi-proxy/maintainability)                                                                                                                                                                                                                                        |
-| Sonar Cloud  | [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=autonomouslogic_eve-esi-proxy&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=autonomouslogic_eve-esi-proxy) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=autonomouslogic_eve-esi-proxy&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=autonomouslogic_eve-esi-proxy) |
-| Codecov      | [![codecov](https://codecov.io/gh/autonomouslogic/eve-esi-proxy/graph/badge.svg?token=MXwjEUJRPk)](https://codecov.io/gh/autonomouslogic/eve-esi-proxy)                                                                                                                                                                                                                                                               |
-
 ## Similar projects
 * [ESI-Proxy](https://github.com/EVE-KILL/ESI-Proxy)
 * [esi-ws-proxy](https://github.com/TrueBrain/esi-ws-proxy/)
 * [orbital-esi-proxy](https://github.com/OrbitalEnterprises/orbital-esi-proxy)
+
