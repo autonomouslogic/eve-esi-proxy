@@ -140,7 +140,7 @@ public class Configs {
 
 	public static final Config<Integer> HTTP_MAX_CONCURRENT_PAGES = Config.<Integer>builder()
 			.name("HTTP_MAX_CONCURRENT_PAGES")
-			.defaultValue(16)
+			.defaultValue(8)
 			.type(Integer.class)
 			.build();
 }

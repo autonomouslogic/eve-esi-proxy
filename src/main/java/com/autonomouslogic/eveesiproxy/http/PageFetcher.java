@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.reactivex.rxjava3.core.Flowable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,10 +77,13 @@ public class PageFetcher {
 
 		var failure = new AtomicBoolean(false);
 		var failedResponses = Flowable.range(1, responsePages - 1)
-				.parallel(maxConcurrentPages)
+				.takeWhile(i -> !failure.get())
+				.parallel(maxConcurrentPages, 1)
 				.runOn(VirtualThreads.SCHEDULER)
-				//			.takeWhile(i -> !failure.get())
 				.flatMapIterable(i -> {
+					if (failure.get()) {
+						return List.of();
+					}
 					var nextRequest = esiRequest
 							.newBuilder()
 							.url(url.newBuilder()
@@ -103,15 +104,19 @@ public class PageFetcher {
 				.toList()
 				.blockingGet();
 
-		log.trace("Failed responses: {}", failedResponses.size());
+		if (!failedResponses.isEmpty()) {
+			if (failedResponses.size() > 1) {
+				for (int i = 1; i < failedResponses.size(); i++) {
+					failedResponses.get(i).close();
+				}
+			}
+			return failedResponses.getFirst();
+		}
 
-		var start = Instant.now();
 		var result = objectMapper.createArrayNode();
 		for (int i = 0; i < responsePages; i++) {
 			result.addAll(pageResults.get(i));
 		}
-		log.trace("Merged in {}", Duration.between(start, Instant.now()));
-		log.trace("Merged result: {}", result.size());
 
 		return new Response.Builder()
 				.request(esiRequest)

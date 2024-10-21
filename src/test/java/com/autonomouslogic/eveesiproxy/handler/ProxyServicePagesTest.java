@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
@@ -204,7 +205,9 @@ public class ProxyServicePagesTest {
 	@ParameterizedTest
 	@ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 	@SneakyThrows
+	@SetEnvironmentVariable(key = "HTTP_MAX_CONCURRENT_PAGES", value = "4")
 	void shouldNotFetchPagesIfThereAreErrors(int errorPage) {
+		var permanentErrorPage = 5; // To test errors on multiple pages during concurrent fetches.
 		mockEsi.setDispatcher(new Dispatcher() {
 			@NotNull
 			@Override
@@ -213,10 +216,11 @@ public class ProxyServicePagesTest {
 				var page = Optional.ofNullable(url.queryParameter("page"))
 						.map(Integer::parseInt)
 						.orElse(1);
-				if (page == errorPage) {
+				if (page == errorPage || page == permanentErrorPage) {
 					return new MockResponse().setResponseCode(400).setHeader("x-server-header", "error");
 				} else {
 					return new MockResponse()
+							.setHeadersDelay(100, TimeUnit.MILLISECONDS)
 							.setResponseCode(200)
 							.addHeader(ProxyHeaderNames.X_PAGES, "10")
 							.setBody("[{\"order_id\":1}]");
