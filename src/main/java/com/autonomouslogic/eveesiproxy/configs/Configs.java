@@ -137,4 +137,10 @@ public class Configs {
 			.defaultValue(Duration.parse("PT2S"))
 			.type(Duration.class)
 			.build();
+
+	public static final Config<Integer> HTTP_MAX_CONCURRENT_PAGES = Config.<Integer>builder()
+			.name("HTTP_MAX_CONCURRENT_PAGES")
+			.defaultValue(4)
+			.type(Integer.class)
+			.build();
 }

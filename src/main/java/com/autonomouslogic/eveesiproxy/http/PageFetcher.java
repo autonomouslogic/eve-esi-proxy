@@ -1,10 +1,12 @@
 package com.autonomouslogic.eveesiproxy.http;
 
+import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.SneakyThrows;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -20,6 +22,8 @@ public class PageFetcher {
 
 	@Inject
 	protected ObjectMapper objectMapper;
+
+	private final int maxConcurrent = Configs.HTTP_MAX_CONCURRENT_PAGES.getRequired();
 
 	@Inject
 	protected PageFetcher() {}
@@ -61,9 +65,10 @@ public class PageFetcher {
 	@SneakyThrows
 	private Response fetch(Request esiRequest, Response firstResponse, int responsePages) {
 		var url = esiRequest.url();
-		ArrayNode result = objectMapper.createArrayNode();
+		var pageResults = new ConcurrentHashMap<Integer, ArrayNode>(responsePages + 1);
 		try (var in = firstResponse.body().byteStream()) {
-			result.addAll((ArrayNode) objectMapper.readTree(in));
+			var array = (ArrayNode) objectMapper.readTree(in);
+			pageResults.put(0, array);
 		}
 		for (int i = 1; i < responsePages; i++) {
 			var nextRequest = esiRequest
@@ -76,8 +81,13 @@ public class PageFetcher {
 				return nextResponse;
 			}
 			try (var in = nextResponse.body().byteStream()) {
-				result.addAll((ArrayNode) objectMapper.readTree(in));
+				var array = (ArrayNode) objectMapper.readTree(in);
+				pageResults.put(i, array);
 			}
+		}
+		var result = objectMapper.createArrayNode();
+		for (int i = 0; i < responsePages; i++) {
+			result.addAll(pageResults.get(i));
 		}
 		return new Response.Builder()
 				.request(esiRequest)
