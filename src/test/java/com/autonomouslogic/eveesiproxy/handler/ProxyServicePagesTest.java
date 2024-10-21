@@ -82,10 +82,7 @@ public class ProxyServicePagesTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(
-			strings = {"null"
-				//		, "", "0", "-1"
-			})
+	@ValueSource(strings = {"null", "", "0", "-1"})
 	@SneakyThrows
 	void shouldFetchAllSubPages(String page) {
 		List<ArrayNode> pagesJson = new ArrayList<>();

@@ -1,16 +1,20 @@
 package com.autonomouslogic.eveesiproxy.http;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
+import com.autonomouslogic.eveesiproxy.util.VirtualThreads;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Maybe;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -19,6 +23,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 @Singleton
+@Log4j2
 public class PageFetcher {
 	@Inject
 	protected OkHttpClient client;
@@ -26,7 +31,7 @@ public class PageFetcher {
 	@Inject
 	protected ObjectMapper objectMapper;
 
-	private final int maxConcurrent = Configs.HTTP_MAX_CONCURRENT_PAGES.getRequired();
+	private final int maxConcurrentPages = Configs.HTTP_MAX_CONCURRENT_PAGES.getRequired();
 
 	@Inject
 	protected PageFetcher() {}
@@ -53,9 +58,7 @@ public class PageFetcher {
 	private static Optional<Integer> getRequestedPage(HttpUrl esiUrl) {
 		return Optional.ofNullable(esiUrl.queryParameter("page"))
 				.filter(s -> !s.isEmpty())
-				.map(Integer::parseInt)
-		//			.filter(p -> p >= 1)
-		;
+				.map(Integer::parseInt);
 	}
 
 	private static int getResponsePages(Response esiResponse) {
@@ -76,35 +79,40 @@ public class PageFetcher {
 
 		var failure = new AtomicBoolean(false);
 		var failedResponses = Flowable.range(1, responsePages - 1)
+				.parallel(maxConcurrentPages)
+				.runOn(VirtualThreads.SCHEDULER)
 				//			.takeWhile(i -> !failure.get())
-				.flatMapMaybe(
-						i -> {
-							var nextRequest = esiRequest
-									.newBuilder()
-									.url(url.newBuilder()
-											.setQueryParameter("page", Integer.toString(i + 1))
-											.build());
-							var nextResponse =
-									client.newCall(nextRequest.build()).execute();
-							if (nextResponse.code() != 200) {
-								failure.set(true);
-								return Maybe.just(nextResponse);
-							}
-							try (var in = nextResponse.body().byteStream()) {
-								var array = (ArrayNode) objectMapper.readTree(in);
-								pageResults.put(i, array);
-							}
-							return Maybe.empty();
-						},
-						false,
-						maxConcurrent)
+				.flatMapIterable(i -> {
+					var nextRequest = esiRequest
+							.newBuilder()
+							.url(url.newBuilder()
+									.setQueryParameter("page", Integer.toString(i + 1))
+									.build());
+					var nextResponse = client.newCall(nextRequest.build()).execute();
+					if (nextResponse.code() != 200) {
+						failure.set(true);
+						return List.of(nextResponse);
+					}
+					try (var in = nextResponse.body().byteStream()) {
+						var array = (ArrayNode) objectMapper.readTree(in);
+						pageResults.put(i, array);
+					}
+					return List.of();
+				})
+				.sequential()
 				.toList()
 				.blockingGet();
 
+		log.trace("Failed responses: {}", failedResponses.size());
+
+		var start = Instant.now();
 		var result = objectMapper.createArrayNode();
 		for (int i = 0; i < responsePages; i++) {
 			result.addAll(pageResults.get(i));
 		}
+		log.trace("Merged in {}", Duration.between(start, Instant.now()));
+		log.trace("Merged result: {}", result.size());
+
 		return new Response.Builder()
 				.request(esiRequest)
 				.protocol(firstResponse.protocol())

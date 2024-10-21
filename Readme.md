@@ -17,7 +17,7 @@ Fly safe o7
 * **Rate limiting** requests to help avoid being banned, including different limits for the endpoints which have special undocumented limits
 * **Handle ESI error limit headers** to stop all requests if the limit is reached
 * **User agent header** is automatically handled
-* **Fetching multiple pages** if no page (or page 0) is set in the request, all pages will be automatically fetched and the result merged
+* **Fetching multiple pages concurrently** if no page (or page 0) is set in the request, all pages will be automatically fetched and the result merged
 * _More planned, see milestone_
 
 The ESI API is a great resource, but can be difficult to work with.
