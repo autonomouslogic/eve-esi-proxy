@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
@@ -103,9 +104,9 @@ public class ProxyServicePagesTest {
 						.filter(s -> !s.isEmpty())
 						.map(Integer::parseInt)
 						.orElse(1);
-				if (page < 1) {
+				if (page < 1 || page > pagesJson.size()) {
 					log.error("Bad page: {}", page);
-					return new MockResponse().setResponseCode(400);
+					return new MockResponse().setResponseCode(404).setBody("Page does not exist");
 				}
 				return new MockResponse()
 						.setResponseCode(200)
@@ -138,7 +139,9 @@ public class ProxyServicePagesTest {
 		assertNull(proxyResponse.header(HeaderNames.LAST_MODIFIED.lowerCase()));
 		assertNull(proxyResponse.header(HeaderNames.ETAG.lowerCase()));
 		assertNull(proxyResponse.header(HeaderNames.EXPIRES.lowerCase()));
-		assertEquals(Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_PAGES));
+		assertEquals(
+				Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PAGES_FETCHED));
+		assertNull(proxyResponse.header(ProxyHeaderNames.X_PAGES));
 		assertNull(proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS));
 
 		for (int i = 0; i < pagesJson.size(); i++) {
@@ -204,7 +207,9 @@ public class ProxyServicePagesTest {
 	@ParameterizedTest
 	@ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 	@SneakyThrows
+	@SetEnvironmentVariable(key = "HTTP_MAX_CONCURRENT_PAGES", value = "4")
 	void shouldNotFetchPagesIfThereAreErrors(int errorPage) {
+		var permanentErrorPage = 5; // To test errors on multiple pages during concurrent fetches.
 		mockEsi.setDispatcher(new Dispatcher() {
 			@NotNull
 			@Override
@@ -213,10 +218,11 @@ public class ProxyServicePagesTest {
 				var page = Optional.ofNullable(url.queryParameter("page"))
 						.map(Integer::parseInt)
 						.orElse(1);
-				if (page == errorPage) {
+				if (page == errorPage || page == permanentErrorPage) {
 					return new MockResponse().setResponseCode(400).setHeader("x-server-header", "error");
 				} else {
 					return new MockResponse()
+							.setHeadersDelay(100, TimeUnit.MILLISECONDS)
 							.setResponseCode(200)
 							.addHeader(ProxyHeaderNames.X_PAGES, "10")
 							.setBody("[{\"order_id\":1}]");
