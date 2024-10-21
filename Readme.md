@@ -111,3 +111,9 @@ The EVE ESI Proxy itself is licensed under the [MIT-0 license](https://spdx.org/
 EVE Online and all assets related to it are owned by [CCP hf.](https://www.ccpgames.com/):
 * [Third-Party Developer License Agreement](https://developers.eveonline.com/license-agreement)
 * [End-user License Agreement](https://community.eveonline.com/support/policies/eve-eula-en/)
+
+## Similar projects
+* [ESI-Proxy](https://github.com/EVE-KILL/ESI-Proxy)
+* [esi-ws-proxy](https://github.com/TrueBrain/esi-ws-proxy/)
+* [orbital-esi-proxy](https://github.com/OrbitalEnterprises/orbital-esi-proxy)
+
