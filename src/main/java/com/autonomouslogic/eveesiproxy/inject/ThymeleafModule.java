@@ -30,7 +30,8 @@ public class ThymeleafModule {
 		return createResolver(TemplateMode.HTML, false, ".html");
 	}
 
-	private static ClassLoaderTemplateResolver createResolver(TemplateMode mode, boolean checkExistence, String suffix) {
+	private static ClassLoaderTemplateResolver createResolver(
+			TemplateMode mode, boolean checkExistence, String suffix) {
 		var resolver = new ClassLoaderTemplateResolver();
 		resolver.setCheckExistence(checkExistence);
 		resolver.setPrefix("/templates/");
