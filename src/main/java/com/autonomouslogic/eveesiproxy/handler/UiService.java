@@ -5,6 +5,7 @@ import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
 import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
 import com.autonomouslogic.eveesiproxy.ui.TemplateUtil;
+import com.autonomouslogic.eveesiproxy.util.HelidonUtil;
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.HttpRules;
@@ -51,10 +52,8 @@ public class UiService implements HttpService {
 		httpRules.any("/", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
 
 		httpRules.get("/login", new LoginHandler());
-		httpRules.any("/login", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
 
-		httpRules.get("/characters/{character_id}", new CharacterHandler());
-		httpRules.any("/characters/{character_id}", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
+		httpRules.get("/characters/{characterId}", new CharacterHandler());
 	}
 
 	class RootHandler implements Handler {
@@ -72,10 +71,8 @@ public class UiService implements HttpService {
 	class LoginHandler implements Handler {
 		@Override
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
-			var characterId = Optional.of(req.requestedUri().query())
-					.filter(q -> q.contains("characterId"))
-					.map(q -> q.get("characterId"))
-					.map(Long::parseLong);
+			var characterId =
+					HelidonUtil.getParameter("characterId", req.query()).map(Long::parseLong);
 			var character = characterId.flatMap(authManager::getCharacterForCharacterId);
 			var currentScopes = character.map(AuthedCharacter::getScopes);
 
@@ -116,9 +113,18 @@ public class UiService implements HttpService {
 	class CharacterHandler implements Handler {
 		@Override
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
-			var characterId = Long.parseLong(req.path().pathParameters().get("character_id"));
-			var authedCharacter = authManager.getAuthedCharacter(characterId);
-			if (authedCharacter == null) {
+			var characterId = HelidonUtil.getParameter("characterId", req.path().pathParameters())
+					.map(Long::parseLong);
+			if (characterId.isEmpty()) {
+				standardHeaders
+						.apply(res)
+						.status(400)
+						.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/plain")
+						.send("Character ID not set");
+				return;
+			}
+			var authedCharacter = characterId.flatMap(id -> Optional.ofNullable(authManager.getAuthedCharacter(id)));
+			if (authedCharacter.isEmpty()) {
 				standardHeaders
 						.apply(res)
 						.status(404)
@@ -127,9 +133,9 @@ public class UiService implements HttpService {
 				return;
 			}
 			var exampleCurl = "curl \"http://localhost:%s/latest/characters/%s/blueprints?token=%s\""
-					.formatted(port, characterId, authedCharacter.getProxyKey());
-			var html =
-					templateUtil.render("character", Map.of("character", authedCharacter, "exampleCurl", exampleCurl));
+					.formatted(port, characterId.get(), authedCharacter.get().getProxyKey());
+			var html = templateUtil.render(
+					"character", Map.of("character", authedCharacter.get(), "exampleCurl", exampleCurl));
 			standardHeaders
 					.apply(res)
 					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")

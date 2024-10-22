@@ -5,6 +5,7 @@ import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
 import com.autonomouslogic.eveesiproxy.handler.IndexService;
 import com.autonomouslogic.eveesiproxy.handler.LoginService;
 import com.autonomouslogic.eveesiproxy.handler.ProxyService;
+import com.autonomouslogic.eveesiproxy.handler.StandardHandlers;
 import com.autonomouslogic.eveesiproxy.handler.StaticService;
 import com.autonomouslogic.eveesiproxy.handler.UiService;
 import dagger.Module;
@@ -53,6 +54,7 @@ public class HelidonModule {
 		routing.register(indexService)
 				.register(UiService.BASE_PATH, uiService)
 				.register(UiService.BASE_PATH, loginService)
+				.any(UiService.BASE_PATH + "/*", StandardHandlers.HTTP_METHOD_NOT_ALLOWED)
 				.register(staticService)
 				.register(proxyService)
 				.error(Exception.class, errorHandler);

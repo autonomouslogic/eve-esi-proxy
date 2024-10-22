@@ -5,13 +5,10 @@
 <div layout:fragment="content">
     <h2>Login</h2>
     <form method="post" action="login/redirect">
-        <input th:if="${character.isPresent()}" type="hidden" name="characterId" th:value="${character.get().characterId}" />
+        <input th:if="${character.isPresent()}" type="hidden" name="characterId"
+               th:value="${character.get().characterId}"/>
 
-        <button type="submit" style="border: 1px solid blue; background-color: #00475d; padding: 0.5rem;">Login</button>
-
-        <p id="many-scopes-error" style="color: red;">Selecting many scopes can cause problems with login</p>
-
-        <p>Select scopes to log in with</p>
+        <p>Select scopes:</p>
 
         <div>
             <span th:replace="scopebox :: scopeBox('scope-publicData', 'publicData', 'publicData', true, true)"></span>
@@ -19,8 +16,8 @@
 
         <span th:each="scopeEntry : ${scopeGroups}">
 
-            <fieldset style="border: 1px solid #444; padding: 1rem;">
-                <legend th:text="${scopeEntry.key}" style="padding: 0.0rem 0.5rem;"></legend>
+            <fieldset style="border: 1px solid #444; padding: 1rem; margin-top: 1rem;">
+                <legend th:text="${scopeEntry.key}" style="padding: 0.0rem 0.5rem; font-weight: bold;"></legend>
 
                 <div>
                     <span th:replace="scopebox :: scopeBox('scope-' + ${scopeEntry.key} + '-all', null, 'All ' + ${scopeEntry.key}, false, false)"></span>
@@ -34,6 +31,11 @@
             </fieldset>
 
         </span>
+
+        <p id="many-scopes-error" style="color: red;">Selecting many scopes can cause problems with login</p>
+
+        <button type="submit">Login &raquo;</button>
+
     </form>
 </div>
 </body>

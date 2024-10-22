@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -81,7 +82,7 @@ public class EsiAuthHelper {
 	protected EsiAuthHelper() {
 		var secretKey = Configs.EVE_OAUTH_SECRET_KEY.get();
 		var serviceBuilder = new ServiceBuilder(clientId)
-				.defaultScope(String.join(" ", ALL_SCOPES))
+				// .defaultScope(String.join(" ", ALL_SCOPES))
 				.callback(callbackUrl);
 		var logLevel = LOG_LEVEL.getRequired().toUpperCase();
 		if (logLevel.equals("TRACE") || logLevel.equals("DEBUG")) {
@@ -97,9 +98,11 @@ public class EsiAuthHelper {
 	}
 
 	@SneakyThrows
-	public URI getLoginUri() {
+	public URI getLoginUri(@NonNull List<String> scopes, @NonNull Optional<Long> characterId) {
 		var state = createState();
-		var builder = service.createAuthorizationUrlBuilder().state(state);
+		var builder = service.createAuthorizationUrlBuilder()
+				.scope(String.join(" ", scopes))
+				.state(state);
 		if (authFlow == AuthFlow.PKCE) {
 			builder = builder.initPKCE();
 		}
@@ -109,7 +112,7 @@ public class EsiAuthHelper {
 		if (pkce != null) {
 			logPkceForState(state, pkce);
 		}
-		stateMemory.put(state, new LoginState(Instant.now(), builder));
+		stateMemory.put(state, new LoginState(Instant.now(), characterId, builder));
 		return new URI(url);
 	}
 
@@ -199,6 +202,7 @@ public class EsiAuthHelper {
 	@Value
 	private static class LoginState {
 		Instant created;
+		Optional<Long> characterId;
 		AuthorizationUrlBuilder authorizationUrlBuilder;
 	}
 }

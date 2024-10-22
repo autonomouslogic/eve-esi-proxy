@@ -3,6 +3,7 @@ package com.autonomouslogic.eveesiproxy.handler;
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
 import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
+import com.autonomouslogic.eveesiproxy.util.HelidonUtil;
 import io.helidon.common.parameters.Parameters;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Status;
@@ -37,27 +38,29 @@ public class LoginService implements HttpService {
 		log.trace("Configuring routing for {}", this.getClass().getSimpleName());
 
 		httpRules.post("/login/redirect", new LoginRedirectHandler());
-		httpRules.any("/login/redirect", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
 
 		httpRules.get("/login/callback", new CallbackHandler());
-		httpRules.any("/login/callback", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
 	}
 
 	private class LoginRedirectHandler implements Handler {
 		@Override
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
-			var params = req.content().as(Parameters.class);
-			var characterId = Optional.ofNullable(params.get("characterId")).map(Long::parseLong);
+			var params = Optional.ofNullable(req.content())
+					.filter(c -> c.hasEntity())
+					.map(c -> c.as(Parameters.class))
+					.orElse(null);
+			var characterId = HelidonUtil.getParameter("characterId", params).map(Long::parseLong);
 			var scopes = Stream.concat(
 							Stream.of("publicData"),
 							EsiAuthHelper.ALL_SCOPES.stream()
-									.filter(s ->
-											params.contains(s) && !params.get(s).isBlank()))
+									.filter(s -> params != null
+											&& params.contains(s)
+											&& !params.get(s).isBlank()))
 					.distinct()
 					.toList();
 			log.trace("Redirecting login for characterId: {}, scopes: {}", characterId, scopes);
 
-			var redirect = esiAuthHelper.getLoginUri();
+			var redirect = esiAuthHelper.getLoginUri(scopes, characterId);
 			log.debug("Redirecting login to {}", redirect);
 			standardHeaders
 					.apply(res)

@@ -23,20 +23,22 @@
             <div>
                 Owner hash: <span style="font-family: monospace" th:text="${character.characterOwnerHash}"></span>
             </div>
-            <div>
-                <a th:href="'/esiproxy/login?characterId=' + ${character.characterId}">Reauth &raquo;</a>
-            </div>
         </span>
     </div>
 
     <div>
         <h3>Example query</h3>
-        <pre th:text="${exampleCurl}"></pre>
+        <pre th:text="${exampleCurl}" style="background-color: #1a1a1a; padding: 0.5rem;"></pre>
     </div>
 
     <div>
         <h3>Scopes</h3>
-        <span th:text="${character.scopes.size()}"></span> scopes authorized:
+        <div>
+            <a th:href="'/esiproxy/login?characterId=' + ${character.characterId}">Change scopes &raquo;</a>
+        </div>
+        <div>
+            <span th:text="${character.scopes.size()}"></span> scopes:
+        </div>
         <ul>
             <li th:each="scope : ${character.scopes}">
                 <span th:text="${scope}"></span>
