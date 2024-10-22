@@ -5,6 +5,8 @@
 <div layout:fragment="content">
     <h2>Login</h2>
     <form method="post" action="login/redirect">
+        <input th:if="${character.isPresent()}" type="hidden" name="characterId" th:value="${character.get().characterId}" />
+
         <button type="submit" style="border: 1px solid blue; background-color: #00475d; padding: 0.5rem;">Login</button>
 
         <p id="many-scopes-error" style="color: red;">Selecting many scopes can cause problems with login</p>

@@ -3,6 +3,7 @@ package com.autonomouslogic.eveesiproxy.handler;
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
 import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
+import io.helidon.common.parameters.Parameters;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Status;
 import io.helidon.webserver.http.Handler;
@@ -12,6 +13,8 @@ import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.extern.log4j.Log4j2;
 
 @Singleton
@@ -43,6 +46,17 @@ public class LoginService implements HttpService {
 	private class LoginRedirectHandler implements Handler {
 		@Override
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
+			var params = req.content().as(Parameters.class);
+			var characterId = Optional.ofNullable(params.get("characterId")).map(Long::parseLong);
+			var scopes = Stream.concat(
+							Stream.of("publicData"),
+							EsiAuthHelper.ALL_SCOPES.stream()
+									.filter(s ->
+											params.contains(s) && !params.get(s).isBlank()))
+					.distinct()
+					.toList();
+			log.trace("Redirecting login for characterId: {}, scopes: {}", characterId, scopes);
+
 			var redirect = esiAuthHelper.getLoginUri();
 			log.debug("Redirecting login to {}", redirect);
 			standardHeaders

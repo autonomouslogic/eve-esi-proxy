@@ -14,7 +14,6 @@ import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -74,9 +73,9 @@ public class UiService implements HttpService {
 		@Override
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
 			var characterId = Optional.of(req.requestedUri().query())
-				.filter(q -> q.contains("characterId"))
-				.map(q -> q.get("characterId"))
-				.map(Long::parseLong);
+					.filter(q -> q.contains("characterId"))
+					.map(q -> q.get("characterId"))
+					.map(Long::parseLong);
 			var character = characterId.flatMap(authManager::getCharacterForCharacterId);
 			var currentScopes = character.map(AuthedCharacter::getScopes);
 
@@ -101,10 +100,12 @@ public class UiService implements HttpService {
 				groups.sort(String::compareTo);
 			}
 
-			var html = templateUtil.render("login", Map.of(
-				"scopeGroups", scopeGroups,
-				"character", character,
-				"currentScopes", currentScopes.orElse(List.of())));
+			var html = templateUtil.render(
+					"login",
+					Map.of(
+							"scopeGroups", scopeGroups,
+							"character", character,
+							"currentScopes", currentScopes.orElse(List.of())));
 			standardHeaders
 					.apply(res)
 					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")

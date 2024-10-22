@@ -85,13 +85,13 @@ public class AuthManager {
 
 	public Optional<AuthedCharacter> getCharacterForOwnerHash(String ownerHash) {
 		return authedCharacters.values().stream()
-			.filter(c -> ownerHash.equals(c.getCharacterOwnerHash()))
-			.findFirst();
+				.filter(c -> ownerHash.equals(c.getCharacterOwnerHash()))
+				.findFirst();
 	}
 
 	public Optional<AuthedCharacter> getCharacterForCharacterId(long characterId) {
 		return authedCharacters.values().stream()
-			.filter(c -> characterId == c.getCharacterId())
-			.findFirst();
+				.filter(c -> characterId == c.getCharacterId())
+				.findFirst();
 	}
 }
