@@ -12,7 +12,7 @@
         <p>Select scopes to log in with</p>
 
         <div>
-            <span th:replace="scopebox :: scopeBox('scope-publicData', 'publicData', 'publicData')"></span>
+            <span th:replace="scopebox :: scopeBox('scope-publicData', 'publicData', 'publicData', true, true)"></span>
         </div>
 
         <span th:each="scopeEntry : ${scopeGroups}">
@@ -21,12 +21,12 @@
                 <legend th:text="${scopeEntry.key}" style="padding: 0.0rem 0.5rem;"></legend>
 
                 <div>
-                    <span th:replace="scopebox :: scopeBox('scope-' + ${scopeEntry.key} + '-all', null, 'All ' + ${scopeEntry.key})"></span>
+                    <span th:replace="scopebox :: scopeBox('scope-' + ${scopeEntry.key} + '-all', null, 'All ' + ${scopeEntry.key}, false, false)"></span>
                 </div>
 
                 <div>
                     <span th:each="scope : ${scopeEntry.value}">
-                        <span th:replace="scopebox :: scopeBox('scope-' + ${scope}, ${scope}, ${scope})"></span>
+                        <span th:replace="scopebox :: scopeBox('scope-' + ${scope}, ${scope}, ${scope}, ${currentScopes.contains(scope)}, false)"></span>
                     </span>
                 </div>
             </fieldset>

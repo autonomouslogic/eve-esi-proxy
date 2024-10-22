@@ -23,6 +23,9 @@
             <div>
                 Owner hash: <span style="font-family: monospace" th:text="${character.characterOwnerHash}"></span>
             </div>
+            <div>
+                <a th:href="'/esiproxy/login?characterId=' + ${character.characterId}">Reauth &raquo;</a>
+            </div>
         </span>
     </div>
 

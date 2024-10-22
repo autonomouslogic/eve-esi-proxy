@@ -2,6 +2,7 @@ package com.autonomouslogic.eveesiproxy.handler;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
+import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
 import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
 import com.autonomouslogic.eveesiproxy.ui.TemplateUtil;
 import io.helidon.http.HeaderNames;
@@ -13,7 +14,10 @@ import io.helidon.webserver.http.ServerResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -69,6 +73,17 @@ public class UiService implements HttpService {
 	class LoginHandler implements Handler {
 		@Override
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
+			var characterId = Optional.of(req.requestedUri().query())
+				.filter(q -> q.contains("characterId"))
+				.map(q -> q.get("characterId"))
+				.map(Long::parseLong);
+			var character = characterId.flatMap(authManager::getCharacterForCharacterId);
+			var currentScopes = character.map(AuthedCharacter::getScopes);
+
+			if (characterId.isPresent() && character.isEmpty()) {
+				standardHeaders.apply(res).status(404).send("Character not found");
+			}
+
 			var scopeGroups = EsiAuthHelper.ALL_SCOPES.stream()
 					.filter(s -> !s.equals("publicData"))
 					.collect(Collectors.groupingBy(
@@ -86,7 +101,10 @@ public class UiService implements HttpService {
 				groups.sort(String::compareTo);
 			}
 
-			var html = templateUtil.render("login", Map.of("scopeGroups", scopeGroups));
+			var html = templateUtil.render("login", Map.of(
+				"scopeGroups", scopeGroups,
+				"character", character,
+				"currentScopes", currentScopes.orElse(List.of())));
 			standardHeaders
 					.apply(res)
 					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")

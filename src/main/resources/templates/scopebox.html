@@ -1,4 +1,5 @@
-<span th:fragment="scopeBox(id, value, text)" style="padding: 0.5rem; display: inline-block; white-space: nowrap;">
-    <input type="checkbox" th:id="${id}" th:value="${value}"/>
+<span th:fragment="scopeBox(id, value, text, checked, disabled)"
+      style="padding: 0.5rem; display: inline-block; white-space: nowrap;">
+    <input type="checkbox" th:id="${id}" th:value="${value}" th:attr="checked = ${checked} , disabled = ${disabled}"/>
     <label th:for="${id}" th:text="${text}"></label>
 </span>
