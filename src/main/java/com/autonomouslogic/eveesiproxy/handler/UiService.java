@@ -2,6 +2,7 @@ package com.autonomouslogic.eveesiproxy.handler;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
+import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
 import com.autonomouslogic.eveesiproxy.ui.TemplateUtil;
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.http.Handler;
@@ -13,6 +14,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 
 @Singleton
@@ -43,6 +46,10 @@ public class UiService implements HttpService {
 		log.trace("Configuring routing for {}", this.getClass().getSimpleName());
 		httpRules.get("/", new RootHandler());
 		httpRules.any("/", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
+
+		httpRules.get("/login", new LoginHandler());
+		httpRules.any("/login", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
+
 		httpRules.get("/characters/{character_id}", new CharacterHandler());
 		httpRules.any("/characters/{character_id}", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
 	}
@@ -52,6 +59,34 @@ public class UiService implements HttpService {
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
 			var authedCharacters = authManager.getAuthedCharacters();
 			var html = templateUtil.render("index", Map.of("authedCharacters", authedCharacters));
+			standardHeaders
+					.apply(res)
+					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")
+					.send(html);
+		}
+	}
+
+	class LoginHandler implements Handler {
+		@Override
+		public void handle(ServerRequest req, ServerResponse res) throws Exception {
+			var scopeGroups = EsiAuthHelper.ALL_SCOPES.stream()
+					.filter(s -> !s.equals("publicData"))
+					.collect(Collectors.groupingBy(
+							s -> {
+								var split = s.split("\\.");
+								if (split.length == 1) {
+									throw new IllegalStateException("Scope %s has no group".formatted(s));
+								}
+								return split[0];
+							},
+							TreeMap::new,
+							Collectors.toList()));
+			for (var group : scopeGroups.keySet()) {
+				var groups = scopeGroups.get(group);
+				groups.sort(String::compareTo);
+			}
+
+			var html = templateUtil.render("login", Map.of("scopeGroups", scopeGroups));
 			standardHeaders
 					.apply(res)
 					.header(HeaderNames.CONTENT_TYPE.lowerCase(), "text/html")

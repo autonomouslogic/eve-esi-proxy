@@ -51,8 +51,8 @@ public class HelidonModule {
 			StaticService staticService,
 			ErrorHandler errorHandler) {
 		routing.register(indexService)
-				.register(UiService.BASE_PATH + "/login", loginService)
 				.register(UiService.BASE_PATH, uiService)
+				.register(UiService.BASE_PATH, loginService)
 				.register(staticService)
 				.register(proxyService)
 				.error(Exception.class, errorHandler);

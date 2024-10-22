@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -47,19 +46,11 @@ import org.apache.commons.lang3.tuple.Pair;
 public class EsiAuthHelper {
 	private static final Duration EXPIRATION_BUFFER = Duration.ofMinutes(1);
 
-	// @todo should be configurable when logging in
-	public static final List<String> SCOPES;
+	public static final List<String> ALL_SCOPES;
 
 	static {
 		try (var in = ResourceUtil.loadResource("/esi-scopes")) {
-			var scopes = new ArrayList<>(IOUtils.readLines(in, StandardCharsets.UTF_8).stream()
-					.filter(e -> !e.isEmpty())
-					.limit(66)
-					.toList());
-			if (!scopes.contains("publicData")) {
-				scopes.add("publicData");
-			}
-			SCOPES = Collections.unmodifiableList(scopes);
+			ALL_SCOPES = Collections.unmodifiableList(IOUtils.readLines(in, StandardCharsets.UTF_8));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -90,7 +81,7 @@ public class EsiAuthHelper {
 	protected EsiAuthHelper() {
 		var secretKey = Configs.EVE_OAUTH_SECRET_KEY.get();
 		var serviceBuilder = new ServiceBuilder(clientId)
-				.defaultScope(String.join(" ", SCOPES))
+				.defaultScope(String.join(" ", ALL_SCOPES))
 				.callback(callbackUrl);
 		var logLevel = LOG_LEVEL.getRequired().toUpperCase();
 		if (logLevel.equals("TRACE") || logLevel.equals("DEBUG")) {

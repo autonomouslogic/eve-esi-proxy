@@ -32,11 +32,15 @@ public class LoginService implements HttpService {
 	@Override
 	public void routing(HttpRules httpRules) {
 		log.trace("Configuring routing for {}", this.getClass().getSimpleName());
-		httpRules.get("/", new LoginHandler());
-		httpRules.get("/callback", new CallbackHandler());
+
+		httpRules.post("/login/redirect", new LoginRedirectHandler());
+		httpRules.any("/login/redirect", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
+
+		httpRules.get("/login/callback", new CallbackHandler());
+		httpRules.any("/login/callback", StandardHandlers.HTTP_METHOD_NOT_ALLOWED);
 	}
 
-	private class LoginHandler implements Handler {
+	private class LoginRedirectHandler implements Handler {
 		@Override
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
 			var redirect = esiAuthHelper.getLoginUri();

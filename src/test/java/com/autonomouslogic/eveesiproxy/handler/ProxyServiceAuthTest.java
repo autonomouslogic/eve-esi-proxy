@@ -127,7 +127,7 @@ public class ProxyServiceAuthTest {
 		assertEquals("client-id-1", loginRedirect.queryParameter("client_id"));
 		assertEquals("http://localhost:8182/esiproxy/login/callback", loginRedirect.queryParameter("redirect_uri"));
 		assertEquals(
-				EsiAuthHelper.SCOPES,
+				EsiAuthHelper.ALL_SCOPES,
 				List.of(loginRedirect.queryParameter("scope").split(" ")));
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
 
@@ -153,7 +153,7 @@ public class ProxyServiceAuthTest {
 								.characterOwnerHash("owner-hash-1")
 								.build()))
 						.put("ExpiresOn", "2021-01-01T00:00:00")
-						.put("Scopes", String.join(" ", EsiAuthHelper.SCOPES))
+						.put("Scopes", String.join(" ", EsiAuthHelper.ALL_SCOPES))
 						.toString());
 
 		// Execute callback.
@@ -185,7 +185,7 @@ public class ProxyServiceAuthTest {
 		tokenRequestParameters.addAll(List.of(
 				"code=auth-code-1",
 				"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Fesiproxy%2Flogin%2Fcallback",
-				"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
+				"scope=" + String.join("%20", EsiAuthHelper.ALL_SCOPES),
 				"grant_type=authorization_code"));
 		if (authFlow == AuthFlow.PKCE) {
 			tokenRequestParameters.add("code_verifier=" + codeVerifier.get());
@@ -210,7 +210,7 @@ public class ProxyServiceAuthTest {
 		assertEquals("Test Character", authedCharacter.getCharacterName());
 		assertEquals("owner-hash-1", authedCharacter.getCharacterOwnerHash());
 		assertNotNull(authedCharacter.getProxyKey());
-		assertEquals(EsiAuthHelper.SCOPES, authedCharacter.getScopes());
+		assertEquals(EsiAuthHelper.ALL_SCOPES, authedCharacter.getScopes());
 	}
 
 	@Test
@@ -255,7 +255,7 @@ public class ProxyServiceAuthTest {
 			tokenRequestParameters.add("client_secret=client-secret-1");
 		}
 		tokenRequestParameters.addAll(List.of(
-				"scope=" + String.join("%20", EsiAuthHelper.SCOPES),
+				"scope=" + String.join("%20", EsiAuthHelper.ALL_SCOPES),
 				"refresh_token=refresh-token-1",
 				"grant_type=refresh_token"));
 		assertRequest(
