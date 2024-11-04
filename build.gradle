@@ -54,7 +54,7 @@ dependencies {
 	// Misc
 	implementation "com.squareup.okhttp3:okhttp:4.12.0"
 //	implementation "org.yaml:snakeyaml:2.3"
-	implementation "com.autonomouslogic.commons:commons-java:1.9.1"
+	implementation "com.autonomouslogic.commons:commons-java:1.9.2"
 	implementation "commons-io:commons-io:2.17.0"
 	implementation "com.google.guava:guava:33.3.1-jre"
 	implementation "com.github.scribejava:scribejava-core:8.3.3"
