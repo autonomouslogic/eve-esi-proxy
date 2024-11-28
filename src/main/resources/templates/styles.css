@@ -12,12 +12,15 @@ header, .container, footer {
     padding: 3rem 1rem;
 }
 
-a {
+a, button {
     color: #f77e16;
     font-weight: bold;
 }
-a:hover {
+a:hover, button:hover {
     text-decoration: underline;
+}
+button:hover {
+    cursor: pointer;
 }
 
 h1 {
