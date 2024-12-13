@@ -11,7 +11,6 @@ import com.autonomouslogic.eveesiproxy.http.ProxyHeaderValues;
 import com.autonomouslogic.eveesiproxy.oauth.AuthFlow;
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
-import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
 import com.autonomouslogic.eveesiproxy.oauth.EsiVerifyResponse;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
@@ -26,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -47,7 +47,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "EVE_OAUTH_TOKEN_URL", value = "http://localhost:" + MOCK_ESI_PORT + "/v2/oauth/token")
 @Timeout(30)
 @Log4j2
-public class ProxyServiceAuthTest {
+public class LoginServiceTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -64,7 +64,7 @@ public class ProxyServiceAuthTest {
 	MockWebServer mockEsi;
 
 	@Inject
-	protected ProxyServiceAuthTest() {}
+	protected LoginServiceTest() {}
 
 	@BeforeEach
 	@SneakyThrows
@@ -111,9 +111,18 @@ public class ProxyServiceAuthTest {
 	@SneakyThrows
 	void testLoginFlow(AuthFlow authFlow) {
 		var characterId = 283764238;
+		var scopes = List.of("publicData", "esi-alliances.read_contacts.v1", "esi-assets.read_assets.v1");
 
 		// Login redirect to EVE auth.
-		var loginResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esiproxy/login");
+		var loginResponse = TestHttpUtils.callProxy(
+				client,
+				proxy,
+				"POST",
+				"/esiproxy/login/redirect",
+				scopes.stream()
+						.filter(s -> !s.equals("publicData"))
+						.map(s -> s + "=on")
+						.collect(Collectors.joining("&")));
 		assertEquals(307, loginResponse.code());
 		var loginRedirect = HttpUrl.parse(loginResponse.header("location"));
 		var codeChallenge = loginRedirect.queryParameter("code_challenge");
@@ -126,9 +135,7 @@ public class ProxyServiceAuthTest {
 		}
 		assertEquals("client-id-1", loginRedirect.queryParameter("client_id"));
 		assertEquals("http://localhost:8182/esiproxy/login/callback", loginRedirect.queryParameter("redirect_uri"));
-		assertEquals(
-				EsiAuthHelper.ALL_SCOPES,
-				List.of(loginRedirect.queryParameter("scope").split(" ")));
+		assertEquals(scopes, List.of(loginRedirect.queryParameter("scope").split(" ")));
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
 
 		// Token response.
@@ -153,7 +160,7 @@ public class ProxyServiceAuthTest {
 								.characterOwnerHash("owner-hash-1")
 								.build()))
 						.put("ExpiresOn", "2021-01-01T00:00:00")
-						.put("Scopes", String.join(" ", EsiAuthHelper.ALL_SCOPES))
+						.put("Scopes", String.join(" ", scopes))
 						.toString());
 
 		// Execute callback.
@@ -185,7 +192,6 @@ public class ProxyServiceAuthTest {
 		tokenRequestParameters.addAll(List.of(
 				"code=auth-code-1",
 				"redirect_uri=http%3A%2F%2Flocalhost%3A8182%2Fesiproxy%2Flogin%2Fcallback",
-				"scope=" + String.join("%20", EsiAuthHelper.ALL_SCOPES),
 				"grant_type=authorization_code"));
 		if (authFlow == AuthFlow.PKCE) {
 			tokenRequestParameters.add("code_verifier=" + codeVerifier.get());
@@ -210,7 +216,7 @@ public class ProxyServiceAuthTest {
 		assertEquals("Test Character", authedCharacter.getCharacterName());
 		assertEquals("owner-hash-1", authedCharacter.getCharacterOwnerHash());
 		assertNotNull(authedCharacter.getProxyKey());
-		assertEquals(EsiAuthHelper.ALL_SCOPES, authedCharacter.getScopes());
+		assertEquals(scopes, authedCharacter.getScopes());
 	}
 
 	@Test
@@ -254,10 +260,7 @@ public class ProxyServiceAuthTest {
 		if (authFlow == AuthFlow.CODE) {
 			tokenRequestParameters.add("client_secret=client-secret-1");
 		}
-		tokenRequestParameters.addAll(List.of(
-				"scope=" + String.join("%20", EsiAuthHelper.ALL_SCOPES),
-				"refresh_token=refresh-token-1",
-				"grant_type=refresh_token"));
+		tokenRequestParameters.addAll(List.of("refresh_token=refresh-token-1", "grant_type=refresh_token"));
 		assertRequest(
 				oauthRequest,
 				"POST",

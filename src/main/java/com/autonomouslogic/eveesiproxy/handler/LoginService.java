@@ -1,5 +1,6 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
+import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import com.autonomouslogic.eveesiproxy.oauth.AuthedCharacter;
 import com.autonomouslogic.eveesiproxy.oauth.EsiAuthHelper;
@@ -37,12 +38,12 @@ public class LoginService implements HttpService {
 	public void routing(HttpRules httpRules) {
 		log.trace("Configuring routing for {}", this.getClass().getSimpleName());
 
-		httpRules.post("/login/redirect", new LoginRedirectHandler());
+		httpRules.post("/login/redirect", new RedirectHandler());
 
 		httpRules.get("/login/callback", new CallbackHandler());
 	}
 
-	private class LoginRedirectHandler implements Handler {
+	private class RedirectHandler implements Handler {
 		@Override
 		public void handle(ServerRequest req, ServerResponse res) throws Exception {
 			var params = Optional.ofNullable(req.content())
@@ -135,7 +136,7 @@ public class LoginService implements HttpService {
 					.status(Status.TEMPORARY_REDIRECT_307)
 					.header(
 							HeaderNames.LOCATION.lowerCase(),
-							UiService.BASE_PATH + "/characters/" + verify.getCharacterId())
+							EveEsiProxy.BASE_PATH + "/characters/" + verify.getCharacterId())
 					.send();
 			//					.send(body.getBytes(StandardCharsets.UTF_8));
 		}

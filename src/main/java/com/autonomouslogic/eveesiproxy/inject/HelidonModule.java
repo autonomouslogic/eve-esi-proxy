@@ -1,5 +1,6 @@
 package com.autonomouslogic.eveesiproxy.inject;
 
+import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.handler.ErrorHandler;
 import com.autonomouslogic.eveesiproxy.handler.IndexService;
@@ -52,9 +53,9 @@ public class HelidonModule {
 			StaticService staticService,
 			ErrorHandler errorHandler) {
 		routing.register(indexService)
-				.register(UiService.BASE_PATH, uiService)
-				.register(UiService.BASE_PATH, loginService)
-				.any(UiService.BASE_PATH + "/*", StandardHandlers.HTTP_METHOD_NOT_ALLOWED)
+				.register(EveEsiProxy.BASE_PATH, uiService)
+				.register(EveEsiProxy.BASE_PATH, loginService)
+				.any(EveEsiProxy.BASE_PATH + "/*", StandardHandlers.HTTP_METHOD_NOT_ALLOWED)
 				.register(staticService)
 				.register(proxyService)
 				.error(Exception.class, errorHandler);

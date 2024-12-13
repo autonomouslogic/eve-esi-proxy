@@ -25,7 +25,6 @@ import lombok.extern.log4j.Log4j2;
 @Singleton
 @Log4j2
 public class UiService implements HttpService {
-	public static final String BASE_PATH = "/esiproxy";
 
 	@Inject
 	protected StandardHeaders standardHeaders;
