@@ -4,3 +4,4 @@ build/
 local.env
 src/main/resources/version
 local.env
+.profileconfig.json
