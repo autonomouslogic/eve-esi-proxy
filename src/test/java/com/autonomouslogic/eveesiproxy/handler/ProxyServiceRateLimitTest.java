@@ -42,7 +42,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "ESI_CHARACTER_CORPORATION_HISTORY_RATE_LIMIT_PER_S", value = "5")
 @Timeout(30)
 @Log4j2
-public class ProxyServiceRateLimitTest {
+class ProxyServiceRateLimitTest {
 	@Inject
 	EveEsiProxy proxy;
 

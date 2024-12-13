@@ -2,7 +2,9 @@ package com.autonomouslogic.eveesiproxy.util;
 
 import io.helidon.common.parameters.Parameters;
 import java.util.Optional;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class HelidonUtil {
 	public static Optional<String> getParameter(String name, Parameters params) {
 		if (params == null) {
