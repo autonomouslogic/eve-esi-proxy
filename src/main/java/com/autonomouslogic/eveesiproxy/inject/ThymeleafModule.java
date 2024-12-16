@@ -23,21 +23,22 @@ public class ThymeleafModule {
 	}
 
 	private static ITemplateResolver cssResolver() {
-		var resolver = new ClassLoaderTemplateResolver();
-		resolver.setCheckExistence(true);
-		resolver.setPrefix("/templates/");
-		resolver.setSuffix(".css");
-		resolver.setTemplateMode(TemplateMode.CSS);
-		resolver.setCacheable(true);
-		resolver.setCacheTTLMs(Duration.ofDays(1000).toMillis());
-		return resolver;
+		return createResolver(TemplateMode.CSS, true, null);
 	}
 
 	private static ITemplateResolver htmlResolver() {
+		return createResolver(TemplateMode.HTML, false, ".html");
+	}
+
+	private static ClassLoaderTemplateResolver createResolver(
+			TemplateMode mode, boolean checkExistence, String suffix) {
 		var resolver = new ClassLoaderTemplateResolver();
+		resolver.setCheckExistence(checkExistence);
 		resolver.setPrefix("/templates/");
-		resolver.setSuffix(".html");
-		resolver.setTemplateMode(TemplateMode.HTML);
+		if (suffix != null) {
+			resolver.setSuffix(suffix);
+		}
+		resolver.setTemplateMode(mode);
 		resolver.setCacheable(true);
 		resolver.setCacheTTLMs(Duration.ofDays(1000).toMillis());
 		return resolver;

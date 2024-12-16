@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<body>
+<!-- /* Content of this page will be decorated by the elements of layout.html (task/layout) */ -->
+<div layout:fragment="content">
+
+    <script type="text/javascript">
+        (function () {
+            const $ = document.querySelectorAll;
+            // const scope
+        })();
+
+        function setScopes(scopes, value) {
+            for (let i = 0; i < scopes.length; i++) {
+                const el = document.querySelector("[name='" + scopes[i] + "']");
+                if (!el) {
+                    continue;
+                }
+                el.checked = value;
+            }
+            countScopes();
+        }
+
+        function parseScopes(el) {
+            const data = el.getAttribute("data-scopes");
+            const scopes = data.substring(1, data.length - 1).split(", ");
+            return scopes;
+        }
+
+        function selectScopes(el) {
+            setScopes(parseScopes(el), true);
+            return false;
+        }
+
+        function deselectScopes(el) {
+            setScopes(parseScopes(el), false);
+            return false;
+        }
+
+        function countScopes() {
+            let n = 0;
+            const checkboxes = document.querySelectorAll("form#login input[type=checkbox]");
+            checkboxes.forEach(function (el) {
+                if (el.checked) {
+                    n++;
+                }
+            });
+            const errorEl = document.getElementById("many-scopes-error");
+            if (n > 45) {
+                errorEl.style.display = "block";
+            } else {
+                errorEl.style.display = "none";
+            }
+        }
+
+        window.onload = countScopes;
+    </script>
+
+    <h2>Login</h2>
+
+    <form id="login" method="post" action="login/redirect">
+        <input th:if="${character.isPresent()}" type="hidden" name="characterId"
+               th:value="${character.get().characterId}"/>
+
+        <p>Select scopes:</p>
+
+        <div>
+            <span th:replace="scopebox :: scopeBox('scope-publicData', 'publicData', 'publicData', true, true)"></span>
+        </div>
+
+        <span th:each="scopeEntry : ${scopeGroups}">
+
+            <fieldset style="border: 1px solid #444; padding: 1rem; margin-top: 1rem;">
+                <legend th:text="${scopeEntry.key}" style="padding: 0.0rem 0.5rem; font-weight: bold;"></legend>
+
+                <div>
+                    <a href="#" onclick="return selectScopes(this);"
+                       th:data-scopes="${scopeEntry.value.toString()}">All</a>
+                    |
+                    <a href="#" onclick="return deselectScopes(this);" th:data-scopes="${scopeEntry.value.toString()}">None</a>
+                </div>
+
+                <div>
+                    <span th:each="scope : ${scopeEntry.value}">
+                        <span th:replace="scopebox :: scopeBox('scope-' + ${scope}, ${scope}, ${scope}, ${currentScopes.contains(scope)}, false)"></span>
+                    </span>
+                </div>
+            </fieldset>
+
+        </span>
+
+        <p id="many-scopes-error" style="color: red; display: none;">Selecting many scopes can cause problems with
+            login</p>
+
+        <button type="submit">Login &raquo;</button>
+
+    </form>
+</div>
+</body>
+</html>

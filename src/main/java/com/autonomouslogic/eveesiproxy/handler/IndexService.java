@@ -1,5 +1,6 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
+import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.oauth.AuthManager;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.Status;
@@ -36,7 +37,7 @@ public class IndexService implements HttpService, Handler {
 		standardHeaders
 				.apply(res)
 				.status(Status.TEMPORARY_REDIRECT_307)
-				.header(HeaderNames.LOCATION.lowerCase(), UiService.BASE_PATH)
+				.header(HeaderNames.LOCATION.lowerCase(), EveEsiProxy.BASE_PATH)
 				.send();
 	}
 }
