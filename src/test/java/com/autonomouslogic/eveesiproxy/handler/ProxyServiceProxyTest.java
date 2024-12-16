@@ -77,7 +77,6 @@ class ProxyServiceProxyTest {
 		}
 		var proxyResponse = TestHttpUtils.callProxy(
 				client, proxy, method, path, Map.of("X-Client-Header", "Test client header"), requestBody);
-		//		if (responseBodyExpected) {
 		TestHttpUtils.assertResponse(
 				proxyResponse,
 				200,
@@ -87,7 +86,6 @@ class ProxyServiceProxyTest {
 						"Test server header",
 						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
 						ProxyHeaderValues.CACHE_STATUS_MISS));
-		//		}
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 		TestHttpUtils.assertRequest(
