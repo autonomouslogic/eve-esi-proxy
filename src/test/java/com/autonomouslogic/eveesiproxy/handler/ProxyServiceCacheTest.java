@@ -31,7 +31,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "HTTP_MAX_TRIES", value = "1")
 @Timeout(30)
 @Log4j2
-class ProxyServiceCacheTest {
+public class ProxyServiceCacheTest {
 	@Inject
 	EveEsiProxy proxy;
 

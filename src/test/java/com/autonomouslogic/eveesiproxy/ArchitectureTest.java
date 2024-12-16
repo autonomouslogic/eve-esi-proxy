@@ -13,7 +13,7 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class ArchitectureTest {
+public class ArchitectureTest {
 	static JavaClasses proxyClasses;
 
 	@BeforeAll

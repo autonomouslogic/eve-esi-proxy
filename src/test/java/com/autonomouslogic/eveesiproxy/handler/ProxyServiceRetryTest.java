@@ -28,7 +28,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 @SetEnvironmentVariable(key = "HTTP_RETRY_DELAY", value = "PT0S")
 @Timeout(30)
 @Log4j2
-class ProxyServiceRetryTest {
+public class ProxyServiceRetryTest {
 	@Inject
 	EveEsiProxy proxy;
 
