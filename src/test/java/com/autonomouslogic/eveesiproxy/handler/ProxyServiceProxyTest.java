@@ -27,7 +27,7 @@ import org.junitpioneer.jupiter.cartesian.CartesianTest;
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
 @Timeout(30)
 @Log4j2
-public class ProxyServiceTest {
+public class ProxyServiceProxyTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -38,7 +38,7 @@ public class ProxyServiceTest {
 	MockWebServer mockEsi;
 
 	@Inject
-	protected ProxyServiceTest() {}
+	protected ProxyServiceProxyTest() {}
 
 	@BeforeEach
 	@SneakyThrows
@@ -77,7 +77,6 @@ public class ProxyServiceTest {
 		}
 		var proxyResponse = TestHttpUtils.callProxy(
 				client, proxy, method, path, Map.of("X-Client-Header", "Test client header"), requestBody);
-		//		if (responseBodyExpected) {
 		TestHttpUtils.assertResponse(
 				proxyResponse,
 				200,
@@ -87,7 +86,6 @@ public class ProxyServiceTest {
 						"Test server header",
 						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
 						ProxyHeaderValues.CACHE_STATUS_MISS));
-		//		}
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 		TestHttpUtils.assertRequest(

@@ -17,6 +17,8 @@ import okhttp3.Request;
  */
 @Log4j2
 public class EveEsiProxy {
+	public static final String BASE_PATH = "/esiproxy";
+
 	@Inject
 	@Named("version")
 	protected String version;

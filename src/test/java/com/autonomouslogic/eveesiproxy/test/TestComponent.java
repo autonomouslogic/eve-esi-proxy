@@ -1,14 +1,7 @@
 package com.autonomouslogic.eveesiproxy.test;
 
-import com.autonomouslogic.eveesiproxy.handler.IndexServiceTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServiceAuthTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServiceCacheTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServiceErrorLimitTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServicePagesTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServiceRateLimitTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServiceRetryTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServiceTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServiceUserAgentTest;
+import com.autonomouslogic.eveesiproxy.handler.*;
+import com.autonomouslogic.eveesiproxy.handler.LoginServiceTest;
 import com.autonomouslogic.eveesiproxy.inject.HelidonModule;
 import com.autonomouslogic.eveesiproxy.inject.JacksonModule;
 import com.autonomouslogic.eveesiproxy.inject.OkHttpModule;
@@ -30,7 +23,7 @@ import jakarta.inject.Singleton;
 public interface TestComponent {
 	void inject(IndexServiceTest test);
 
-	void inject(ProxyServiceAuthTest test);
+	void inject(LoginServiceTest test);
 
 	void inject(ProxyServiceCacheTest test);
 
@@ -42,7 +35,7 @@ public interface TestComponent {
 
 	void inject(ProxyServiceRetryTest test);
 
-	void inject(ProxyServiceTest test);
+	void inject(ProxyServiceProxyTest test);
 
 	void inject(ProxyServiceUserAgentTest test);
 }

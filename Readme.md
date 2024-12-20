@@ -73,7 +73,7 @@ The proxy is configured via environment variables set via `docker run -e`:
 * `HTTP_MAX_CONCURRENT_PAGES` - Maximum number of pages to fetch concurrently per request - defaults to `8`
 
 ## Character login
-To login with a character, open the proxy interface at http://localhost:8182/ and click "Log in".
+To login with a character, open the proxy interface at http://localhost:8182/ and click "Add character".
 After a successful login, you'll be shown a "Proxy key".
 Use this key in-place of your normal OAuth access token, like:
 ```bash

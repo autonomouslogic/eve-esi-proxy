@@ -34,22 +34,22 @@ public class ArchitectureTest {
 	}
 
 	@Test
-	public void javaxInjectShouldNotBeUsedOnClasses() {
+	void javaxInjectShouldNotBeUsedOnClasses() {
 		classes().should().notBeAnnotatedWith(javax.inject.Singleton.class).check(proxyClasses);
 	}
 
 	@Test
-	public void javaxInjectShouldNotBeUsedConstructors() {
+	void javaxInjectShouldNotBeUsedConstructors() {
 		noConstructors().should().beAnnotatedWith(javax.inject.Inject.class).check(proxyClasses);
 	}
 
 	@Test
-	public void javaxInjectShouldNotBeUsedOnFields() {
+	void javaxInjectShouldNotBeUsedOnFields() {
 		noFields().should().beAnnotatedWith(javax.inject.Inject.class).check(proxyClasses);
 	}
 
 	@Test
-	public void injectedClassesShouldHaveProtectedConstructors() {
+	void injectedClassesShouldHaveProtectedConstructors() {
 		constructors()
 				.that()
 				.areAnnotatedWith(Inject.class)
@@ -59,7 +59,7 @@ public class ArchitectureTest {
 	}
 
 	@Test
-	public void injectedClassesShouldNotHaveExtraConstructors() {
+	void injectedClassesShouldNotHaveExtraConstructors() {
 		constructors()
 				.that()
 				.areDeclaredInClassesThat()
