@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -72,8 +73,9 @@ public class EsiRelay {
 	}
 
 	private @Nullable HttpUrl createUrl(HttpPrologue prologue) throws MalformedURLException {
-		var esiUrl = HttpUrl.get(new URL(
-				esiBaseUrl, prologue.uriPath().toString() + prologue.query().toString()));
+		var url = URI.create(
+				esiBaseUrl + prologue.uriPath().toString() + prologue.query().toString());
+		var esiUrl = HttpUrl.get(url);
 		esiUrl = pageFetcher.removeInvalidPageQueryString(esiUrl);
 		return esiUrl;
 	}

@@ -1,6 +1,7 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
 import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
@@ -10,7 +11,12 @@ import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
@@ -90,6 +96,21 @@ public class ProxyServiceProxyTest {
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 		TestHttpUtils.assertRequest(
 				esiRequest, method, path, Map.of("X-Client-Header", "Test client header"), requestBody);
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldProxyRequestsFromJavaHttpClientWithDoubleSlash() {
+		TestHttpUtils.enqueueResponse(mockEsi, 200);
+		var uri = URI.create("http://127.0.0.1:" + proxy.port() + "//esi");
+		var request = HttpRequest.newBuilder().uri(uri).build();
+		var client = HttpClient.newHttpClient();
+		var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		assertEquals(200, response.statusCode());
+		var esiRequest = mockEsi.takeRequest(0, TimeUnit.SECONDS);
+		assertEquals("GET", esiRequest.getMethod());
+		assertEquals("//esi", esiRequest.getPath());
+		TestHttpUtils.assertNoMoreRequests(mockEsi);
 	}
 
 	@Test
