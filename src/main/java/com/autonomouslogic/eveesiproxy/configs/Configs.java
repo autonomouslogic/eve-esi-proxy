@@ -25,7 +25,7 @@ public class Configs {
 	public static final Config<String> ESI_BASE_URL = Config.<String>builder()
 			.name("ESI_BASE_URL")
 			.type(String.class)
-			.defaultValue("https://esi.evetech.net/")
+			.defaultValue("https://esi.evetech.net")
 			.build();
 
 	public static final Config<String> ESI_USER_AGENT =

@@ -25,6 +25,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
@@ -98,18 +99,19 @@ public class ProxyServiceProxyTest {
 				esiRequest, method, path, Map.of("X-Client-Header", "Test client header"), requestBody);
 	}
 
-	@Test
+	@ParameterizedTest
+	@ValueSource(strings = {"/esi", "//esi"})
 	@SneakyThrows
-	void shouldProxyRequestsFromJavaHttpClientWithDoubleSlash() {
+	void shouldProxyRequestsFromJavaHttpClient(String path) {
 		TestHttpUtils.enqueueResponse(mockEsi, 200);
-		var uri = URI.create("http://127.0.0.1:" + proxy.port() + "//esi");
+		var uri = URI.create("http://127.0.0.1:" + proxy.port() + path);
 		var request = HttpRequest.newBuilder().uri(uri).build();
 		var client = HttpClient.newHttpClient();
 		var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		assertEquals(200, response.statusCode());
 		var esiRequest = mockEsi.takeRequest(0, TimeUnit.SECONDS);
 		assertEquals("GET", esiRequest.getMethod());
-		assertEquals("//esi", esiRequest.getPath());
+		assertEquals(path, esiRequest.getPath());
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
 	}
 

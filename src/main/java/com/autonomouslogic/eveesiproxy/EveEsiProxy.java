@@ -55,7 +55,7 @@ public class EveEsiProxy {
 
 	@SneakyThrows
 	private static void testProtocol(OkHttpClient client) {
-		var url = new URL(Configs.ESI_BASE_URL.getRequired()) + "latest/status";
+		var url = new URL(Configs.ESI_BASE_URL.getRequired()) + "/latest/status";
 		var request = new Request.Builder()
 				.url(url)
 				.header(HeaderNames.USER_AGENT.lowerCase(), "test")
