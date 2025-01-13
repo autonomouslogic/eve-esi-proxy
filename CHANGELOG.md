@@ -1,5 +1,19 @@
 EVE ESI Proxy Changelog
 
+## [1.0.3](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.2...1.0.3) (2025-01-13)
+
+
+### Bug Fixes
+
+* Default ESI base URL shouldn't have a trailing slash ([098feae](https://github.com/autonomouslogic/eve-esi-proxy/commit/098feaec844b2afcdfd9ae5d897dd9849346e0e4))
+* Double slashes in the beginning of the path should not switch host ([#95](https://github.com/autonomouslogic/eve-esi-proxy/issues/95)) ([4866dfb](https://github.com/autonomouslogic/eve-esi-proxy/commit/4866dfbb81b40d20b7135ab1b4d7a98c5b6fe5d1))
+* Handle compressed requests and responses ([#96](https://github.com/autonomouslogic/eve-esi-proxy/issues/96)) ([f0f6ecd](https://github.com/autonomouslogic/eve-esi-proxy/commit/f0f6ecdf23d154c2c82827b343de3d771f247cfc))
+
+
+### Dependency Updates
+
+* **deps:** update plugin com.diffplug.spotless to v7 ([#92](https://github.com/autonomouslogic/eve-esi-proxy/issues/92)) ([d71aff0](https://github.com/autonomouslogic/eve-esi-proxy/commit/d71aff0b4f78b919413b174cec2d6bd547a0a78b))
+
 ## [1.0.2](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.1...1.0.2) (2025-01-07)
 
 
