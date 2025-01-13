@@ -1,8 +1,7 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
 import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
@@ -11,16 +10,20 @@ import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPOutputStream;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okio.Buffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -113,6 +116,29 @@ public class ProxyServiceProxyTest {
 		assertEquals("GET", esiRequest.getMethod());
 		assertEquals(path, esiRequest.getPath());
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldProxyCompression() {
+		var body = "Test response";
+		var compressedBody = new ByteArrayOutputStream();
+		try (var out = new GZIPOutputStream(compressedBody)) {
+			out.write(body.getBytes());
+		}
+		mockEsi.enqueue(new MockResponse()
+				.setResponseCode(200)
+				.setBody(new Buffer().write(compressedBody.toByteArray()))
+				.addHeader("Content-Encoding", "gzip"));
+
+		var proxyResponse =
+				TestHttpUtils.callProxy(client, proxy, "GET", "/esi", Map.of("Accept-Encoding", "deflate, gzip, br"));
+
+		TestHttpUtils.assertResponse(proxyResponse, 200, body);
+		assertNull(proxyResponse.header("Content-Encoding"));
+
+		var esiRequest = mockEsi.takeRequest();
+		assertEquals("gzip", esiRequest.getHeader("Accept-Encoding"));
 	}
 
 	@Test

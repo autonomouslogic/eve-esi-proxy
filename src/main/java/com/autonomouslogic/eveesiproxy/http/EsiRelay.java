@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.HttpUrl;
@@ -26,6 +27,9 @@ import org.jetbrains.annotations.Nullable;
 @Singleton
 @Log4j2
 public class EsiRelay {
+	private static final List<String> BLOCKED_HEADERS =
+			List.of("Host", "Accept-Encoding").stream().map(String::toLowerCase).toList();
+
 	@Inject
 	protected OkHttpClient client;
 
@@ -83,7 +87,7 @@ public class EsiRelay {
 	private static void copyHeaders(ServerRequest proxyRequest, Request.Builder esiRequestBuilder, HttpUrl esiUrl) {
 		esiRequestBuilder.header("Host", esiUrl.host() + ":" + esiUrl.port());
 		proxyRequest.headers().forEach(header -> {
-			if (header.name().equalsIgnoreCase("Host")) {
+			if (BLOCKED_HEADERS.contains(header.name().toLowerCase())) {
 				return;
 			}
 			esiRequestBuilder.addHeader(header.name(), header.get());
