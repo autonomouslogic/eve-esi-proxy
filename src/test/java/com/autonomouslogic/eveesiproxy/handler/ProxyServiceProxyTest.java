@@ -120,7 +120,7 @@ public class ProxyServiceProxyTest {
 
 	@Test
 	@SneakyThrows
-	void shouldProxyCompression() {
+	void shouldHandleCompression() {
 		var body = "Test response";
 		var compressedBody = new ByteArrayOutputStream();
 		try (var out = new GZIPOutputStream(compressedBody)) {
