@@ -48,6 +48,10 @@ public class PageFetcher {
 		if (responsePages == 1) {
 			return esiResponse;
 		}
+		log.debug(
+				"Request for {} did not contain a page query parameter, {} pages seen",
+				esiRequest.url(),
+				responsePages);
 		return fetch(esiRequest, esiResponse, responsePages);
 	}
 
