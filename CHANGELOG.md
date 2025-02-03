@@ -1,5 +1,18 @@
 EVE ESI Proxy Changelog
 
+## [1.0.4](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.3...1.0.4) (2025-02-03)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#99](https://github.com/autonomouslogic/eve-esi-proxy/issues/99)) ([bad7d60](https://github.com/autonomouslogic/eve-esi-proxy/commit/bad7d605cb549e3c9f9f13a5a3fc6260beb17478))
+* Minor tweaks ([#98](https://github.com/autonomouslogic/eve-esi-proxy/issues/98)) ([9543868](https://github.com/autonomouslogic/eve-esi-proxy/commit/954386856b80410e7db36639445ee0dd2a4e261b))
+
+
+### Dependency Updates
+
+* **deps:** update plugin org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin to v4 ([#97](https://github.com/autonomouslogic/eve-esi-proxy/issues/97)) ([c79957d](https://github.com/autonomouslogic/eve-esi-proxy/commit/c79957d0c5789fddb0b0c08c6064db95a674b93b))
+
 ## [1.0.3](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.2...1.0.3) (2025-01-13)
 
 
