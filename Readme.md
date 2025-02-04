@@ -27,7 +27,7 @@ Fly safe o7
 * **Handle ESI error limit headers** to stop all requests if the limit is reached
 * **Retry failed requests** if a 5xx is returned
 * **User agent header** is automatically handled
-* **Fetching multiple pages concurrently** if no page (or page 0) is set in the request, merging all pages into a single response
+* **Fetching multiple pages concurrently** if no page (or page 0) is set in the request, merging all pages into a single response (see https://github.com/autonomouslogic/eve-esi-proxy/issues/100)
 
 Caching, rate limiting, retries, etc. are all handled transparently.
 
