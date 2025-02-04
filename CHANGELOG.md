@@ -1,5 +1,22 @@
 EVE ESI Proxy Changelog
 
+## [1.0.5](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.4...1.0.5) (2025-02-04)
+
+
+### Documentation
+
+* Note on handling multiple pages ([1dc9865](https://github.com/autonomouslogic/eve-esi-proxy/commit/1dc98659d4f1c8bd6402102eb11144070053ee97))
+
+
+### Dependency Updates
+
+* **deps:** update plugin io.freefair.lombok to v8.12.1 ([#101](https://github.com/autonomouslogic/eve-esi-proxy/issues/101)) ([7a021ce](https://github.com/autonomouslogic/eve-esi-proxy/commit/7a021ce103256bb5ea32ab13a9274aee56fb9513))
+
+
+### Continuous Integration
+
+* Disbled semantic PR ([0833780](https://github.com/autonomouslogic/eve-esi-proxy/commit/0833780270b79ed1a3e8cf3481af85010dbc8f70))
+
 ## [1.0.4](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.3...1.0.4) (2025-02-03)
 
 
