@@ -38,4 +38,6 @@ public interface TestComponent {
 	void inject(ProxyServiceProxyTest test);
 
 	void inject(ProxyServiceUserAgentTest test);
+
+	void inject(ProxyServiceTimeoutTest test);
 }

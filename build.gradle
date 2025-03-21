@@ -37,9 +37,10 @@ dependencies {
 	// Logging
 	implementation "org.apache.logging.log4j:log4j-api:2.24.3"
 	implementation platform("org.apache.logging.log4j:log4j-bom:2.24.3")
-	runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:2.24.3"
-	runtimeOnly "org.slf4j:jul-to-slf4j:2.0.17"
 	runtimeOnly "org.apache.logging.log4j:log4j-core:2.24.3"
+//	runtimeOnly "org.slf4j:jul-to-slf4j:2.0.17"
+	runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:2.24.3"
+	runtimeOnly "org.apache.logging.log4j:log4j-jul:2.24.3"
 
 	// Jackson
 	implementation "com.fasterxml.jackson.core:jackson-annotations:2.18.3"
