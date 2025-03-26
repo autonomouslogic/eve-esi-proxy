@@ -82,23 +82,25 @@ public class ProxyServiceCacheTest {
 						"hash-1"));
 
 		// First proxy response.
-		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse1,
-				200,
-				"Test body",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		try (var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse1,
+					200,
+					"Test body",
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		}
 
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 
 		// Second proxy response should be served from cache.
-		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse2,
-				200,
-				"Test body",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+		try (var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse2,
+					200,
+					"Test body",
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+		}
 
 		// A second request to the ESI should never be made.
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
@@ -124,23 +126,25 @@ public class ProxyServiceCacheTest {
 		}
 
 		// First proxy response.
-		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse1,
-				200,
-				"Test body 0",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		try (var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse1,
+					200,
+					"Test body 0",
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		}
 
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 
 		// Second proxy response should not be served from cache.
-		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse2,
-				200,
-				"Test body 1",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		try (var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse2,
+					200,
+					"Test body 1",
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		}
 
 		// A second request to the ESI should be made.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
@@ -154,20 +158,22 @@ public class ProxyServiceCacheTest {
 		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test body");
 
 		// First proxy response.
-		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse1,
-				responseCode,
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		try (var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse1,
+					responseCode,
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		}
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 
 		// Second proxy response should not be served from cache.
-		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse2,
-				200,
-				"Test body",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		try (var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse2,
+					200,
+					"Test body",
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		}
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 	}
 
@@ -180,31 +186,33 @@ public class ProxyServiceCacheTest {
 				mockEsi, 200, "Test body", Map.of(HeaderNames.EXPIRES.lowerCase(), expiresString));
 
 		// First proxy response.
-		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse1,
-				200,
-				"Test body",
-				Map.of(
-						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
-						ProxyHeaderValues.CACHE_STATUS_MISS,
-						HeaderNames.EXPIRES.lowerCase(),
-						expiresString));
+		try (var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse1,
+					200,
+					"Test body",
+					Map.of(
+							ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
+							ProxyHeaderValues.CACHE_STATUS_MISS,
+							HeaderNames.EXPIRES.lowerCase(),
+							expiresString));
+		}
 
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 
 		// Second proxy response should be served from cache.
-		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse2,
-				200,
-				"Test body",
-				Map.of(
-						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
-						ProxyHeaderValues.CACHE_STATUS_HIT,
-						HeaderNames.EXPIRES.lowerCase(),
-						expiresString));
+		try (var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse2,
+					200,
+					"Test body",
+					Map.of(
+							ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
+							ProxyHeaderValues.CACHE_STATUS_HIT,
+							HeaderNames.EXPIRES.lowerCase(),
+							expiresString));
+		}
 
 		// A second request to the ESI should never be made.
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
@@ -222,27 +230,29 @@ public class ProxyServiceCacheTest {
 		}
 
 		// First proxy response.
-		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse1,
-				200,
-				"Test body",
-				Map.of(
-						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
-						ProxyHeaderValues.CACHE_STATUS_MISS,
-						HeaderNames.ETAG.lowerCase(),
-						"hash1"));
+		try (var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse1,
+					200,
+					"Test body",
+					Map.of(
+							ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
+							ProxyHeaderValues.CACHE_STATUS_MISS,
+							HeaderNames.ETAG.lowerCase(),
+							"hash1"));
+		}
 
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 
 		// Second proxy response should be served from cache.
-		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse2,
-				200,
-				modified ? "Test body new" : "Test body",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		try (var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse2,
+					200,
+					modified ? "Test body new" : "Test body",
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		}
 
 		// A second request to the ESI should be conditional.
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -261,29 +271,31 @@ public class ProxyServiceCacheTest {
 				Map.of(HeaderNames.EXPIRES.lowerCase(), expiresString, HeaderNames.ETAG.lowerCase(), "hash1"));
 
 		// First proxy response.
-		var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse1,
-				200,
-				"Test body",
-				Map.of(
-						ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
-						ProxyHeaderValues.CACHE_STATUS_MISS,
-						HeaderNames.EXPIRES.lowerCase(),
-						expiresString,
-						HeaderNames.ETAG.lowerCase(),
-						"hash1"));
+		try (var proxyResponse1 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse1,
+					200,
+					"Test body",
+					Map.of(
+							ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS,
+							ProxyHeaderValues.CACHE_STATUS_MISS,
+							HeaderNames.EXPIRES.lowerCase(),
+							expiresString,
+							HeaderNames.ETAG.lowerCase(),
+							"hash1"));
+		}
 
 		// ESI request.
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 
 		// Second proxy response should be served from cache.
-		var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse2,
-				200,
-				"Test body",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+		try (var proxyResponse2 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse2,
+					200,
+					"Test body",
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+		}
 
 		// No requests should have been made to the ESI.
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
@@ -297,12 +309,13 @@ public class ProxyServiceCacheTest {
 		TestHttpUtils.enqueueResponse(mockEsi, 304);
 
 		// Third proxy response should be conditional.
-		var proxyResponse3 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse3,
-				200,
-				"Test body",
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		try (var proxyResponse3 = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse3,
+					200,
+					"Test body",
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		}
 
 		// A third request to the ESI should be conditional.
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);

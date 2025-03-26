@@ -147,9 +147,10 @@ public class ProxyServiceProxyTest {
 		TestHttpUtils.enqueueResponse(
 				mockEsi, 302, Map.of("Location", "http://localhost:" + mockEsi.getPort() + "/redirected"));
 
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse, 302, Map.of("Location", "http://localhost:" + MOCK_ESI_PORT + "/redirected"));
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse, 302, Map.of("Location", "http://localhost:" + MOCK_ESI_PORT + "/redirected"));
+		}
 
 		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 	}
