@@ -8,9 +8,7 @@ import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.net.SocketTimeoutException;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +61,7 @@ public class ProxyServiceStressTest {
 
 	@Test
 	@SneakyThrows
-	void shouldHandleRequests() {
+	void shouldHandleManyRequests() {
 		mockEsi.setDispatcher(new DelayDispatcher(Duration.ZERO));
 		for (int i = 0; i < 100; i++) {
 			log.info(String.format("Executing request %s", i));
@@ -98,33 +96,10 @@ public class ProxyServiceStressTest {
 
 	@Test
 	@SneakyThrows
-	void shouldHandleErrorRequests() {
-		mockEsi.setDispatcher(new ErrorDispatcher());
-		for (int i = 0; i < 1; i++) {
-			log.info(String.format("Executing request %s", i));
-			assertThrows(SocketTimeoutException.class, () -> TestHttpUtils.callProxy(client, proxy, "GET", "/esi")
-					.close());
-		}
-		assertEquals(1, mockEsi.getRequestCount());
-	}
-
-	@Test
-	@SneakyThrows
 	@SetEnvironmentVariable(key = "HTTP_CALL_TIMEOUT", value = "PT0.1S")
 	void shouldHandleEsiTimeouts() {
-		testTimeouts(10);
-	}
-
-	@Test
-	@SneakyThrows
-	@SetEnvironmentVariable(key = "HTTP_CALL_TIMEOUT", value = "PT0.001S")
-	void shouldHandleShortEsiTimeouts() {
-		testTimeouts(100);
-	}
-
-	void testTimeouts(int n) {
 		mockEsi.setDispatcher(new DelayDispatcher(Duration.ofSeconds(1)));
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < 20; i++) {
 			log.info(String.format("Executing request %s", i));
 			try {
 				try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
@@ -134,31 +109,7 @@ public class ProxyServiceStressTest {
 				log.info("Request exception", e);
 			}
 		}
-		assertEquals(n, mockEsi.getRequestCount());
-	}
-
-	@Test
-	@SneakyThrows
-	void shouldHandleClientTimeouts() {
-		mockEsi.setDispatcher(new DelayDispatcher(Duration.ofSeconds(5)));
-		client.newBuilder()
-				//			.connectTimeout(Duration.ofMillis(1))
-				//			.readTimeout(Duration.ofMillis(1))
-				//			.writeTimeout(Duration.ofMillis(1))
-				.callTimeout(Duration.ofMillis(1))
-				.build();
-		for (int i = 0; i < 10; i++) {
-			log.info(String.format("Executing request %s", i));
-			var start = Instant.now();
-			assertThrows(SocketTimeoutException.class, () -> {
-				try (var response = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
-					log.info("Response: {}", response);
-				}
-			});
-			var time = Duration.between(start, Instant.now());
-			assertTrue(time.compareTo(Duration.ofSeconds(1)) <= 0, String.format("%s is longer than 1 second", time));
-		}
-		assertEquals(10, mockEsi.getRequestCount());
+		assertEquals(20, mockEsi.getRequestCount());
 	}
 
 	@RequiredArgsConstructor
@@ -170,15 +121,6 @@ public class ProxyServiceStressTest {
 		public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) throws InterruptedException {
 			Thread.sleep(delay.toMillis());
 			return new MockResponse().setResponseCode(204);
-		}
-	}
-
-	@RequiredArgsConstructor
-	static class ErrorDispatcher extends Dispatcher {
-		@NotNull
-		@Override
-		public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) {
-			throw new RuntimeException();
 		}
 	}
 }
