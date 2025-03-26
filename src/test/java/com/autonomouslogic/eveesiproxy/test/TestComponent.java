@@ -39,5 +39,5 @@ public interface TestComponent {
 
 	void inject(ProxyServiceUserAgentTest test);
 
-	void inject(ProxyServiceTimeoutTest test);
+	void inject(ProxyServiceStressTest test);
 }
