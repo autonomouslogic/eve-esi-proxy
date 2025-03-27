@@ -28,6 +28,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
+@SetEnvironmentVariable(key = "HTTP_MAX_TRIES", value = "1")
 @Timeout(120)
 @Log4j2
 public class ProxyServiceStressTest {
