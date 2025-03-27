@@ -98,11 +98,11 @@ spotless {
 	java {
 		target "src/**/*.java"
 		palantirJavaFormat()
-		indentWithTabs()
+		leadingSpacesToTabs()
 	}
 
 	groovyGradle {
-		indentWithTabs()
+		leadingSpacesToTabs()
 	}
 }
 

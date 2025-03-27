@@ -1,7 +1,9 @@
 package com.autonomouslogic.eveesiproxy.handler;
 
 import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
