@@ -68,8 +68,9 @@ public class ProxyServiceRetryTest {
 		TestHttpUtils.enqueueResponse(mockEsi, status, "Error");
 		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test body");
 
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(proxyResponse, 200, "Test body");
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(proxyResponse, 200, "Test body");
+		}
 
 		for (int i = 0; i < 2; i++) {
 			assertNotNull(TestHttpUtils.takeRequest(mockEsi));
@@ -84,8 +85,9 @@ public class ProxyServiceRetryTest {
 			TestHttpUtils.enqueueResponse(mockEsi, 500, "Timeout");
 		}
 
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(proxyResponse, 500, "Timeout");
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(proxyResponse, 500, "Timeout");
+		}
 
 		for (int i = 0; i < 3; i++) {
 			assertNotNull(TestHttpUtils.takeRequest(mockEsi));
@@ -100,9 +102,10 @@ public class ProxyServiceRetryTest {
 		TestHttpUtils.enqueueResponse(mockEsi, 200, "Test body");
 
 		var start = Instant.now();
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		var time = Duration.between(start, Instant.now());
-		assertEquals(2.0, time.toMillis() / 1000.0, 100.0);
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			var time = Duration.between(start, Instant.now());
+			assertEquals(2.0, time.toMillis() / 1000.0, 100.0);
+		}
 
 		for (int i = 0; i < 2; i++) {
 			assertNotNull(TestHttpUtils.takeRequest(mockEsi));

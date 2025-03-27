@@ -122,27 +122,28 @@ public class ProxyServicePagesTest {
 		});
 
 		var initialPageQuery = page.equals("null") ? "" : "&page=" + page;
-		var proxyResponse = TestHttpUtils.callProxy(
+		try (var proxyResponse = TestHttpUtils.callProxy(
 				client,
 				proxy,
 				"GET",
 				"/latest/markets/10000002/orders/?datasource=tranquility" + initialPageQuery
-						+ "&order_type=all&type_id=37");
-		assertEquals(200, proxyResponse.code());
-		var responseBody = proxyResponse.body();
-		assertNotNull(responseBody);
-		var suppliedJson = responseBody.string();
-		var suppliedArray = (ArrayNode) objectMapper.readTree(suppliedJson);
-		assertEquals(expectedArray.size(), suppliedArray.size());
-		assertEquals(expectedArray, suppliedArray);
+						+ "&order_type=all&type_id=37")) {
+			assertEquals(200, proxyResponse.code());
+			var responseBody = proxyResponse.body();
+			assertNotNull(responseBody);
+			var suppliedJson = responseBody.string();
+			var suppliedArray = (ArrayNode) objectMapper.readTree(suppliedJson);
+			assertEquals(expectedArray.size(), suppliedArray.size());
+			assertEquals(expectedArray, suppliedArray);
 
-		assertNull(proxyResponse.header(HeaderNames.LAST_MODIFIED.lowerCase()));
-		assertNull(proxyResponse.header(HeaderNames.ETAG.lowerCase()));
-		assertNull(proxyResponse.header(HeaderNames.EXPIRES.lowerCase()));
-		assertEquals(
-				Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PAGES_FETCHED));
-		assertNull(proxyResponse.header(ProxyHeaderNames.X_PAGES));
-		assertNull(proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS));
+			assertNull(proxyResponse.header(HeaderNames.LAST_MODIFIED.lowerCase()));
+			assertNull(proxyResponse.header(HeaderNames.ETAG.lowerCase()));
+			assertNull(proxyResponse.header(HeaderNames.EXPIRES.lowerCase()));
+			assertEquals(
+					Integer.toString(pagesJson.size()), proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PAGES_FETCHED));
+			assertNull(proxyResponse.header(ProxyHeaderNames.X_PAGES));
+			assertNull(proxyResponse.header(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS));
+		}
 
 		for (int i = 0; i < pagesJson.size(); i++) {
 			assertNotNull(TestHttpUtils.takeRequest(mockEsi));
@@ -173,12 +174,13 @@ public class ProxyServicePagesTest {
 				"[{\"order_id\":1},{\"order_id\":2}]",
 				Map.of(ProxyHeaderNames.X_PAGES, "10", "x-server-header", "single"));
 
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi?page=1");
-		TestHttpUtils.assertResponse(
-				proxyResponse,
-				200,
-				"[{\"order_id\":1},{\"order_id\":2}]",
-				Map.of(ProxyHeaderNames.X_PAGES, "10", "x-server-header", "single"));
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi?page=1")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse,
+					200,
+					"[{\"order_id\":1},{\"order_id\":2}]",
+					Map.of(ProxyHeaderNames.X_PAGES, "10", "x-server-header", "single"));
+		}
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi?page=1");
@@ -193,12 +195,13 @@ public class ProxyServicePagesTest {
 				"[{\"order_id\":1},{\"order_id\":2}]",
 				Map.of(ProxyHeaderNames.X_PAGES, "1", "x-server-header", "single"));
 
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(
-				proxyResponse,
-				200,
-				"[{\"order_id\":1},{\"order_id\":2}]",
-				Map.of(ProxyHeaderNames.X_PAGES, "1", "x-server-header", "single"));
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(
+					proxyResponse,
+					200,
+					"[{\"order_id\":1},{\"order_id\":2}]",
+					Map.of(ProxyHeaderNames.X_PAGES, "1", "x-server-header", "single"));
+		}
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
 		TestHttpUtils.assertRequest(esiRequest, "GET", "/esi");
@@ -230,8 +233,9 @@ public class ProxyServicePagesTest {
 			}
 		});
 
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi");
-		TestHttpUtils.assertResponse(proxyResponse, 400, Map.of("x-server-header", "error"));
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(proxyResponse, 400, Map.of("x-server-header", "error"));
+		}
 
 		RecordedRequest esiRequest;
 		int i = 0;

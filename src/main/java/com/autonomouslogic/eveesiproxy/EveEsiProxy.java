@@ -60,14 +60,15 @@ public class EveEsiProxy {
 				.url(url)
 				.header(HeaderNames.USER_AGENT.lowerCase(), "test")
 				.build();
-		var response = client.newCall(request).execute();
-		if (response.code() != 200) {
-			log.warn(
-					"Received {} from ESI status {}: {}",
-					response.code(),
-					url,
-					response.body().string());
+		try (var response = client.newCall(request).execute()) {
+			if (response.code() != 200) {
+				log.warn(
+						"Received {} from ESI status {}: {}",
+						response.code(),
+						url,
+						response.body().string());
+			}
+			log.info("Connected to the ESI over {}", response.protocol());
 		}
-		log.info("Connected to the ESI over {}", response.protocol());
 	}
 }

@@ -144,8 +144,9 @@ public class PageFetcher {
 						.newBuilder()
 						.setQueryParameter("page", Integer.toString(page))
 						.build());
-		var nextResponse = client.newCall(nextRequest.build()).execute();
-		return nextResponse;
+		try (var nextResponse = client.newCall(nextRequest.build()).execute()) {
+			return nextResponse;
+		}
 	}
 
 	@SneakyThrows

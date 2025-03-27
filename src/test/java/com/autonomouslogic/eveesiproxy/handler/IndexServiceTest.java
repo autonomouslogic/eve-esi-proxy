@@ -41,9 +41,10 @@ public class IndexServiceTest {
 	@Test
 	@SneakyThrows
 	void shouldRespondToRequests() {
-		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/");
-		assertEquals(307, proxyResponse.code());
-		assertEquals("/esiproxy", proxyResponse.header(HeaderNames.LOCATION.lowerCase()));
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/")) {
+			assertEquals(307, proxyResponse.code());
+			assertEquals("/esiproxy", proxyResponse.header(HeaderNames.LOCATION.lowerCase()));
+		}
 	}
 
 	@Test

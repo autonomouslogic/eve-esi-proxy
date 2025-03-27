@@ -104,7 +104,8 @@ public class ProxyServiceErrorLimitTest {
 				var thread = new Thread(() -> {
 					while (!stop.get()) {
 						try {
-							TestHttpUtils.callProxy(client, proxy, "GET", "/page");
+							TestHttpUtils.callProxy(client, proxy, "GET", "/page")
+									.close();
 						} catch (Exception e) {
 							log.warn("Fail", e);
 						}
