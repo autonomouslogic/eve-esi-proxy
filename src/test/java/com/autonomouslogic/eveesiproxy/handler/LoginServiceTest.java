@@ -164,10 +164,12 @@ public class LoginServiceTest {
 						.toString());
 
 		// Execute callback.
-		var callbackResponse = TestHttpUtils.callProxy(
-				client, proxy, "GET", "/esiproxy/login/callback?code=auth-code-1&state=" + state);
-		assertEquals(307, callbackResponse.code());
-		assertEquals("/esiproxy/characters/" + characterId, callbackResponse.header(HeaderNames.LOCATION.lowerCase()));
+		try (var callbackResponse = TestHttpUtils.callProxy(
+				client, proxy, "GET", "/esiproxy/login/callback?code=auth-code-1&state=" + state)) {
+			assertEquals(307, callbackResponse.code());
+			assertEquals(
+					"/esiproxy/characters/" + characterId, callbackResponse.header(HeaderNames.LOCATION.lowerCase()));
+		}
 
 		// Token request.
 		var tokenRequest = TestHttpUtils.takeRequest(mockEsi);

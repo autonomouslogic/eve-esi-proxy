@@ -107,15 +107,19 @@ public class ProxyServiceRateLimitTest {
 	void shouldNotLimitCachedResponses(String url, double expectedRate) {
 		var count = new AtomicInteger(0);
 		var watch = Stopwatch.createStarted();
-		TestHttpUtils.assertResponse(
-				TestHttpUtils.callProxy(client, proxy, "GET", url),
-				200,
-				Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
-		while (watch.elapsed().compareTo(duration) < 0) {
+		try (var response = TestHttpUtils.callProxy(client, proxy, "GET", url)) {
 			TestHttpUtils.assertResponse(
-					TestHttpUtils.callProxy(client, proxy, "GET", url),
+					response,
 					200,
-					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+					Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_MISS));
+		}
+		while (watch.elapsed().compareTo(duration) < 0) {
+			try (var response = TestHttpUtils.callProxy(client, proxy, "GET", url)) {
+				TestHttpUtils.assertResponse(
+						response,
+						200,
+						Map.of(ProxyHeaderNames.X_EVE_ESI_PROXY_CACHE_STATUS, ProxyHeaderValues.CACHE_STATUS_HIT));
+			}
 			count.incrementAndGet();
 		}
 		var time = watch.elapsed().toMillis();

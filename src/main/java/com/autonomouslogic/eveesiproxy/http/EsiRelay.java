@@ -55,9 +55,10 @@ public class EsiRelay {
 	@SneakyThrows
 	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
 		var esiRequest = createEsiRequest(proxyRequest).build();
-		var esiResponse = client.newCall(esiRequest).execute();
-		esiResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
-		sendResponse(esiResponse, res);
+		try (var esiResponse = client.newCall(esiRequest).execute()) {
+			var pageResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
+			sendResponse(pageResponse, res);
+		}
 	}
 
 	private static void sendResponse(Response esiResponse, ServerResponse res) throws IOException {
