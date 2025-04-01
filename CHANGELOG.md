@@ -1,5 +1,19 @@
 EVE ESI Proxy Changelog
 
+## [1.0.7](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.6...1.0.7) (2025-04-01)
+
+
+### Bug Fixes
+
+* Close HTTP responses ([#104](https://github.com/autonomouslogic/eve-esi-proxy/issues/104)) ([0e28ba2](https://github.com/autonomouslogic/eve-esi-proxy/commit/0e28ba24219451e1ce07cd11651988a0e8801b3a))
+* Fixed logging of rate limits ([0ce0e9f](https://github.com/autonomouslogic/eve-esi-proxy/commit/0ce0e9fbc769cad533a460bdd5da05cca4b524a8))
+* Switched to OkHttp's async API ([#105](https://github.com/autonomouslogic/eve-esi-proxy/issues/105)) ([9d25a97](https://github.com/autonomouslogic/eve-esi-proxy/commit/9d25a97071997ebad1caa5de36d2525af8069078))
+
+
+### Continuous Integration
+
+* Re-enabled releases ([961d527](https://github.com/autonomouslogic/eve-esi-proxy/commit/961d527037413fe46f7d73656512cab7bc24b101))
+
 ## [1.0.6](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.5...1.0.6) (2025-03-04)
 
 
