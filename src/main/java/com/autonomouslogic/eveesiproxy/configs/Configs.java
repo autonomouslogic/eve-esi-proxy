@@ -143,4 +143,10 @@ public class Configs {
 			.defaultValue(8)
 			.type(Integer.class)
 			.build();
+
+	public static final Config<Integer> HTTP_MAX_CONCURRENT_REQUESTS = Config.<Integer>builder()
+			.name("HTTP_MAX_CONCURRENT_REQUESTS")
+			.defaultValue(64)
+			.type(Integer.class)
+			.build();
 }

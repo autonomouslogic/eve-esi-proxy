@@ -4,6 +4,7 @@ import static com.autonomouslogic.eveesiproxy.configs.Configs.LOG_LEVEL;
 
 import com.autonomouslogic.commons.ResourceUtil;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
+import com.autonomouslogic.eveesiproxy.http.OkHttpExec;
 import com.autonomouslogic.eveesiproxy.http.UserAgentInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -150,7 +151,7 @@ public class EsiAuthHelper {
 				.header("Authorization", "Bearer " + token)
 				.build();
 		EsiVerifyResponse verify;
-		try (var response = client.newCall(request).execute()) {
+		try (var response = OkHttpExec.execute(client.newCall(request))) {
 			if (!response.isSuccessful()) {
 				log.warn("Failed to verify token: {}", response);
 				throw new RuntimeException("Failed to verify token");

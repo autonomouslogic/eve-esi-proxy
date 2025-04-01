@@ -55,7 +55,7 @@ public class EsiRelay {
 	@SneakyThrows
 	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
 		var esiRequest = createEsiRequest(proxyRequest).build();
-		try (var esiResponse = client.newCall(esiRequest).execute()) {
+		try (var esiResponse = OkHttpExec.execute(client.newCall(esiRequest))) {
 			var pageResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
 			sendResponse(pageResponse, res);
 		}
