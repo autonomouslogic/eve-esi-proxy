@@ -40,7 +40,7 @@ public class OkHttpModule {
 			AuthorizationNoStoreCacheInterceptor authorizationNoStoreCacheInterceptor,
 			ServerRetryInterceptor serverRetryInterceptor) {
 		log.trace("Creating HTTP client");
-		return new OkHttpClient.Builder()
+		var client = new OkHttpClient.Builder()
 				.followRedirects(false)
 				.followSslRedirects(false)
 				.connectTimeout(Configs.HTTP_CONNECT_TIMEOUT.getRequired())
@@ -59,6 +59,11 @@ public class OkHttpModule {
 				.addNetworkInterceptor(authorizationNoStoreCacheInterceptor)
 				.addNetworkInterceptor(privateCacheInterceptor)
 				.build();
+		var dispatcher = client.dispatcher();
+		var maxConcurrentRequests = Configs.HTTP_MAX_CONCURRENT_REQUESTS.getRequired();
+		dispatcher.setMaxRequests(maxConcurrentRequests);
+		dispatcher.setMaxRequestsPerHost(maxConcurrentRequests);
+		return client;
 	}
 
 	@Provides

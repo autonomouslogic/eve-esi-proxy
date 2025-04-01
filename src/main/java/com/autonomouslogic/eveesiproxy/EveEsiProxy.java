@@ -1,6 +1,7 @@
 package com.autonomouslogic.eveesiproxy;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
+import com.autonomouslogic.eveesiproxy.http.OkHttpExec;
 import com.autonomouslogic.eveesiproxy.inject.DaggerMainComponent;
 import io.helidon.http.HeaderNames;
 import io.helidon.webserver.WebServer;
@@ -60,7 +61,7 @@ public class EveEsiProxy {
 				.url(url)
 				.header(HeaderNames.USER_AGENT.lowerCase(), "test")
 				.build();
-		try (var response = client.newCall(request).execute()) {
+		try (var response = OkHttpExec.execute(client.newCall(request))) {
 			if (response.code() != 200) {
 				log.warn(
 						"Received {} from ESI status {}: {}",
