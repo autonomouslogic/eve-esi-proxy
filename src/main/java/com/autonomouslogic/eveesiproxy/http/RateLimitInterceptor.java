@@ -50,13 +50,13 @@ public class RateLimitInterceptor implements Interceptor {
 		var type = EsiRouteClassifier.classifyRoute(path);
 		switch (type) {
 			case CHARACTER_CORPORATION_HISTORY:
-				rateLimit(characterCorporationHistoryLimiter, characterCorporationHistoryLogLimiter);
+				rateLimit(type, characterCorporationHistoryLimiter, characterCorporationHistoryLogLimiter);
 				break;
 			case MARKET_HISTORY:
-				rateLimit(marketHistoryLimiter, marketHistoryLogLimiter);
+				rateLimit(type, marketHistoryLimiter, marketHistoryLogLimiter);
 				break;
 			case OTHER:
-				rateLimit(otherLimiter, otherLogLimiter);
+				rateLimit(type, otherLimiter, otherLogLimiter);
 				break;
 			default:
 				throw new IllegalStateException("Unknown ESI route type: " + type);
@@ -65,9 +65,9 @@ public class RateLimitInterceptor implements Interceptor {
 		return response;
 	}
 
-	private void rateLimit(RateLimiter rateLimiter, RateLimiter loggingRateLimiter) {
+	private void rateLimit(EsiRouteType routeType, RateLimiter rateLimiter, RateLimiter loggingRateLimiter) {
 		if (!rateLimiter.tryAcquire()) {
-			logRateLimit(EsiRouteType.OTHER, loggingRateLimiter);
+			logRateLimit(routeType, loggingRateLimiter);
 			rateLimiter.acquire();
 		}
 	}
