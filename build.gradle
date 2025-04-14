@@ -4,7 +4,7 @@ plugins {
 	id "jacoco"
 	id "application"
 	id "io.freefair.lombok" version "8.13.1"
-	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "4.0.2"
+	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "5.1.1"
 	id "com.diffplug.spotless" version "7.0.2"
 }
 
