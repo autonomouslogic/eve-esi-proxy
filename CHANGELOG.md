@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.0.9](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.8...1.0.9) (2025-04-15)
+
+
+### Dependency Updates
+
+* **deps:** update plugin org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin to v5 ([#109](https://github.com/autonomouslogic/eve-esi-proxy/issues/109)) ([d8dac1b](https://github.com/autonomouslogic/eve-esi-proxy/commit/d8dac1ba21a18ca09b2f0df2685795be641b8625))
+
 ## [1.0.8](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.7...1.0.8) (2025-04-07)
 
 
