@@ -1,5 +1,13 @@
 EVE ESI Proxy Changelog
 
+## [1.0.12](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.11...1.0.12) (2025-06-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency com.autonomouslogic.commons:commons-java to v1.9.8 ([#116](https://github.com/autonomouslogic/eve-esi-proxy/issues/116)) ([93cf39c](https://github.com/autonomouslogic/eve-esi-proxy/commit/93cf39c41fc293c2609825809deba3ed685b6f98))
+* Removed unused scope esi-characterstats.read.v1 ([#113](https://github.com/autonomouslogic/eve-esi-proxy/issues/113)) ([6ebea94](https://github.com/autonomouslogic/eve-esi-proxy/commit/6ebea94a0ce8e9d7e2ec835bb8b251b4fe786ed5))
+
 ## [1.0.11](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.10...1.0.11) (2025-06-02)
 
 
