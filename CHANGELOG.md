@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.0.14](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.13...1.0.14) (2025-07-08)
+
+
+### Dependency Updates
+
+* **deps:** update plugin com.diffplug.spotless to v7.1.0 ([#119](https://github.com/autonomouslogic/eve-esi-proxy/issues/119)) ([2c764ad](https://github.com/autonomouslogic/eve-esi-proxy/commit/2c764addab40d0049506a19f8abf41aec75cfd4b))
+
 ## [1.0.13](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.12...1.0.13) (2025-07-07)
 
 
