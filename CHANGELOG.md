@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.0.16](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.15...1.0.16) (2025-08-05)
+
+
+### Dependency Updates
+
+* **deps:** update eclipse-temurin docker tag to v21.0.8_9-jre-alpine ([#123](https://github.com/autonomouslogic/eve-esi-proxy/issues/123)) ([469993c](https://github.com/autonomouslogic/eve-esi-proxy/commit/469993c2b84860d2adc72e9b0bb4765302d16205))
+
 ## [1.0.15](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.14...1.0.15) (2025-08-04)
 
 
