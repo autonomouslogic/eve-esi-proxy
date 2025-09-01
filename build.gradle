@@ -3,8 +3,8 @@ plugins {
 	id "idea"
 	id "jacoco"
 	id "application"
-	id "io.freefair.lombok" version "8.14"
-	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "5.1.7"
+	id "io.freefair.lombok" version "8.14.2"
+	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "5.1.8"
 	id "com.diffplug.spotless" version "7.2.1"
 }
 
@@ -30,9 +30,9 @@ java {
 }
 
 dependencies {
-	annotationProcessor "com.google.dagger:dagger-compiler:2.57"
+	annotationProcessor "com.google.dagger:dagger-compiler:2.57.1"
 //	implementation "io.reactivex.rxjava3:rxjava:3.1.8"
-	implementation "com.google.dagger:dagger:2.57"
+	implementation "com.google.dagger:dagger:2.57.1"
 
 	// Logging
 	implementation "org.apache.logging.log4j:log4j-api:2.25.1"
@@ -43,14 +43,14 @@ dependencies {
 	runtimeOnly "org.apache.logging.log4j:log4j-jul:2.25.1"
 
 	// Jackson
-	implementation "com.fasterxml.jackson.core:jackson-annotations:2.19.2"
-	implementation "com.fasterxml.jackson.core:jackson-core:2.19.2"
-	implementation "com.fasterxml.jackson.core:jackson-databind:2.19.2"
-	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.19.2"
+	implementation "com.fasterxml.jackson.core:jackson-annotations:2.20"
+	implementation "com.fasterxml.jackson.core:jackson-core:2.20.0"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.20.0"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.0"
 
 	// Helidon
-	implementation "io.helidon.webserver:helidon-webserver:4.2.4"
-	implementation "io.helidon.logging:helidon-logging-slf4j:4.2.4"
+	implementation "io.helidon.webserver:helidon-webserver:4.2.6"
+	implementation "io.helidon.logging:helidon-logging-slf4j:4.2.6"
 
 	// Misc
 	implementation "com.squareup.okhttp3:okhttp:4.12.0"
@@ -66,12 +66,12 @@ dependencies {
 	implementation "io.reactivex.rxjava3:rxjava:3.1.11"
 
 	// Tests
-	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.57"
-	testImplementation "com.google.dagger:dagger:2.57"
+	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.57.1"
+	testImplementation "com.google.dagger:dagger:2.57.1"
 	testImplementation "org.junit.jupiter:junit-jupiter:5.13.4"
 	testImplementation "org.junit.jupiter:junit-jupiter-params:5.13.4"
 	testImplementation "org.junit-pioneer:junit-pioneer:2.3.0"
-	testImplementation "org.mockito:mockito-junit-jupiter:5.18.0"
+	testImplementation "org.mockito:mockito-junit-jupiter:5.19.0"
 	testImplementation "com.squareup.okhttp3:mockwebserver:4.12.0"
 	testImplementation "com.tngtech.archunit:archunit:1.4.1"
 }
