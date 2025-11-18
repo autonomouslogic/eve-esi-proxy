@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles global stop if 420 responses are received.
+ * This is the "old" system for limiting requests on the ESI.
+ * The newer method is implemented in {@link ServiceRateLimitInterceptor}.
  */
 @Singleton
 @Log4j2
