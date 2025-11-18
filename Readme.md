@@ -24,6 +24,7 @@ Fly safe o7
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself. Authed requests are not currently cached
 * **Conditional requests** to refresh objects in the cache
 * **Rate limiting** to help avoid being banned, including different limits for the endpoints which have special undocumented limits
+* **Handle ESI service rate limit headers** to stop all requests if the limit is reached
 * **Handle ESI error limit headers** to stop all requests if the limit is reached
 * **Retry failed requests** if a 5xx is returned
 * **User agent header** is automatically handled
