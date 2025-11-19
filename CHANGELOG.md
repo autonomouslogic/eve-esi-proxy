@@ -1,5 +1,29 @@
 EVE ESI Proxy Changelog
 
+## [1.1.0](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.19...1.1.0) (2025-11-19)
+
+
+### Features
+
+* Support for new rate limits on the ESI ([#138](https://github.com/autonomouslogic/eve-esi-proxy/issues/138)) ([ebbf41c](https://github.com/autonomouslogic/eve-esi-proxy/commit/ebbf41c1ca593675b9ab04ff2f26c0a9bd87ab43))
+
+
+### Bug Fixes
+
+* **deps:** update junit-framework monorepo to v6 (major) ([#134](https://github.com/autonomouslogic/eve-esi-proxy/issues/134)) ([699ab73](https://github.com/autonomouslogic/eve-esi-proxy/commit/699ab7369b6947f95b9faab95419ae5ec5c40336))
+* **deps:** update okhttp monorepo to v5 (major) ([#117](https://github.com/autonomouslogic/eve-esi-proxy/issues/117)) ([626446f](https://github.com/autonomouslogic/eve-esi-proxy/commit/626446fb193e72a2fed04bde163c59945c4294aa))
+
+
+### Dependency Updates
+
+* **deps:** update actions/checkout action to v5 ([#124](https://github.com/autonomouslogic/eve-esi-proxy/issues/124)) ([9d32a91](https://github.com/autonomouslogic/eve-esi-proxy/commit/9d32a9120487e0b4ca802612920b3f7f180a1628))
+* **deps:** update actions/setup-java action to v5 ([#128](https://github.com/autonomouslogic/eve-esi-proxy/issues/128)) ([c86be3f](https://github.com/autonomouslogic/eve-esi-proxy/commit/c86be3ff21b73e2276233e54e372d2020fbb819a))
+* **deps:** update amannn/action-semantic-pull-request action to v6 ([#126](https://github.com/autonomouslogic/eve-esi-proxy/issues/126)) ([21b12e7](https://github.com/autonomouslogic/eve-esi-proxy/commit/21b12e76746887270106879f3f132759bb24f3d8))
+* **deps:** update gradle to v9 ([#121](https://github.com/autonomouslogic/eve-esi-proxy/issues/121)) ([4a2bb8c](https://github.com/autonomouslogic/eve-esi-proxy/commit/4a2bb8cc614d03844cb7bbf4640e69e5044db82d))
+* **deps:** update plugin com.diffplug.spotless to v8 ([#131](https://github.com/autonomouslogic/eve-esi-proxy/issues/131)) ([4b52e7e](https://github.com/autonomouslogic/eve-esi-proxy/commit/4b52e7edbb8bdd1925e51aa5eb8c9c314d7a19ca))
+* **deps:** update plugin io.freefair.lombok to v9 ([#133](https://github.com/autonomouslogic/eve-esi-proxy/issues/133)) ([be58ea3](https://github.com/autonomouslogic/eve-esi-proxy/commit/be58ea30d787f9c0f77db6c310e9fb3643938446))
+* **deps:** update plugin org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin to v7 ([#127](https://github.com/autonomouslogic/eve-esi-proxy/issues/127)) ([2abc8ad](https://github.com/autonomouslogic/eve-esi-proxy/commit/2abc8ade3bc0b84762ee7e0be46cacd1990c02dc))
+
 ## [1.0.19](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.0.18...1.0.19) (2025-11-03)
 
 
