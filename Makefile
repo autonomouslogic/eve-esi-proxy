@@ -53,3 +53,8 @@ version:
 renovate-validate:
 	npm install renovate
 	node node_modules/renovate/dist/config-validator.js
+
+update-esi-spec:
+	curl -s https://esi.evetech.net/meta/openapi.json | jq . > src/main/resources/esi-openapi.json
+	cat src/main/resources/esi-openapi.json | jq -r '.components.securitySchemes.OAuth2.flows.authorizationCode.scopes[]' | sort > src/main/resources/esi-scopes
+	echo publicData >> src/main/resources/esi-scopes

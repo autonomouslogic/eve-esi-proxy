@@ -1,0 +1,44 @@
+name: Update ESI Spec
+on:
+  schedule:
+    - cron: "30 12 * * *"
+  push:
+jobs:
+  Java:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Install jq
+        run: sudo apt install -y jq
+
+      - name: Update
+        run: make update-esi-spec
+
+      - name: Test
+        run: make test
+
+      - name: Commit
+        env:
+          DEV_NOTICES_DISCORD_WEBHOOK_URL: ${{ secrets.DEV_NOTICES_DISCORD_WEBHOOK_URL }}
+        run: |
+          if [[ `git status --porcelain` ]]; then
+            git commit -am "chore: Updated ESI spec"
+            git push
+            ./.github/notify-discord.sh $DEV_NOTICES_DISCORD_WEBHOOK_URL "Updated ESI spec on EVE ESI Proxy"
+          fi
