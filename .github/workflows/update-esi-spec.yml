@@ -17,6 +17,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Git setup
+        run: |
+          git config user.name "Github Actions"
+          git config user.email actions@github.com
+
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
