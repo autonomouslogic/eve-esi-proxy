@@ -17,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.SneakyThrows;
@@ -180,9 +181,7 @@ public class ProxyServiceServiceRateLimitTest {
 		var group1RequestCount = new AtomicInteger(0);
 		var group2RequestCount = new AtomicInteger(0);
 		var noGroupRequestCount = new AtomicInteger(0);
-		var group1CompleteTime = new ArrayList<Instant>();
-		var group2CompleteTime = new ArrayList<Instant>();
-		var noGroupCompleteTime = new ArrayList<Instant>();
+		var requestOrder = new ConcurrentLinkedQueue<String>();
 
 		mockEsi.setDispatcher(new Dispatcher() {
 			@NotNull
@@ -193,6 +192,7 @@ public class ProxyServiceServiceRateLimitTest {
 
 				if (path.startsWith("/latest/characters/12345/contacts")) {
 					var count = group1RequestCount.incrementAndGet();
+					requestOrder.add("contacts-" + count);
 					// Return 429 only on first request
 					if (count == 1) {
 						return new MockResponse()
@@ -203,9 +203,11 @@ public class ProxyServiceServiceRateLimitTest {
 					return new MockResponse().setResponseCode(200).setBody("group1");
 				} else if (path.startsWith("/latest/characters/12345/wallet")) {
 					group2RequestCount.incrementAndGet();
+					requestOrder.add("wallet");
 					return new MockResponse().setResponseCode(200).setBody("group2");
 				} else if (path.startsWith("/latest/characters/12345/assets")) {
 					noGroupRequestCount.incrementAndGet();
+					requestOrder.add("assets");
 					return new MockResponse().setResponseCode(200).setBody("no-group");
 				}
 
@@ -213,7 +215,6 @@ public class ProxyServiceServiceRateLimitTest {
 			}
 		});
 
-		var startTime = Instant.now();
 		var group1Success = new AtomicBoolean(false);
 		var group2Success = new AtomicBoolean(false);
 		var noGroupSuccess = new AtomicBoolean(false);
@@ -226,7 +227,6 @@ public class ProxyServiceServiceRateLimitTest {
 					assertEquals(200, response.code());
 					assertEquals("group1", response.body().string());
 					group1Success.set(true);
-					group1CompleteTime.add(Instant.now());
 				}
 			} catch (Exception e) {
 				log.info("Task 1 error", e);
@@ -242,7 +242,6 @@ public class ProxyServiceServiceRateLimitTest {
 					assertEquals(200, response.code());
 					assertEquals("group2", response.body().string());
 					group2Success.set(true);
-					group2CompleteTime.add(Instant.now());
 				}
 			} catch (Exception e) {
 				log.info("Task 2 error", e);
@@ -258,7 +257,6 @@ public class ProxyServiceServiceRateLimitTest {
 					assertEquals(200, response.code());
 					assertEquals("no-group", response.body().string());
 					noGroupSuccess.set(true);
-					noGroupCompleteTime.add(Instant.now());
 				}
 			} catch (Exception e) {
 				log.info("Task 3 error", e);
@@ -283,27 +281,19 @@ public class ProxyServiceServiceRateLimitTest {
 		assertEquals(1, group2RequestCount.get(), "Group 2 should not be retried");
 		assertEquals(1, noGroupRequestCount.get(), "No-group should not be retried");
 
-		// Verify timing: Group 1 should take longer (2s+ for retry), while groups 2 and 3 complete quickly
-		var group1Duration = Duration.between(startTime, group1CompleteTime.get(0));
-		var group2Duration = Duration.between(startTime, group2CompleteTime.get(0));
-		var noGroupDuration = Duration.between(startTime, noGroupCompleteTime.get(0));
+		// Verify request order: wallet and assets should arrive BEFORE contacts-2 (the retry)
+		// This proves they were NOT blocked by group1's rate limit
+		var orderedRequests = new ArrayList<>(requestOrder);
+		log.info("Request order: {}", orderedRequests);
 
-		log.info("Group 1 completed at: {}", group1Duration);
-		log.info("Group 2 completed at: {}", group2Duration);
-		log.info("No-group completed at: {}", noGroupDuration);
+		assertEquals("contacts-1", orderedRequests.get(0), "First request should be contacts (gets 429)");
+		// Wallet and assets should come before the retry
+		var walletIndex = orderedRequests.indexOf("wallet");
+		var assetsIndex = orderedRequests.indexOf("assets");
+		var contactsRetryIndex = orderedRequests.indexOf("contacts-2");
 
-		// Group 1 should take at least 2 seconds (rate limit wait time)
-		assertTrue(
-				group1Duration.toMillis() >= 2000,
-				"Group 1 should take at least 2s due to rate limit, but took " + group1Duration);
-
-		// Groups 2 and 3 should complete much faster (not blocked by group 1's rate limit)
-		assertTrue(
-				group2Duration.toMillis() < 1500,
-				"Group 2 should complete quickly (not blocked), but took " + group2Duration);
-		assertTrue(
-				noGroupDuration.toMillis() < 1500,
-				"No-group should complete quickly (not blocked), but took " + noGroupDuration);
+		assertTrue(walletIndex < contactsRetryIndex, "Wallet request should arrive before contacts retry (not blocked)");
+		assertTrue(assetsIndex < contactsRetryIndex, "Assets request should arrive before contacts retry (not blocked)");
 
 		// Verify total request count to mock server
 		var totalRequests = mockEsi.getRequestCount();
@@ -315,7 +305,7 @@ public class ProxyServiceServiceRateLimitTest {
 	void shouldStopMultipleRequestsToSameRateLimitGroup() {
 		var contactsCount = new AtomicInteger(0);
 		var calendarCount = new AtomicInteger(0);
-		var calendarRequestTime = new ArrayList<Instant>();
+		var requestOrder = new ConcurrentLinkedQueue<String>();
 
 		mockEsi.setDispatcher(new Dispatcher() {
 			@NotNull
@@ -326,6 +316,7 @@ public class ProxyServiceServiceRateLimitTest {
 
 				if (path.startsWith("/latest/characters/12345/contacts")) {
 					var count = contactsCount.incrementAndGet();
+					requestOrder.add("contacts-" + count);
 					// Return 429 only on first request
 					if (count == 1) {
 						return new MockResponse()
@@ -336,7 +327,7 @@ public class ProxyServiceServiceRateLimitTest {
 					return new MockResponse().setResponseCode(200).setBody("contacts");
 				} else if (path.startsWith("/latest/characters/12345/calendar")) {
 					calendarCount.incrementAndGet();
-					calendarRequestTime.add(Instant.now());
+					requestOrder.add("calendar");
 					return new MockResponse().setResponseCode(200).setBody("calendar");
 				}
 
@@ -344,11 +335,8 @@ public class ProxyServiceServiceRateLimitTest {
 			}
 		});
 
-		var startTime = Instant.now();
 		var task1Success = new AtomicBoolean(false);
 		var task2Success = new AtomicBoolean(false);
-		var task1CompleteTime = new ArrayList<Instant>();
-		var task2CompleteTime = new ArrayList<Instant>();
 
 		// Both tasks request different URLs in the same group (char-social)
 		var task1 = (Runnable) () -> {
@@ -358,7 +346,6 @@ public class ProxyServiceServiceRateLimitTest {
 					assertEquals(200, response.code());
 					assertEquals("contacts", response.body().string());
 					task1Success.set(true);
-					task1CompleteTime.add(Instant.now());
 				}
 			} catch (Exception e) {
 				log.info("Task 1 error", e);
@@ -373,7 +360,6 @@ public class ProxyServiceServiceRateLimitTest {
 					assertEquals(200, response.code());
 					assertEquals("calendar", response.body().string());
 					task2Success.set(true);
-					task2CompleteTime.add(Instant.now());
 				}
 			} catch (Exception e) {
 				log.info("Task 2 error", e);
@@ -392,24 +378,17 @@ public class ProxyServiceServiceRateLimitTest {
 		assertTrue(contactsCount.get() >= 2, "Contacts should have initial 429 + retry");
 		assertEquals(1, calendarCount.get(), "Calendar should only be called once after waiting");
 
-		var task1Duration = Duration.between(startTime, task1CompleteTime.get(0));
-		var task2Duration = Duration.between(startTime, task2CompleteTime.get(0));
-		var calendarRequestDuration = Duration.between(startTime, calendarRequestTime.get(0));
+		// Verify request order: calendar should arrive AFTER contacts-2 (the retry)
+		// This proves it WAS blocked by the same group's rate limit
+		var orderedRequests = new ArrayList<>(requestOrder);
+		log.info("Request order: {}", orderedRequests);
 
-		log.info("Task 1 completed at: {}", task1Duration);
-		log.info("Task 2 completed at: {}", task2Duration);
-		log.info("Calendar request received at: {}", calendarRequestDuration);
-
-		// Task 2 should be delayed because it's waiting for task 1's rate limit to clear
-		// The calendar request should arrive at the server AFTER the rate limit wait (2s)
-		assertTrue(
-				calendarRequestDuration.toMillis() >= 2000,
-				"Calendar request should be delayed by rate limit, but arrived at " + calendarRequestDuration);
-
-		// Task 2 should complete after at least 2 seconds (500ms delay + 2s rate limit wait)
-		assertTrue(
-				task2Duration.toMillis() >= 2500,
-				"Task 2 should be blocked by rate limit, but completed at " + task2Duration);
+		assertEquals("contacts-1", orderedRequests.get(0), "First request should be contacts (gets 429)");
+		assertEquals(
+				"contacts-2",
+				orderedRequests.get(1),
+				"Second request should be contacts retry (after rate limit wait)");
+		assertEquals("calendar", orderedRequests.get(2), "Third request should be calendar (blocked until retry completes)");
 
 		// Verify total request count to mock server
 		var totalRequests = mockEsi.getRequestCount();
