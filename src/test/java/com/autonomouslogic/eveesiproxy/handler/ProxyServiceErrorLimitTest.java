@@ -159,4 +159,30 @@ public class ProxyServiceErrorLimitTest {
 			});
 		}
 	}
+
+	@ParameterizedTest
+	@ValueSource(ints = {1, 2, 3})
+	@SneakyThrows
+	void shouldHandleMultipleStopRequests(final int stops) {
+		var stopLeft = new AtomicInteger(0);
+		mockEsi.setDispatcher(new Dispatcher() {
+			@NotNull
+			@Override
+			public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) throws InterruptedException {
+				var s = stopLeft.incrementAndGet();
+				log.info("Stopping request {}", s);
+				if (s <= stops) {
+					return new MockResponse()
+							.setResponseCode(420)
+							.setHeader(ErrorLimitInterceptor.ERROR_LIMIT_RESET, 1);
+				}
+				return new MockResponse().setResponseCode(200).setBody("success body");
+			}
+		});
+
+		try (var response = TestHttpUtils.callProxy(client, proxy, "GET", "/page")) {
+			assertEquals(200, response.code());
+			assertEquals("success body", response.body().string());
+		}
+	}
 }
