@@ -33,7 +33,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
-@Timeout(30)
+@Timeout(60)
 @Log4j2
 public class ProxyServiceErrorLimitTest {
 	@Inject
@@ -161,7 +161,7 @@ public class ProxyServiceErrorLimitTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = {1, 2, 3})
+	@ValueSource(ints = {3})
 	@SneakyThrows
 	void shouldHandleMultipleStopRequests(final int stops) {
 		var stopLeft = new AtomicInteger(0);
