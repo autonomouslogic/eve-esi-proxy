@@ -57,6 +57,7 @@ public class ErrorLimitInterceptor implements Interceptor {
 					var resetTime = parseResetTime(Optional.ofNullable(response.header(ERROR_LIMIT_RESET))
 							.orElse("10"));
 					log.warn(String.format("ESI 420, waiting for %s", resetTime));
+					response.close();
 					Thread.sleep(resetTime.plusSeconds(1).toMillis());
 				} finally {
 					globalStop.set(false);
