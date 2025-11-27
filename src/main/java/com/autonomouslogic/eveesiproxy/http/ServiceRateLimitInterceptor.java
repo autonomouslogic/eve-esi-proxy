@@ -45,11 +45,14 @@ public class ServiceRateLimitInterceptor implements Interceptor {
 				// @todo there's possibly a race condition here on concurrent requests, though it might not matter in
 				// practice.
 				globalStop.set(true);
-				var resetTime = parseResetTime(
-						Optional.ofNullable(response.header(RETRY_AFTER)).orElse("10"));
-				log.warn(String.format("ESI 429, waiting for %s", resetTime));
-				Thread.sleep(resetTime.plusSeconds(1).toMillis());
-				globalStop.set(false);
+				try {
+					var resetTime = parseResetTime(
+							Optional.ofNullable(response.header(RETRY_AFTER)).orElse("10"));
+					log.warn(String.format("ESI 429, waiting for %s", resetTime));
+					Thread.sleep(resetTime.plusSeconds(1).toMillis());
+				} finally {
+					globalStop.set(false);
+				}
 			} else {
 				success = true;
 			}
