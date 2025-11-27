@@ -3,6 +3,7 @@ package com.autonomouslogic.eveesiproxy.handler;
 import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.http.ServiceRateLimitInterceptor;
@@ -14,6 +15,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.SneakyThrows;
@@ -169,5 +172,184 @@ public class ProxyServiceServiceRateLimitTest {
 			assertEquals(200, response.code());
 			assertEquals("success body", response.body().string());
 		}
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldOnlyStopRequestsToSameRateLimitGroup() {
+		var group1RequestCount = new AtomicInteger(0);
+		var group2RequestCount = new AtomicInteger(0);
+		var noGroupRequestCount = new AtomicInteger(0);
+
+		mockEsi.setDispatcher(new Dispatcher() {
+			@NotNull
+			@Override
+			public MockResponse dispatch(@NotNull RecordedRequest request) {
+				var path = request.getPath();
+				log.info("Request to: {}", path);
+
+				if (path.startsWith("/latest/characters/12345/contacts")) {
+					var count = group1RequestCount.incrementAndGet();
+					// Return 429 only on first request
+					if (count == 1) {
+						return new MockResponse()
+								.setResponseCode(429)
+								.setHeader("x-ratelimit-group", "char-social")
+								.setHeader(ServiceRateLimitInterceptor.RETRY_AFTER, 1);
+					}
+					return new MockResponse().setResponseCode(200).setBody("group1");
+				} else if (path.startsWith("/latest/characters/12345/wallet")) {
+					group2RequestCount.incrementAndGet();
+					return new MockResponse().setResponseCode(200).setBody("group2");
+				} else if (path.startsWith("/latest/characters/12345/assets")) {
+					noGroupRequestCount.incrementAndGet();
+					return new MockResponse().setResponseCode(200).setBody("no-group");
+				}
+
+				return new MockResponse().setResponseCode(404);
+			}
+		});
+
+		var group1Success = new AtomicBoolean(false);
+		var group2Success = new AtomicBoolean(false);
+		var noGroupSuccess = new AtomicBoolean(false);
+
+		// Task 1: Request to char-social group (will get rate limited)
+		var task1 = (Runnable) () -> {
+			try {
+				try (var response =
+						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/contacts")) {
+					assertEquals(200, response.code());
+					assertEquals("group1", response.body().string());
+					group1Success.set(true);
+				}
+			} catch (Exception e) {
+				log.info("Task 1 error", e);
+			}
+		};
+
+		// Task 2: Request to char-wallet group (different group, should not be blocked)
+		var task2 = (Runnable) () -> {
+			try {
+				Thread.sleep(500); // Wait to ensure task1 triggers rate limit
+				try (var response =
+						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/wallet")) {
+					assertEquals(200, response.code());
+					assertEquals("group2", response.body().string());
+					group2Success.set(true);
+				}
+			} catch (Exception e) {
+				log.info("Task 2 error", e);
+			}
+		};
+
+		// Task 3: Request to URL without rate limit group (should not be blocked)
+		var task3 = (Runnable) () -> {
+			try {
+				Thread.sleep(500); // Wait to ensure task1 triggers rate limit
+				try (var response =
+						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/assets")) {
+					assertEquals(200, response.code());
+					assertEquals("no-group", response.body().string());
+					noGroupSuccess.set(true);
+				}
+			} catch (Exception e) {
+				log.info("Task 3 error", e);
+			}
+		};
+
+		var futures = List.of(
+				CompletableFuture.runAsync(task1), CompletableFuture.runAsync(task2), CompletableFuture.runAsync(task3));
+
+		// Wait for all tasks to complete
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+		// Verify all tasks completed successfully
+		assertTrue(group1Success.get(), "Group 1 request should succeed after rate limit");
+		assertTrue(group2Success.get(), "Group 2 request should not be blocked");
+		assertTrue(noGroupSuccess.get(), "No-group request should not be blocked");
+
+		// Group 1 should have multiple requests (initial 429 + retry)
+		assertTrue(group1RequestCount.get() > 1, "Group 1 should have retry attempts");
+
+		// Group 2 and no-group should only have one request each (not blocked)
+		assertEquals(1, group2RequestCount.get(), "Group 2 should not be retried");
+		assertEquals(1, noGroupRequestCount.get(), "No-group should not be retried");
+	}
+
+	@Test
+	@SneakyThrows
+	void shouldStopMultipleRequestsToSameRateLimitGroup() {
+		var contactsCount = new AtomicInteger(0);
+		var calendarCount = new AtomicInteger(0);
+
+		mockEsi.setDispatcher(new Dispatcher() {
+			@NotNull
+			@Override
+			public MockResponse dispatch(@NotNull RecordedRequest request) {
+				var path = request.getPath();
+				log.info("Request to: {}", path);
+
+				if (path.startsWith("/latest/characters/12345/contacts")) {
+					var count = contactsCount.incrementAndGet();
+					// Return 429 only on first request
+					if (count == 1) {
+						return new MockResponse()
+								.setResponseCode(429)
+								.setHeader("x-ratelimit-group", "char-social")
+								.setHeader(ServiceRateLimitInterceptor.RETRY_AFTER, 1);
+					}
+					return new MockResponse().setResponseCode(200).setBody("contacts");
+				} else if (path.startsWith("/latest/characters/12345/calendar")) {
+					calendarCount.incrementAndGet();
+					return new MockResponse().setResponseCode(200).setBody("calendar");
+				}
+
+				return new MockResponse().setResponseCode(404);
+			}
+		});
+
+		var task1Success = new AtomicBoolean(false);
+		var task2Success = new AtomicBoolean(false);
+
+		// Both tasks request different URLs in the same group (char-social)
+		var task1 = (Runnable) () -> {
+			try {
+				try (var response =
+						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/contacts")) {
+					assertEquals(200, response.code());
+					assertEquals("contacts", response.body().string());
+					task1Success.set(true);
+				}
+			} catch (Exception e) {
+				log.info("Task 1 error", e);
+			}
+		};
+
+		var task2 = (Runnable) () -> {
+			try {
+				Thread.sleep(500); // Slight delay to ensure task1 triggers rate limit
+				try (var response =
+						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/calendar")) {
+					assertEquals(200, response.code());
+					assertEquals("calendar", response.body().string());
+					task2Success.set(true);
+				}
+			} catch (Exception e) {
+				log.info("Task 2 error", e);
+			}
+		};
+
+		var futures = List.of(CompletableFuture.runAsync(task1), CompletableFuture.runAsync(task2));
+
+		// Wait for both tasks to complete
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+		assertTrue(task1Success.get(), "Task 1 should succeed");
+		assertTrue(task2Success.get(), "Task 2 should be blocked and then succeed");
+
+		// Both URLs are in the same group, so task2 should wait for task1's rate limit
+		assertTrue(contactsCount.get() >= 2, "Contacts should have initial 429 + retry");
+		assertEquals(1, calendarCount.get(), "Calendar should only be called once after waiting");
 	}
 }
