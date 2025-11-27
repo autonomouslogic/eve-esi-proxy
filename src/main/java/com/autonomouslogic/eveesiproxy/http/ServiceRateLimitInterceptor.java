@@ -66,8 +66,8 @@ public class ServiceRateLimitInterceptor implements Interceptor {
 					var groupStop = groupStops.computeIfAbsent(rateLimitGroup, k -> new AtomicBoolean());
 					groupStop.set(true);
 					try {
-						var resetTime = parseResetTime(
-								Optional.ofNullable(response.header(RETRY_AFTER)).orElse("10"));
+						var resetTime = parseResetTime(Optional.ofNullable(response.header(RETRY_AFTER))
+								.orElse("10"));
 						log.warn(String.format("ESI 429 for group '%s', waiting for %s", rateLimitGroup, resetTime));
 						response.close();
 						Thread.sleep(resetTime.plusSeconds(1).toMillis());
@@ -76,8 +76,8 @@ public class ServiceRateLimitInterceptor implements Interceptor {
 					}
 				} else {
 					// No rate limit group, just retry without blocking other requests
-					var resetTime =
-							parseResetTime(Optional.ofNullable(response.header(RETRY_AFTER)).orElse("10"));
+					var resetTime = parseResetTime(
+							Optional.ofNullable(response.header(RETRY_AFTER)).orElse("10"));
 					log.warn(String.format("ESI 429 (no group), waiting for %s", resetTime));
 					response.close();
 					Thread.sleep(resetTime.plusSeconds(1).toMillis());

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.SneakyThrows;
@@ -221,53 +222,56 @@ public class ProxyServiceServiceRateLimitTest {
 
 		// Task 1: Request to char-social group (will get rate limited)
 		var task1 = (Runnable) () -> {
-			try {
-				try (var response =
-						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/contacts")) {
-					assertEquals(200, response.code());
-					assertEquals("group1", response.body().string());
-					group1Success.set(true);
-				}
+			try (var response = TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/contacts")) {
+				assertEquals(200, response.code());
+				assertEquals("group1", response.body().string());
+				group1Success.set(true);
 			} catch (Exception e) {
-				log.info("Task 1 error", e);
+				throw new RuntimeException(e);
 			}
 		};
 
 		// Task 2: Request to char-wallet group (different group, should not be blocked)
 		var task2 = (Runnable) () -> {
 			try {
-				Thread.sleep(500); // Wait to ensure task1 triggers rate limit
-				try (var response =
-						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/wallet")) {
+				// Wait to ensure task1 triggers rate limit
+				while (group1RequestCount.get() == 0) {
+					Thread.sleep(10);
+				}
+				try (var response = TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/wallet")) {
 					assertEquals(200, response.code());
 					assertEquals("group2", response.body().string());
 					group2Success.set(true);
 				}
 			} catch (Exception e) {
-				log.info("Task 2 error", e);
+				throw new RuntimeException(e);
 			}
 		};
 
 		// Task 3: Request to URL without rate limit group (should not be blocked)
 		var task3 = (Runnable) () -> {
 			try {
-				Thread.sleep(500); // Wait to ensure task1 triggers rate limit
-				try (var response =
-						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/assets")) {
+				// Wait to ensure task1 triggers rate limit
+				while (group1RequestCount.get() == 0) {
+					Thread.sleep(10);
+				}
+				try (var response = TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/assets")) {
 					assertEquals(200, response.code());
 					assertEquals("no-group", response.body().string());
 					noGroupSuccess.set(true);
 				}
 			} catch (Exception e) {
-				log.info("Task 3 error", e);
+				throw new RuntimeException(e);
 			}
 		};
 
 		var futures = List.of(
-				CompletableFuture.runAsync(task1), CompletableFuture.runAsync(task2), CompletableFuture.runAsync(task3));
+				CompletableFuture.runAsync(task1),
+				CompletableFuture.runAsync(task2),
+				CompletableFuture.runAsync(task3));
 
 		// Wait for all tasks to complete
-		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get(5, TimeUnit.SECONDS);
 
 		// Verify all tasks completed successfully
 		assertTrue(group1Success.get(), "Group 1 request should succeed after rate limit");
@@ -275,7 +279,7 @@ public class ProxyServiceServiceRateLimitTest {
 		assertTrue(noGroupSuccess.get(), "No-group request should not be blocked");
 
 		// Group 1 should have multiple requests (initial 429 + retry)
-		assertTrue(group1RequestCount.get() > 1, "Group 1 should have retry attempts");
+		assertEquals(2, group1RequestCount.get(), "Group 1 should have retry attempts");
 
 		// Group 2 and no-group should only have one request each (not blocked)
 		assertEquals(1, group2RequestCount.get(), "Group 2 should not be retried");
@@ -292,12 +296,17 @@ public class ProxyServiceServiceRateLimitTest {
 		var assetsIndex = orderedRequests.indexOf("assets");
 		var contactsRetryIndex = orderedRequests.indexOf("contacts-2");
 
-		assertTrue(walletIndex < contactsRetryIndex, "Wallet request should arrive before contacts retry (not blocked)");
-		assertTrue(assetsIndex < contactsRetryIndex, "Assets request should arrive before contacts retry (not blocked)");
+		assertTrue(
+				walletIndex < contactsRetryIndex, "Wallet request should arrive before contacts retry (not blocked)");
+		assertTrue(
+				assetsIndex < contactsRetryIndex, "Assets request should arrive before contacts retry (not blocked)");
 
 		// Verify total request count to mock server
 		var totalRequests = mockEsi.getRequestCount();
-		assertEquals(4, totalRequests, "Total requests to mock server should be 4 (2 for group1, 1 each for group2 and no-group)");
+		assertEquals(
+				4,
+				totalRequests,
+				"Total requests to mock server should be 4 (2 for group1, 1 each for group2 and no-group)");
 	}
 
 	@Test
@@ -340,15 +349,12 @@ public class ProxyServiceServiceRateLimitTest {
 
 		// Both tasks request different URLs in the same group (char-social)
 		var task1 = (Runnable) () -> {
-			try {
-				try (var response =
-						TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/contacts")) {
-					assertEquals(200, response.code());
-					assertEquals("contacts", response.body().string());
-					task1Success.set(true);
-				}
+			try (var response = TestHttpUtils.callProxy(client, proxy, "GET", "/latest/characters/12345/contacts")) {
+				assertEquals(200, response.code());
+				assertEquals("contacts", response.body().string());
+				task1Success.set(true);
 			} catch (Exception e) {
-				log.info("Task 1 error", e);
+				throw new RuntimeException(e);
 			}
 		};
 
@@ -362,20 +368,20 @@ public class ProxyServiceServiceRateLimitTest {
 					task2Success.set(true);
 				}
 			} catch (Exception e) {
-				log.info("Task 2 error", e);
+				throw new RuntimeException(e);
 			}
 		};
 
 		var futures = List.of(CompletableFuture.runAsync(task1), CompletableFuture.runAsync(task2));
 
 		// Wait for both tasks to complete
-		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).get(5, TimeUnit.SECONDS);
 
 		assertTrue(task1Success.get(), "Task 1 should succeed");
 		assertTrue(task2Success.get(), "Task 2 should be blocked and then succeed");
 
 		// Both URLs are in the same group, so task2 should wait for task1's rate limit
-		assertTrue(contactsCount.get() >= 2, "Contacts should have initial 429 + retry");
+		assertEquals(2, contactsCount.get(), "Contacts should have initial 429 + retry");
 		assertEquals(1, calendarCount.get(), "Calendar should only be called once after waiting");
 
 		// Verify request order: calendar should arrive AFTER contacts-2 (the retry)
@@ -388,7 +394,8 @@ public class ProxyServiceServiceRateLimitTest {
 				"contacts-2",
 				orderedRequests.get(1),
 				"Second request should be contacts retry (after rate limit wait)");
-		assertEquals("calendar", orderedRequests.get(2), "Third request should be calendar (blocked until retry completes)");
+		assertEquals(
+				"calendar", orderedRequests.get(2), "Third request should be calendar (blocked until retry completes)");
 
 		// Verify total request count to mock server
 		var totalRequests = mockEsi.getRequestCount();
