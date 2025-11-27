@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
+import jakarta.inject.Inject;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
