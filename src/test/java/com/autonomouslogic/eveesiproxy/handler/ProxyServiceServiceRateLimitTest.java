@@ -304,6 +304,10 @@ public class ProxyServiceServiceRateLimitTest {
 		assertTrue(
 				noGroupDuration.toMillis() < 1500,
 				"No-group should complete quickly (not blocked), but took " + noGroupDuration);
+
+		// Verify total request count to mock server
+		var totalRequests = mockEsi.getRequestCount();
+		assertEquals(4, totalRequests, "Total requests to mock server should be 4 (2 for group1, 1 each for group2 and no-group)");
 	}
 
 	@Test
@@ -311,7 +315,7 @@ public class ProxyServiceServiceRateLimitTest {
 	void shouldStopMultipleRequestsToSameRateLimitGroup() {
 		var contactsCount = new AtomicInteger(0);
 		var calendarCount = new AtomicInteger(0);
-		var calendarRequestTime = new AtomicInteger(0);
+		var calendarRequestTime = new ArrayList<Instant>();
 
 		mockEsi.setDispatcher(new Dispatcher() {
 			@NotNull
@@ -332,7 +336,7 @@ public class ProxyServiceServiceRateLimitTest {
 					return new MockResponse().setResponseCode(200).setBody("contacts");
 				} else if (path.startsWith("/latest/characters/12345/calendar")) {
 					calendarCount.incrementAndGet();
-					calendarRequestTime.set((int) System.currentTimeMillis());
+					calendarRequestTime.add(Instant.now());
 					return new MockResponse().setResponseCode(200).setBody("calendar");
 				}
 
@@ -340,11 +344,11 @@ public class ProxyServiceServiceRateLimitTest {
 			}
 		});
 
-		var startTime = System.currentTimeMillis();
+		var startTime = Instant.now();
 		var task1Success = new AtomicBoolean(false);
 		var task2Success = new AtomicBoolean(false);
-		var task1CompleteTime = new AtomicInteger(0);
-		var task2CompleteTime = new AtomicInteger(0);
+		var task1CompleteTime = new ArrayList<Instant>();
+		var task2CompleteTime = new ArrayList<Instant>();
 
 		// Both tasks request different URLs in the same group (char-social)
 		var task1 = (Runnable) () -> {
@@ -354,7 +358,7 @@ public class ProxyServiceServiceRateLimitTest {
 					assertEquals(200, response.code());
 					assertEquals("contacts", response.body().string());
 					task1Success.set(true);
-					task1CompleteTime.set((int) (System.currentTimeMillis() - startTime));
+					task1CompleteTime.add(Instant.now());
 				}
 			} catch (Exception e) {
 				log.info("Task 1 error", e);
@@ -369,7 +373,7 @@ public class ProxyServiceServiceRateLimitTest {
 					assertEquals(200, response.code());
 					assertEquals("calendar", response.body().string());
 					task2Success.set(true);
-					task2CompleteTime.set((int) (System.currentTimeMillis() - startTime));
+					task2CompleteTime.add(Instant.now());
 				}
 			} catch (Exception e) {
 				log.info("Task 2 error", e);
@@ -388,20 +392,27 @@ public class ProxyServiceServiceRateLimitTest {
 		assertTrue(contactsCount.get() >= 2, "Contacts should have initial 429 + retry");
 		assertEquals(1, calendarCount.get(), "Calendar should only be called once after waiting");
 
-		log.info("Task 1 completed at: {}ms", task1CompleteTime.get());
-		log.info("Task 2 completed at: {}ms", task2CompleteTime.get());
-		log.info("Calendar request received at: {}ms", (int) (calendarRequestTime.get() - startTime));
+		var task1Duration = Duration.between(startTime, task1CompleteTime.get(0));
+		var task2Duration = Duration.between(startTime, task2CompleteTime.get(0));
+		var calendarRequestDuration = Duration.between(startTime, calendarRequestTime.get(0));
+
+		log.info("Task 1 completed at: {}", task1Duration);
+		log.info("Task 2 completed at: {}", task2Duration);
+		log.info("Calendar request received at: {}", calendarRequestDuration);
 
 		// Task 2 should be delayed because it's waiting for task 1's rate limit to clear
 		// The calendar request should arrive at the server AFTER the rate limit wait (2s)
 		assertTrue(
-				calendarRequestTime.get() - startTime >= 2000,
-				"Calendar request should be delayed by rate limit, but arrived at "
-						+ (calendarRequestTime.get() - startTime) + "ms");
+				calendarRequestDuration.toMillis() >= 2000,
+				"Calendar request should be delayed by rate limit, but arrived at " + calendarRequestDuration);
 
 		// Task 2 should complete after at least 2 seconds (500ms delay + 2s rate limit wait)
 		assertTrue(
-				task2CompleteTime.get() >= 2500,
-				"Task 2 should be blocked by rate limit, but completed at " + task2CompleteTime.get() + "ms");
+				task2Duration.toMillis() >= 2500,
+				"Task 2 should be blocked by rate limit, but completed at " + task2Duration);
+
+		// Verify total request count to mock server
+		var totalRequests = mockEsi.getRequestCount();
+		assertEquals(3, totalRequests, "Total requests to mock server should be 3 (2 for contacts, 1 for calendar)");
 	}
 }
