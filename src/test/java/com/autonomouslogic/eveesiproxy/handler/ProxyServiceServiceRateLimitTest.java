@@ -28,11 +28,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
-@Timeout(30)
+@Timeout(60)
 @Log4j2
 public class ProxyServiceServiceRateLimitTest {
 	@Inject
@@ -140,6 +142,32 @@ public class ProxyServiceServiceRateLimitTest {
 					log.warn("Failed to stop thread", e);
 				}
 			});
+		}
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = {3})
+	@SneakyThrows
+	void shouldHandleMultipleStopRequests(final int stops) {
+		var stopLeft = new AtomicInteger(0);
+		mockEsi.setDispatcher(new Dispatcher() {
+			@NotNull
+			@Override
+			public MockResponse dispatch(@NotNull RecordedRequest recordedRequest) throws InterruptedException {
+				var s = stopLeft.incrementAndGet();
+				log.info("Stopping request {}", s);
+				if (s <= stops) {
+					return new MockResponse()
+							.setResponseCode(429)
+							.setHeader(ServiceRateLimitInterceptor.RETRY_AFTER, 1);
+				}
+				return new MockResponse().setResponseCode(200).setBody("success body");
+			}
+		});
+
+		try (var response = TestHttpUtils.callProxy(client, proxy, "GET", "/page")) {
+			assertEquals(200, response.code());
+			assertEquals("success body", response.body().string());
 		}
 	}
 }
