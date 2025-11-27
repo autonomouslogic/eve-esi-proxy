@@ -56,5 +56,10 @@ renovate-validate:
 
 update-esi-spec:
 	curl -s https://esi.evetech.net/meta/openapi.json | jq . > src/main/resources/esi-openapi.json
-	cat src/main/resources/esi-openapi.json | jq -r '.components.securitySchemes.OAuth2.flows.authorizationCode.scopes[]' | sort > src/main/resources/esi-scopes
+	cat src/main/resources/esi-openapi.json \
+		| jq -r '.components.securitySchemes.OAuth2.flows.authorizationCode.scopes[]' \
+		| sort > src/main/resources/esi-scopes
 	echo publicData >> src/main/resources/esi-scopes
+	cat src/main/resources/esi-openapi.json \
+		| jq -r '[ .paths | to_entries | .[] | {"url": .key, "group": .value[]["x-rate-limit"].group } ]' \
+		> src/main/resources/esi-url-groups.json
