@@ -7,9 +7,9 @@ import com.autonomouslogic.eveesiproxy.http.ErrorLimitInterceptor;
 import com.autonomouslogic.eveesiproxy.http.LoggingInterceptor;
 import com.autonomouslogic.eveesiproxy.http.PrivateCacheInterceptor;
 import com.autonomouslogic.eveesiproxy.http.ProxyKeyInterceptor;
+import com.autonomouslogic.eveesiproxy.http.RateLimitGroupStopInterceptor;
 import com.autonomouslogic.eveesiproxy.http.RateLimitInterceptor;
 import com.autonomouslogic.eveesiproxy.http.ServerRetryInterceptor;
-import com.autonomouslogic.eveesiproxy.http.ServiceRateLimitInterceptor;
 import com.autonomouslogic.eveesiproxy.http.TokenAuthorizationInterceptor;
 import com.autonomouslogic.eveesiproxy.http.UserAgentInterceptor;
 import dagger.Module;
@@ -35,7 +35,7 @@ public class OkHttpModule {
 			LoggingInterceptor loggingInterceptor,
 			UserAgentInterceptor userAgentInterceptor,
 			ErrorLimitInterceptor errorLimitInterceptor,
-			ServiceRateLimitInterceptor serviceRateLimitInterceptor,
+			RateLimitGroupStopInterceptor rateLimitGroupStopInterceptor,
 			ProxyKeyInterceptor proxyKeyInterceptor,
 			TokenAuthorizationInterceptor tokenAuthorizationInterceptor,
 			PrivateCacheInterceptor privateCacheInterceptor,
@@ -56,7 +56,7 @@ public class OkHttpModule {
 				.addInterceptor(proxyKeyInterceptor)
 				.addInterceptor(serverRetryInterceptor)
 				.addInterceptor(errorLimitInterceptor)
-				.addInterceptor(serviceRateLimitInterceptor)
+				.addInterceptor(rateLimitGroupStopInterceptor)
 				.addInterceptor(loggingInterceptor)
 				.addNetworkInterceptor(rateLimitInterceptor)
 				.addNetworkInterceptor(authorizationNoStoreCacheInterceptor)

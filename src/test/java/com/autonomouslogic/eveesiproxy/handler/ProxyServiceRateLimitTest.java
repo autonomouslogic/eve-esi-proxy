@@ -35,6 +35,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
+/**
+ * Tests ongoing rate limits to keep the request rate at a maximum.
+ */
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
 @SetEnvironmentVariable(key = "ESI_RATE_LIMIT_PER_S", value = "20")
