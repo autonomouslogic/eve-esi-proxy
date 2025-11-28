@@ -55,7 +55,7 @@ public class ProxyServiceUserAgentTest {
 		DaggerTestComponent.builder().build().inject(this);
 
 		proxyVersionString =
-				String.format("eve-esi-proxy/%s (+https://github.com/autonomouslogic/eve-esi-proxy)", version);
+				String.format("EveEsiProxy/%s (+https://github.com/autonomouslogic/eve-esi-proxy)", version);
 
 		mockEsi = new MockWebServer();
 		mockEsi.start(MOCK_ESI_PORT);

@@ -6,7 +6,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -26,6 +29,8 @@ public class UserAgentInterceptor implements Interceptor {
 	@Named("version")
 	protected String version;
 
+	private final Set<String> seenUserAgents = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
 	private final Optional<String> configuredUserAgent =
 			Configs.ESI_USER_AGENT.get().map(String::trim).filter(h -> !h.isEmpty());
 	private String defaultUserAgent;
@@ -42,7 +47,7 @@ public class UserAgentInterceptor implements Interceptor {
 	}
 
 	public String getDefaultUserAgent() {
-		return "eve-esi-proxy/%s (+https://github.com/autonomouslogic/eve-esi-proxy)".formatted(version);
+		return "EveEsiProxy/%s (+https://github.com/autonomouslogic/eve-esi-proxy)".formatted(version);
 	}
 
 	@NotNull
@@ -63,6 +68,7 @@ public class UserAgentInterceptor implements Interceptor {
 		var reqBuilder = req.newBuilder().removeHeader(HeaderNames.USER_AGENT.lowerCase());
 		String userAgent = resolveUserAgent(suppliedAgent);
 		reqBuilder.header(HeaderNames.USER_AGENT.lowerCase(), userAgent);
+		logUserAgent(userAgent);
 		return chain.proceed(reqBuilder.build());
 	}
 
@@ -95,5 +101,11 @@ public class UserAgentInterceptor implements Interceptor {
 			userAgent = configuredUserAgent.get() + " " + defaultUserAgent;
 		}
 		return userAgent;
+	}
+
+	private void logUserAgent(String userAgent) {
+		if (seenUserAgents.add(userAgent)) {
+			log.debug("New user agent seen: {}", userAgent);
+		}
 	}
 }
