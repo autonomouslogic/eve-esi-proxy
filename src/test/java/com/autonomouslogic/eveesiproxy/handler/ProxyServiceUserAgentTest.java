@@ -9,6 +9,7 @@ import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -18,6 +19,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
 /**
@@ -39,6 +42,8 @@ public class ProxyServiceUserAgentTest {
 	@Named("version")
 	String version;
 
+	String proxyVersionString;
+
 	MockWebServer mockEsi;
 
 	@Inject
@@ -48,6 +53,10 @@ public class ProxyServiceUserAgentTest {
 	@SneakyThrows
 	void setup() {
 		DaggerTestComponent.builder().build().inject(this);
+
+		proxyVersionString =
+				String.format("eve-esi-proxy/%s (+https://github.com/autonomouslogic/eve-esi-proxy)", version);
+
 		mockEsi = new MockWebServer();
 		mockEsi.start(MOCK_ESI_PORT);
 		proxy.start();
@@ -69,7 +78,7 @@ public class ProxyServiceUserAgentTest {
 	void shouldUseConfiguredUserAgent() {
 		TestHttpUtils.enqueueResponse(mockEsi, 204);
 		var proxyResponse =
-				TestHttpUtils.callProxy(client, proxy, "GET", "/esi", Map.of(HeaderNames.USER_AGENT.lowerCase(), ""));
+				TestHttpUtils.callProxy(client, proxy, "GET", "/esi", Map.of(HeaderNames.USER_AGENT.defaultCase(), ""));
 		TestHttpUtils.assertResponse(proxyResponse, 204);
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -77,21 +86,36 @@ public class ProxyServiceUserAgentTest {
 				1,
 				esiRequest
 						.getHeaders()
-						.values(HeaderNames.USER_AGENT.lowerCase())
+						.values(HeaderNames.USER_AGENT.defaultCase())
 						.size());
 		TestHttpUtils.assertRequest(
 				esiRequest,
 				"GET",
 				"/esi",
-				Map.of(HeaderNames.USER_AGENT.lowerCase(), "test@example.com eve-esi-proxy/" + version));
+				Map.of(HeaderNames.USER_AGENT.lowerCase(), "test@example.com " + proxyVersionString));
 	}
 
-	@Test
+	@ParameterizedTest
+	@ValueSource(strings = {"header", "x-header", "query"})
 	@SneakyThrows
-	void shouldForwardSuppliedUserAgent() {
+	void shouldForwardSuppliedUserAgent(String userAgentSource) {
 		TestHttpUtils.enqueueResponse(mockEsi, 204);
-		var proxyResponse = TestHttpUtils.callProxy(
-				client, proxy, "GET", "/esi", Map.of(HeaderNames.USER_AGENT.lowerCase(), "test-agent"));
+		var headers = new HashMap<String, String>();
+		var path = "/esi";
+		switch (userAgentSource) {
+			case "header":
+				headers.put(HeaderNames.USER_AGENT.defaultCase(), "test-agent");
+				break;
+			case "x-header":
+				headers.put(HeaderNames.USER_AGENT.defaultCase(), "");
+				headers.put("X-User-Agent", "test-agent");
+				break;
+			case "query":
+				headers.put(HeaderNames.USER_AGENT.defaultCase(), "");
+				path += "?user_agent=test-agent";
+				break;
+		}
+		var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", path, headers);
 		TestHttpUtils.assertResponse(proxyResponse, 204);
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -104,8 +128,8 @@ public class ProxyServiceUserAgentTest {
 		TestHttpUtils.assertRequest(
 				esiRequest,
 				"GET",
-				"/esi",
-				Map.of(HeaderNames.USER_AGENT.lowerCase(), "test-agent test@example.com eve-esi-proxy/" + version));
+				path,
+				Map.of(HeaderNames.USER_AGENT.lowerCase(), "test-agent test@example.com " + proxyVersionString));
 	}
 
 	@Test
@@ -114,7 +138,7 @@ public class ProxyServiceUserAgentTest {
 	void shouldForwardSuppliedUserAgentEvenIfOneIsntConfigured() {
 		TestHttpUtils.enqueueResponse(mockEsi, 204);
 		var proxyResponse = TestHttpUtils.callProxy(
-				client, proxy, "GET", "/esi", Map.of(HeaderNames.USER_AGENT.lowerCase(), "test-agent"));
+				client, proxy, "GET", "/esi", Map.of(HeaderNames.USER_AGENT.defaultCase(), "test-agent"));
 		TestHttpUtils.assertResponse(proxyResponse, 204);
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -128,7 +152,7 @@ public class ProxyServiceUserAgentTest {
 				esiRequest,
 				"GET",
 				"/esi",
-				Map.of(HeaderNames.USER_AGENT.lowerCase(), "test-agent eve-esi-proxy/" + version));
+				Map.of(HeaderNames.USER_AGENT.lowerCase(), "test-agent " + proxyVersionString));
 	}
 
 	@Test

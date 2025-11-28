@@ -147,7 +147,7 @@ public class EsiAuthHelper {
 		var request = new Request.Builder()
 				.get()
 				.url(url)
-				.header(HeaderNames.USER_AGENT.lowerCase(), userAgentInterceptor.getVersionHeaderPart())
+				.header(HeaderNames.USER_AGENT.lowerCase(), userAgentInterceptor.getDefaultUserAgent())
 				.header("Authorization", "Bearer " + token)
 				.build();
 		EsiVerifyResponse verify;
