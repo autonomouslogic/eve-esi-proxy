@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Singleton
 @Log4j2
-public class ServiceRateLimitInterceptor implements Interceptor {
+public class RateLimitGroupStopInterceptor implements Interceptor {
 	public static final String RETRY_AFTER = "Retry-After";
 	public static final String X_RATELIMIT_GROUP = "x-ratelimit-group";
 
@@ -36,7 +36,7 @@ public class ServiceRateLimitInterceptor implements Interceptor {
 	EsiUrlGroupResolver urlGroupResolver;
 
 	@Inject
-	protected ServiceRateLimitInterceptor() {}
+	protected RateLimitGroupStopInterceptor() {}
 
 	@NotNull
 	@Override

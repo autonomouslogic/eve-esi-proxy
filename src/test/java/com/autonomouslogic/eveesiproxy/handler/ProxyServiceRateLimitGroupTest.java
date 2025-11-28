@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
-import com.autonomouslogic.eveesiproxy.http.ServiceRateLimitInterceptor;
+import com.autonomouslogic.eveesiproxy.http.RateLimitGroupStopInterceptor;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
 import jakarta.inject.Inject;
@@ -37,11 +37,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 
+/**
+ * Tests 429 responses.
+ */
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
 @Timeout(60)
 @Log4j2
-public class ProxyServiceServiceRateLimitTest {
+public class ProxyServiceRateLimitGroupTest {
 	@Inject
 	EveEsiProxy proxy;
 
@@ -55,7 +58,7 @@ public class ProxyServiceServiceRateLimitTest {
 	Instant limitResetTime;
 
 	@Inject
-	protected ProxyServiceServiceRateLimitTest() {}
+	protected ProxyServiceRateLimitGroupTest() {}
 
 	@BeforeEach
 	@SneakyThrows
@@ -84,7 +87,7 @@ public class ProxyServiceServiceRateLimitTest {
 					var response = new MockResponse().setResponseCode(429);
 					if (limitResetTime != null) {
 						response.setHeader(
-								ServiceRateLimitInterceptor.RETRY_AFTER,
+								RateLimitGroupStopInterceptor.RETRY_AFTER,
 								Duration.between(Instant.now(), limitResetTime)
 										.truncatedTo(ChronoUnit.SECONDS)
 										.toSeconds());
@@ -164,7 +167,7 @@ public class ProxyServiceServiceRateLimitTest {
 				if (s <= stops) {
 					return new MockResponse()
 							.setResponseCode(429)
-							.setHeader(ServiceRateLimitInterceptor.RETRY_AFTER, 1);
+							.setHeader(RateLimitGroupStopInterceptor.RETRY_AFTER, 1);
 				}
 				return new MockResponse().setResponseCode(200).setBody("success body");
 			}
@@ -199,7 +202,7 @@ public class ProxyServiceServiceRateLimitTest {
 						return new MockResponse()
 								.setResponseCode(429)
 								.setHeader("x-ratelimit-group", "char-social")
-								.setHeader(ServiceRateLimitInterceptor.RETRY_AFTER, 2);
+								.setHeader(RateLimitGroupStopInterceptor.RETRY_AFTER, 2);
 					}
 					return new MockResponse().setResponseCode(200).setBody("group1");
 				} else if (path.startsWith("/latest/characters/12345/wallet")) {
@@ -331,7 +334,7 @@ public class ProxyServiceServiceRateLimitTest {
 						return new MockResponse()
 								.setResponseCode(429)
 								.setHeader("x-ratelimit-group", "char-social")
-								.setHeader(ServiceRateLimitInterceptor.RETRY_AFTER, 2);
+								.setHeader(RateLimitGroupStopInterceptor.RETRY_AFTER, 2);
 					}
 					return new MockResponse().setResponseCode(200).setBody("contacts");
 				} else if (path.startsWith("/latest/characters/12345/calendar")) {

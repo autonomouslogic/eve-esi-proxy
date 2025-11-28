@@ -6,9 +6,9 @@ import com.autonomouslogic.eveesiproxy.handler.ProxyServiceCacheTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceErrorLimitTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServicePagesTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceProxyTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceRateLimitGroupTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceRateLimitTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceRetryTest;
-import com.autonomouslogic.eveesiproxy.handler.ProxyServiceServiceRateLimitTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceStressTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceUserAgentTest;
 import com.autonomouslogic.eveesiproxy.http.EsiUrlGroupResolverTest;
@@ -45,7 +45,7 @@ public interface TestComponent {
 
 	void inject(ProxyServiceRetryTest test);
 
-	void inject(ProxyServiceServiceRateLimitTest test);
+	void inject(ProxyServiceRateLimitGroupTest test);
 
 	void inject(ProxyServiceProxyTest test);
 
