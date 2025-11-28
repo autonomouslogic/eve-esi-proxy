@@ -1,5 +1,23 @@
 EVE ESI Proxy Changelog
 
+## [1.2.0](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.1.2...1.2.0) (2025-11-28)
+
+
+### Features
+
+* Handle 429 responses for rate limit groups ([#144](https://github.com/autonomouslogic/eve-esi-proxy/issues/144)) ([6853e48](https://github.com/autonomouslogic/eve-esi-proxy/commit/6853e488113a4a72f58fb2cce52b66464829a9a1))
+* Updated user agent resolution ([#147](https://github.com/autonomouslogic/eve-esi-proxy/issues/147)) ([1a9f884](https://github.com/autonomouslogic/eve-esi-proxy/commit/1a9f884c56d7b6d4a269ce54d630d274bea67755))
+
+
+### Bug Fixes
+
+* Switched internal user agent to PascalCase ([00f55a8](https://github.com/autonomouslogic/eve-esi-proxy/commit/00f55a8e713cb83d6f3b35ce1273be86728cf25a))
+
+
+### Dependency Updates
+
+* **deps:** update actions/checkout action to v6 ([#139](https://github.com/autonomouslogic/eve-esi-proxy/issues/139)) ([c9ccb67](https://github.com/autonomouslogic/eve-esi-proxy/commit/c9ccb67b138f603dc9255d18ad5ffcc102328802))
+
 ## [1.1.2](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.1.1...1.1.2) (2025-11-27)
 
 
