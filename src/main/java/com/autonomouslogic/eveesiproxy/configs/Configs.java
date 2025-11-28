@@ -149,4 +149,14 @@ public class Configs {
 			.defaultValue(64)
 			.type(Integer.class)
 			.build();
+
+	/**
+	 * Enable window-based rate limiting using token buckets.
+	 * When enabled, requests are proactively rate limited based on ESI group rate limit configurations.
+	 */
+	public static final Config<Boolean> ESI_WINDOW_RATE_LIMIT_ENABLED = Config.<Boolean>builder()
+			.name("ESI_WINDOW_RATE_LIMIT_ENABLED")
+			.defaultValue(true)
+			.type(Boolean.class)
+			.build();
 }

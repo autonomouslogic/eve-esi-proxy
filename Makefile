@@ -61,5 +61,5 @@ update-esi-spec:
 		| sort > src/main/resources/esi-scopes
 	echo publicData >> src/main/resources/esi-scopes
 	cat src/main/resources/esi-openapi.json \
-		| jq -r '[ .paths | to_entries | .[] | {"url": .key, "group": .value[]["x-rate-limit"].group } ]' \
+		| jq -r '[ .paths | to_entries | .[] | {"url": .key, "group": .value[]["x-rate-limit"].group, "maxTokens": .value[]["x-rate-limit"]["max-tokens"], "windowSize": .value[]["x-rate-limit"]["window-size"] } ]' \
 		> src/main/resources/esi-url-groups.json

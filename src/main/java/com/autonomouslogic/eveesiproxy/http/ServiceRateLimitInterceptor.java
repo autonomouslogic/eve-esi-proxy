@@ -1,5 +1,6 @@
 package com.autonomouslogic.eveesiproxy.http;
 
+import com.autonomouslogic.eveesiproxy.configs.Configs;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
  * Handles per-group rate limiting when 429 responses are received.
  * When a 429 response includes an x-ratelimit-group header, only requests to that specific group are stopped.
  * URLs without a rate limit group are not affected by rate limiting.
+ * Also implements proactive rate limiting using token buckets based on ESI rate limit group configurations.
  * @see <a href="https://developers.eveonline.com/docs/services/esi/rate-limiting/">Rate Limiting</a>
  * @see <a href="https://developers.eveonline.com/blog/hold-your-horses-introducing-rate-limiting-to-esi">Hold your horses: introducing rate limiting to ESI</a>
  * @see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/429">429 Too Many Requests</a>
@@ -31,6 +33,7 @@ public class ServiceRateLimitInterceptor implements Interceptor {
 	public static final String X_RATELIMIT_GROUP = "x-ratelimit-group";
 
 	private final ConcurrentHashMap<String, AtomicBoolean> groupStops = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, TokenBucket> tokenBuckets = new ConcurrentHashMap<>();
 
 	@Inject
 	EsiUrlGroupResolver urlGroupResolver;
@@ -44,7 +47,8 @@ public class ServiceRateLimitInterceptor implements Interceptor {
 	public Response intercept(@NotNull Chain chain) throws IOException {
 		var request = chain.request();
 		var urlPath = request.url().encodedPath();
-		var requestGroup = urlGroupResolver.resolveGroup(urlPath);
+		var requestGroupInfo = urlGroupResolver.resolveGroupInfo(urlPath);
+		var requestGroup = requestGroupInfo.map(EsiUrlGroup::getGroup);
 
 		var success = false;
 		Response response;
@@ -52,6 +56,19 @@ public class ServiceRateLimitInterceptor implements Interceptor {
 			// If the URL belongs to a rate limit group, respect that group's stop
 			if (requestGroup.isPresent()) {
 				respectGroupStop(requestGroup.get());
+			}
+
+			// Proactive rate limiting using token bucket
+			if (Configs.ESI_WINDOW_RATE_LIMIT_ENABLED.getRequired()
+					&& requestGroupInfo.isPresent()
+					&& requestGroup.isPresent()) {
+				var groupInfo = requestGroupInfo.get();
+				if (groupInfo.getMaxTokens() != null && groupInfo.getTokensPerSecond() != null) {
+					var tokenBucket = tokenBuckets.computeIfAbsent(
+							requestGroup.get(),
+							k -> new TokenBucket(groupInfo.getMaxTokens(), groupInfo.getTokensPerSecond()));
+					tokenBucket.acquire(requestGroup.get());
+				}
 			}
 
 			response = chain.proceed(request);

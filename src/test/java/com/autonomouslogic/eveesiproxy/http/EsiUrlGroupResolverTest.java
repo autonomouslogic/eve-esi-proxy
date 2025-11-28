@@ -57,6 +57,37 @@ public class EsiUrlGroupResolverTest {
 		assertEquals(Optional.of("alliance-social"), resolver.resolveGroup(prefix + "/alliances/1234/contacts"));
 	}
 
+	@Test
+	void shouldResolveGroupInfoWithRateLimits() {
+		var groupInfo = resolver.resolveGroupInfo("/characters/12345/wallet");
+		assertTrue(groupInfo.isPresent());
+		assertEquals("char-wallet", groupInfo.get().getGroup());
+		assertEquals(150, groupInfo.get().getMaxTokens());
+		assertEquals("15m", groupInfo.get().getWindowSize());
+		assertEquals(150.0 / (15 * 60), groupInfo.get().getTokensPerSecond(), 0.0001);
+	}
+
+	@Test
+	void shouldResolveGroupInfoWithoutRateLimits() {
+		var groupInfo = resolver.resolveGroupInfo("/alliances/123");
+		assertTrue(groupInfo.isPresent());
+		assertEquals(null, groupInfo.get().getGroup());
+		assertEquals(null, groupInfo.get().getMaxTokens());
+		assertEquals(null, groupInfo.get().getWindowSize());
+		assertEquals(null, groupInfo.get().getTokensPerSecond());
+	}
+
+	@Test
+	void shouldCalculateTokensPerSecondForCharIndustry() {
+		var groupInfo = resolver.resolveGroupInfo("/characters/12345/industry/jobs");
+		assertTrue(groupInfo.isPresent());
+		assertEquals("char-industry", groupInfo.get().getGroup());
+		assertEquals(600, groupInfo.get().getMaxTokens());
+		assertEquals("15m", groupInfo.get().getWindowSize());
+		// 600 tokens / (15 minutes * 60 seconds) = 600 / 900 = 0.6666...
+		assertEquals(600.0 / 900.0, groupInfo.get().getTokensPerSecond(), 0.0001);
+	}
+
 	public static Stream<Arguments> urlsWithGroups() {
 		return Stream.of(
 				// Alliance groups

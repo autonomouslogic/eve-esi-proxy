@@ -1,790 +1,2048 @@
 [
   {
     "url": "/alliances",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/alliances/{alliance_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/alliances/{alliance_id}/contacts",
-    "group": "alliance-social"
+    "group": "alliance-social",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/alliances/{alliance_id}/contacts/labels",
-    "group": "alliance-social"
+    "group": "alliance-social",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/alliances/{alliance_id}/corporations",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/alliances/{alliance_id}/icons",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/affiliation",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}/agents_research",
-    "group": "char-industry"
+    "group": "char-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/assets",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}/assets/locations",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}/assets/names",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}/attributes",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/blueprints",
-    "group": "char-industry"
+    "group": "char-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/calendar",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/calendar/{event_id}",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/calendar/{event_id}",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/calendar/{event_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/calendar/{event_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/calendar/{event_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/calendar/{event_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/calendar/{event_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/calendar/{event_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/calendar/{event_id}/attendees",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/clones",
-    "group": "char-location"
+    "group": "char-location",
+    "maxTokens": 1200,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/contacts",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/contacts",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/contacts",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/contacts",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/contacts",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/contacts/labels",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/contracts",
-    "group": "char-contract"
+    "group": "char-contract",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/contracts/{contract_id}/bids",
-    "group": "char-contract"
+    "group": "char-contract",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/contracts/{contract_id}/items",
-    "group": "char-contract"
+    "group": "char-contract",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/corporationhistory",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}/cspa",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/fatigue",
-    "group": "char-location"
+    "group": "char-location",
+    "maxTokens": 1200,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/fittings",
-    "group": "fitting"
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/fittings",
-    "group": "fitting"
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/fittings",
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/fittings",
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/fittings",
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/fittings",
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/fittings",
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/fittings",
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/fittings/{fitting_id}",
-    "group": "fitting"
+    "group": "fitting",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/fleet",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/fw/stats",
-    "group": "factional-warfare"
+    "group": "factional-warfare",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/implants",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/industry/jobs",
-    "group": "char-industry"
+    "group": "char-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/killmails/recent",
-    "group": "char-killmail"
+    "group": "char-killmail",
+    "maxTokens": 30,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/location",
-    "group": "char-location"
+    "group": "char-location",
+    "maxTokens": 1200,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/loyalty/points",
-    "group": "char-wallet"
+    "group": "char-wallet",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail/labels",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail/labels",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/labels",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/labels",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/labels",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/labels",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/labels",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/labels",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail/labels/{label_id}",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail/lists",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail/{mail_id}",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail/{mail_id}",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mail/{mail_id}",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/characters/{character_id}/mail/{mail_id}",
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/medals",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/mining",
-    "group": "char-industry"
+    "group": "char-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/notifications",
-    "group": "char-notification"
+    "group": "char-notification",
+    "maxTokens": 15,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/notifications/contacts",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/online",
-    "group": "char-location"
+    "group": "char-location",
+    "maxTokens": 1200,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/orders",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}/orders/history",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}/planets",
-    "group": "char-industry"
+    "group": "char-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/planets/{planet_id}",
-    "group": "char-industry"
+    "group": "char-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/portrait",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/roles",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/search",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/characters/{character_id}/ship",
-    "group": "char-location"
+    "group": "char-location",
+    "maxTokens": 1200,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/skillqueue",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/skills",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/standings",
-    "group": "char-social"
+    "group": "char-social",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/titles",
-    "group": "char-detail"
+    "group": "char-detail",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/wallet",
-    "group": "char-wallet"
+    "group": "char-wallet",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/wallet/journal",
-    "group": "char-wallet"
+    "group": "char-wallet",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/characters/{character_id}/wallet/transactions",
-    "group": "char-wallet"
+    "group": "char-wallet",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/contracts/public/bids/{contract_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/contracts/public/items/{contract_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/contracts/public/{region_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporation/{corporation_id}/mining/extractions",
-    "group": "corp-industry"
+    "group": "corp-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporation/{corporation_id}/mining/observers",
-    "group": "corp-industry"
+    "group": "corp-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporation/{corporation_id}/mining/observers/{observer_id}",
-    "group": "corp-industry"
+    "group": "corp-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/npccorps",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/alliancehistory",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/assets",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/assets/locations",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/assets/names",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/blueprints",
-    "group": "corp-industry"
+    "group": "corp-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/contacts",
-    "group": "corp-social"
+    "group": "corp-social",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/contacts/labels",
-    "group": "corp-social"
+    "group": "corp-social",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/containers/logs",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/contracts",
-    "group": "corp-contract"
+    "group": "corp-contract",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/contracts/{contract_id}/bids",
-    "group": "corp-contract"
+    "group": "corp-contract",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/contracts/{contract_id}/items",
-    "group": "corp-contract"
+    "group": "corp-contract",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/customs_offices",
-    "group": "corp-industry"
+    "group": "corp-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/divisions",
-    "group": "corp-wallet"
+    "group": "corp-wallet",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/facilities",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/fw/stats",
-    "group": "factional-warfare"
+    "group": "factional-warfare",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/icons",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/industry/jobs",
-    "group": "corp-industry"
+    "group": "corp-industry",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/killmails/recent",
-    "group": "corp-killmail"
+    "group": "corp-killmail",
+    "maxTokens": 30,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/medals",
-    "group": "corp-detail"
+    "group": "corp-detail",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/medals/issued",
-    "group": "corp-detail"
+    "group": "corp-detail",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/members",
-    "group": "corp-member"
+    "group": "corp-member",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/members/limit",
-    "group": "corp-member"
+    "group": "corp-member",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/members/titles",
-    "group": "corp-member"
+    "group": "corp-member",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/membertracking",
-    "group": "corp-member"
+    "group": "corp-member",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/orders",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/orders/history",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/roles",
-    "group": "corp-member"
+    "group": "corp-member",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/roles/history",
-    "group": "corp-member"
+    "group": "corp-member",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/shareholders",
-    "group": "corp-detail"
+    "group": "corp-detail",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/standings",
-    "group": "corp-member"
+    "group": "corp-member",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/starbases",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/starbases/{starbase_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/structures",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/corporations/{corporation_id}/titles",
-    "group": "corp-detail"
+    "group": "corp-detail",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/wallets",
-    "group": "corp-wallet"
+    "group": "corp-wallet",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/wallets/{division}/journal",
-    "group": "corp-wallet"
+    "group": "corp-wallet",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/corporations/{corporation_id}/wallets/{division}/transactions",
-    "group": "corp-wallet"
+    "group": "corp-wallet",
+    "maxTokens": 300,
+    "windowSize": "15m"
   },
   {
     "url": "/dogma/attributes",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/dogma/attributes/{attribute_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/dogma/dynamic/items/{type_id}/{item_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/dogma/effects",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/dogma/effects/{effect_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/fleets/{fleet_id}",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/members",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/members",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/members/{member_id}",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/members/{member_id}",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members/{member_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members/{member_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members/{member_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members/{member_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members/{member_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/members/{member_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/squads/{squad_id}",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/squads/{squad_id}",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/squads/{squad_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/squads/{squad_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/squads/{squad_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/squads/{squad_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/squads/{squad_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/squads/{squad_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/wings",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/wings",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/wings/{wing_id}",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/wings/{wing_id}",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings/{wing_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings/{wing_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings/{wing_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings/{wing_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings/{wing_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
+  },
+  {
+    "url": "/fleets/{fleet_id}/wings/{wing_id}",
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fleets/{fleet_id}/wings/{wing_id}/squads",
-    "group": "fleet"
+    "group": "fleet",
+    "maxTokens": 1800,
+    "windowSize": "15m"
   },
   {
     "url": "/fw/leaderboards",
-    "group": "factional-warfare"
+    "group": "factional-warfare",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/fw/leaderboards/characters",
-    "group": "factional-warfare"
+    "group": "factional-warfare",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/fw/leaderboards/corporations",
-    "group": "factional-warfare"
+    "group": "factional-warfare",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/fw/stats",
-    "group": "factional-warfare"
+    "group": "factional-warfare",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/fw/systems",
-    "group": "factional-warfare"
+    "group": "factional-warfare",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/fw/wars",
-    "group": "factional-warfare"
+    "group": "factional-warfare",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/incursions",
-    "group": "incursion"
+    "group": "incursion",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/industry/facilities",
-    "group": "industry"
+    "group": "industry",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/industry/systems",
-    "group": "industry"
+    "group": "industry",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/insurance/prices",
-    "group": "insurance"
+    "group": "insurance",
+    "maxTokens": 150,
+    "windowSize": "15m"
   },
   {
     "url": "/killmails/{killmail_id}/{killmail_hash}",
-    "group": "killmail"
+    "group": "killmail",
+    "maxTokens": 3600,
+    "windowSize": "15m"
   },
   {
     "url": "/loyalty/stores/{corporation_id}/offers",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/markets/groups",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/markets/groups/{market_group_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/markets/prices",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/markets/structures/{structure_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/markets/{region_id}/history",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/markets/{region_id}/orders",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/markets/{region_id}/types",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/meta/changelog",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/meta/compatibility-dates",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/route/{origin}/{destination}",
-    "group": "routes"
+    "group": "routes",
+    "maxTokens": 3600,
+    "windowSize": "15m"
   },
   {
     "url": "/sovereignty/campaigns",
-    "group": "sovereignty"
+    "group": "sovereignty",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/sovereignty/map",
-    "group": "sovereignty"
+    "group": "sovereignty",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/sovereignty/structures",
-    "group": "sovereignty"
+    "group": "sovereignty",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/status",
-    "group": "status"
+    "group": "status",
+    "maxTokens": 600,
+    "windowSize": "15m"
   },
   {
     "url": "/ui/autopilot/waypoint",
-    "group": "ui"
+    "group": "ui",
+    "maxTokens": 900,
+    "windowSize": "15m"
   },
   {
     "url": "/ui/openwindow/contract",
-    "group": "ui"
+    "group": "ui",
+    "maxTokens": 900,
+    "windowSize": "15m"
   },
   {
     "url": "/ui/openwindow/information",
-    "group": "ui"
+    "group": "ui",
+    "maxTokens": 900,
+    "windowSize": "15m"
   },
   {
     "url": "/ui/openwindow/marketdetails",
-    "group": "ui"
+    "group": "ui",
+    "maxTokens": 900,
+    "windowSize": "15m"
   },
   {
     "url": "/ui/openwindow/newmail",
-    "group": "ui"
+    "group": "ui",
+    "maxTokens": 900,
+    "windowSize": "15m"
   },
   {
     "url": "/universe/ancestries",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/asteroid_belts/{asteroid_belt_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/bloodlines",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/categories",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/categories/{category_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/constellations",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/constellations/{constellation_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/factions",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/graphics",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/graphics/{graphic_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/groups",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/groups/{group_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/ids",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/moons/{moon_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/names",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/planets/{planet_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/races",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/regions",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/regions/{region_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/schematics/{schematic_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/stargates/{stargate_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/stars/{star_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/stations/{station_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/structures",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/structures/{structure_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/system_jumps",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/system_kills",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/systems",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/systems/{system_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/types",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/universe/types/{type_id}",
-    "group": null
+    "group": null,
+    "maxTokens": null,
+    "windowSize": null
   },
   {
     "url": "/wars",
-    "group": "killmail"
+    "group": "killmail",
+    "maxTokens": 3600,
+    "windowSize": "15m"
   },
   {
     "url": "/wars/{war_id}",
-    "group": "killmail"
+    "group": "killmail",
+    "maxTokens": 3600,
+    "windowSize": "15m"
   },
   {
     "url": "/wars/{war_id}/killmails",
-    "group": "killmail"
+    "group": "killmail",
+    "maxTokens": 3600,
+    "windowSize": "15m"
   }
 ]

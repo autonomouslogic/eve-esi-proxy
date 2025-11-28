@@ -25,6 +25,10 @@ public class EsiUrlGroupResolver {
 	}
 
 	public Optional<String> resolveGroup(String urlPath) {
+		return resolveGroupInfo(urlPath).map(EsiUrlGroup::getGroup);
+	}
+
+	public Optional<EsiUrlGroup> resolveGroupInfo(String urlPath) {
 		String normalizedPath =
 				urlPath.endsWith("/") && urlPath.length() > 1 ? urlPath.substring(0, urlPath.length() - 1) : urlPath;
 
@@ -32,7 +36,7 @@ public class EsiUrlGroupResolver {
 
 		for (CompiledUrlGroup compiled : compiledGroups) {
 			if (compiled.pattern.matcher(normalizedPath).matches()) {
-				return Optional.ofNullable(compiled.group);
+				return Optional.ofNullable(compiled.esiUrlGroup);
 			}
 		}
 
@@ -59,7 +63,7 @@ public class EsiUrlGroupResolver {
 	private List<CompiledUrlGroup> loadAndCompileGroups(ObjectMapper objectMapper) {
 		try (var in = ResourceUtil.loadResource(GROUPS_FILE)) {
 			return objectMapper.readValue(in, new TypeReference<List<EsiUrlGroup>>() {}).stream()
-					.map(group -> new CompiledUrlGroup(compileUrlPattern(group.getUrl()), group.getGroup()))
+					.map(group -> new CompiledUrlGroup(compileUrlPattern(group.getUrl()), group))
 					.toList();
 		} catch (IOException e) {
 			throw new IllegalStateException("Failed to load URL groups from " + GROUPS_FILE, e);
@@ -89,6 +93,6 @@ public class EsiUrlGroupResolver {
 	@Value
 	private static class CompiledUrlGroup {
 		Pattern pattern;
-		String group;
+		EsiUrlGroup esiUrlGroup;
 	}
 }
