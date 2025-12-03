@@ -37,15 +37,15 @@
   },
   {
     "url": "/characters/{character_id}/assets",
-    "group": null
+    "group": "char-asset"
   },
   {
     "url": "/characters/{character_id}/assets/locations",
-    "group": null
+    "group": "char-asset"
   },
   {
     "url": "/characters/{character_id}/assets/names",
-    "group": null
+    "group": "char-asset"
   },
   {
     "url": "/characters/{character_id}/attributes",
@@ -313,15 +313,15 @@
   },
   {
     "url": "/corporations/{corporation_id}/assets",
-    "group": null
+    "group": "corp-asset"
   },
   {
     "url": "/corporations/{corporation_id}/assets/locations",
-    "group": null
+    "group": "corp-asset"
   },
   {
     "url": "/corporations/{corporation_id}/assets/names",
-    "group": null
+    "group": "corp-asset"
   },
   {
     "url": "/corporations/{corporation_id}/blueprints",
