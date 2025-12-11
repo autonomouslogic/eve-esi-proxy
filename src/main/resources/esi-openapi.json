@@ -24742,7 +24742,12 @@
         "tags": [
           "Meta"
         ],
-        "x-compatibility-date": "2020-01-01"
+        "x-compatibility-date": "2020-01-01",
+        "x-rate-limit": {
+          "group": "meta",
+          "max-tokens": 150,
+          "window-size": "15m"
+        }
       }
     },
     "/meta/compatibility-dates": {
@@ -24811,7 +24816,12 @@
         "tags": [
           "Meta"
         ],
-        "x-compatibility-date": "2020-01-01"
+        "x-compatibility-date": "2020-01-01",
+        "x-rate-limit": {
+          "group": "meta",
+          "max-tokens": 150,
+          "window-size": "15m"
+        }
       }
     },
     "/route/{origin}/{destination}": {
