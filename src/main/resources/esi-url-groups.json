@@ -605,11 +605,11 @@
   },
   {
     "url": "/meta/changelog",
-    "group": null
+    "group": "meta"
   },
   {
     "url": "/meta/compatibility-dates",
-    "group": null
+    "group": "meta"
   },
   {
     "url": "/route/{origin}/{destination}",
