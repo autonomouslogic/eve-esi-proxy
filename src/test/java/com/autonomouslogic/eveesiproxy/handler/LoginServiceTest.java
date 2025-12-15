@@ -139,10 +139,7 @@ public class LoginServiceTest {
 		TestHttpUtils.assertNoMoreRequests(mockEsi);
 
 		// Token response.
-		TestHttpUtils.enqueueResponse(
-				mockEsi,
-				200,
-				"""
+		TestHttpUtils.enqueueResponse(mockEsi, 200, """
 		{
 			"access_token": "access-token-1",
 			"expires_in": 1199,
@@ -236,10 +233,7 @@ public class LoginServiceTest {
 
 	void testProxyKeyTranslation(AuthFlow authFlow) {
 		// Token response.
-		TestHttpUtils.enqueueResponse(
-				mockEsi,
-				200,
-				"""
+		TestHttpUtils.enqueueResponse(mockEsi, 200, """
 			{
 				"access_token": "access-token-1",
 				"expires_in": 1199,
