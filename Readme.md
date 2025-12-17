@@ -20,7 +20,7 @@ Join us on [Discord](https://everef.net/discord).
 Fly safe o7
 
 ## Features
-* **Character login** is supported and OAuth is handled automatically, [see below](#character-login)
+* **Character login** is supported and OAuth is handled automatically - [see below](#character-login)
 * **Cache responses** to disk to improve request times and reduce load on the ESI itself. Authed requests are not currently cached
 * **Conditional requests** to refresh objects in the cache
 * **Rate limiting** to help avoid being banned, including different limits for the endpoints which have special undocumented limits
@@ -28,7 +28,8 @@ Fly safe o7
 * **Handle ESI error limit headers** to stop all requests if the limit is reached
 * **Retry failed requests** if a 5xx is returned
 * **User agent header** is automatically handled
-* **Fetching multiple pages concurrently** if no page (or page 0) is set in the request, merging all pages into a single response (see https://github.com/autonomouslogic/eve-esi-proxy/issues/100)
+* **Fetching multiple pages concurrently**, merging all pages into a single response - [see below](#pagination)
+* **Fetching cursor cursor pages**, merging all pages into a single response - [see below](#pagination)
 
 Caching, rate limiting, retries, etc. are all handled transparently.
 
@@ -99,6 +100,20 @@ For instance:
 ```bash
 docker run -e "EVE_OAUTH_CLIENT_ID=<your client id>" -e "EVE_OAUTH_CLIENT_SECRET=<your secret key>"
 ```
+
+## Pagination
+The ESI API supports two types of pagination: pages and cursors.
+In both cases, the proxy will automatically fetch all pages and merge the results into a single array in the response.
+If the original request contains a specific page or cursor, only that page or cursor will be fetched and returned,
+as it is assumed that the caller will handle pagination.
+
+* For page-based pagination:
+  * if `page=0` is specified in the request, the proxy will still fetch all pages
+  * if a page other than zero is specified, only that page will be fetched
+* For [cursor-based Pagination](https://developers.eveonline.com/docs/services/esi/pagination/cursor-based/):
+  * if `before=` (empty string), only the first page will be requested and cursors will not be followed
+  * only `before` cursors will be followed
+  * the response returned to the caller will container the original `after` cursor from the first response, but no `before` cursor
 
 ## Overhead
 The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP server stack for Java 21,
