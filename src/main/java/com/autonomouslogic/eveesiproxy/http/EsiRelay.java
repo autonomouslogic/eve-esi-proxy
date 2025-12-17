@@ -36,6 +36,9 @@ public class EsiRelay {
 	@Inject
 	protected PageFetcher pageFetcher;
 
+	@Inject
+	protected CursorFetcher cursorFetcher;
+
 	private final URL esiBaseUrl;
 
 	@Inject
@@ -56,7 +59,8 @@ public class EsiRelay {
 	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
 		var esiRequest = createEsiRequest(proxyRequest).build();
 		try (var esiResponse = OkHttpExec.execute(client.newCall(esiRequest))) {
-			var pageResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
+			var cursorResponse = cursorFetcher.fetchCursorPages(esiRequest, esiResponse);
+			var pageResponse = pageFetcher.fetchSubPages(esiRequest, cursorResponse);
 			sendResponse(pageResponse, res);
 		}
 	}

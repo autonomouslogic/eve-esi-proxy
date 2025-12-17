@@ -92,7 +92,7 @@ public class ProxyServiceCursorTest {
 				.setBody(createObjectWithCursor("before-1", "after-1", List.of("a", "b", "c"))
 						.toString()));
 		dispatcher.addBeforeResponse("before-1", createObjectWithCursor("before-2", "after-2", List.of("d", "e", "f")));
-		dispatcher.addBeforeResponse("before-2", createObjectWithCursor(null, "after-2", List.of("g", "h", "j")));
+		dispatcher.addBeforeResponse("before-2", createObjectWithCursor(null, "after-2", List.of("g", "h", "i")));
 
 		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/cursor")) {
 			assertEquals(200, proxyResponse.code());
