@@ -92,6 +92,7 @@ public class EsiRelay {
 				esiBaseUrl + prologue.uriPath().toString() + prologue.query().toString());
 		var esiUrl = HttpUrl.get(url);
 		esiUrl = pageFetcher.removeInvalidPageQueryString(esiUrl);
+		esiUrl = cursorFetcher.removeInvalidCursorParameters(esiUrl);
 		return esiUrl;
 	}
 

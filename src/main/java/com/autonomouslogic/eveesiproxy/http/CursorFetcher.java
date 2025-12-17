@@ -72,7 +72,29 @@ public class CursorFetcher {
 
 	private boolean hasCursorParameter(Request request) {
 		var url = request.url();
-		return url.queryParameter("before") != null || url.queryParameter("after") != null;
+		var before = url.queryParameter("before");
+		var after = url.queryParameter("after");
+		return (before != null && !before.isEmpty()) || (after != null && !after.isEmpty());
+	}
+
+	public HttpUrl removeInvalidCursorParameters(HttpUrl url) {
+		var before = url.queryParameter("before");
+		var after = url.queryParameter("after");
+
+		var builder = url.newBuilder();
+		boolean modified = false;
+
+		if ("0".equals(before) || (before != null && before.isEmpty())) {
+			builder.removeAllQueryParameters("before");
+			modified = true;
+		}
+
+		if ("0".equals(after) || (after != null && after.isEmpty())) {
+			builder.removeAllQueryParameters("after");
+			modified = true;
+		}
+
+		return modified ? builder.build() : url;
 	}
 
 	private Response recreateResponse(Response originalResponse, byte[] bodyBytes) {

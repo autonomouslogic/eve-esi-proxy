@@ -102,18 +102,19 @@ docker run -e "EVE_OAUTH_CLIENT_ID=<your client id>" -e "EVE_OAUTH_CLIENT_SECRET
 ```
 
 ## Pagination
-The ESI API supports two types of pagination: pages and cursors.
+The ESI API supports two types of pagination: pages and [cursors](https://developers.eveonline.com/docs/services/esi/pagination/cursor-based/).
 In both cases, the proxy will automatically fetch all pages and merge the results into a single array in the response.
 If the original request contains a specific page or cursor, only that page or cursor will be fetched and returned,
 as it is assumed that the caller will handle pagination.
 
-* For page-based pagination:
-  * if `page=0` is specified in the request, the proxy will still fetch all pages
-  * if a page other than zero is specified, only that page will be fetched
-* For [cursor-based Pagination](https://developers.eveonline.com/docs/services/esi/pagination/cursor-based/):
-  * if `before=` (empty string) is specified, only the first page will be requested and cursors will not be followed. This is consistent with the ESI
-  * only `before` cursors will be followed
-  * the response returned to the caller will container the original `after` cursor from the first response, but no `before` cursor
+| Pagination type | Auto-fetch all pages                                                   | Fetch only first page       |
+|-----------------|------------------------------------------------------------------------|-----------------------------|
+| Pages           | Omit `page`, or set `page=0`                                           | Set `page=1`                |
+| Cursor          | Omit `before` and `after`, or set `before=` or `after=` (empty-string) | Set `before=0` or `after=0` |
+
+For cursor, automatic pagination happens by following the `before` cursor all the way back.
+The proxy response will include the `after` cursor from the first ESI response, meaning you can still use that to fetch
+newly modified records.
 
 ## Overhead
 The EVE ESI Proxy is built on [Helidon](https://helidon.io/), a fast HTTP server stack for Java 21,

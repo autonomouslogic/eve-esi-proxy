@@ -82,10 +82,12 @@ public class ProxyServiceCursorTest {
 		}
 	}
 
-	@Test
+	@CartesianTest
 	@SneakyThrows
 	@SuppressWarnings("unchecked")
-	void shouldFollowBeforeCursors() {
+	void shouldFollowBeforeCursors(
+			@CartesianTest.Values(strings = {"before", "after"}) String cursorType,
+			@CartesianTest.Values(strings = {"null", ""}) String cursorValue) {
 		mockEsi.setDispatcher(dispatcher);
 		dispatcher.setFirstResponse(new MockResponse()
 				.setResponseCode(200)
@@ -95,7 +97,11 @@ public class ProxyServiceCursorTest {
 		dispatcher.addBeforeResponse("before-1", createObjectWithCursor("before-2", "after-2", List.of("d", "e", "f")));
 		dispatcher.addBeforeResponse("before-2", createObjectWithCursor(null, "after-2", List.of("g", "h", "i")));
 
-		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/cursor")) {
+		var url = "/cursor";
+		if (!cursorValue.equals("null")) {
+			url += "?" + cursorType + "=" + cursorValue;
+		}
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", url)) {
 			assertEquals(200, proxyResponse.code());
 			var responseBody = proxyResponse.body();
 			assertNotNull(responseBody);
@@ -130,7 +136,7 @@ public class ProxyServiceCursorTest {
 	@SneakyThrows
 	void shouldNotFollowCursorsIfSpecificallySupplied(
 			@CartesianTest.Values(strings = {"before", "after"}) String cursorType,
-			@CartesianTest.Values(strings = {"cursor-0", ""}) String cursorValue) {
+			@CartesianTest.Values(strings = {"cursor-0", "0"}) String cursorValue) {
 		mockEsi.enqueue(new MockResponse()
 				.setResponseCode(200)
 				.setBody(createObjectWithCursor("before-1", "after-1", List.of("a", "b", "c"))
@@ -142,7 +148,12 @@ public class ProxyServiceCursorTest {
 		}
 
 		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
-		assertEquals(cursorValue, esiRequest.getRequestUrl().queryParameter(cursorType));
+		if (cursorValue.equals("0")) {
+			assertNull(esiRequest.getRequestUrl().queryParameter("before"));
+			assertNull(esiRequest.getRequestUrl().queryParameter("after"));
+		} else {
+			assertEquals(cursorValue, esiRequest.getRequestUrl().queryParameter(cursorType));
+		}
 	}
 
 	@Test
