@@ -29,10 +29,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
+import org.junitpioneer.jupiter.cartesian.CartesianTest;
 
 /**
  * Tests automatic cursor-based pagination handling.
+ * See <a href="https://developers.eveonline.com/docs/services/esi/pagination/cursor-based/">Cursor-based Pagination</a>
  */
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
 @SetEnvironmentVariable(key = "ESI_USER_AGENT", value = "test@example.com")
@@ -61,7 +64,6 @@ public class ProxyServiceCursorTest {
 		DaggerTestComponent.builder().build().inject(this);
 		mockEsi = new MockWebServer();
 		dispatcher = new CursorDispatcher();
-		mockEsi.setDispatcher(dispatcher);
 		mockEsi.start(MOCK_ESI_PORT);
 		proxy.start();
 	}
@@ -84,6 +86,7 @@ public class ProxyServiceCursorTest {
 	@SneakyThrows
 	@SuppressWarnings("unchecked")
 	void shouldFollowBeforeCursors() {
+		mockEsi.setDispatcher(dispatcher);
 		dispatcher.setFirstResponse(new MockResponse()
 				.setResponseCode(200)
 				.setBody(createObjectWithCursor("before-1", "after-1", List.of("a", "b", "c"))
@@ -103,7 +106,9 @@ public class ProxyServiceCursorTest {
 					objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
 			assertEquals(List.of("a", "b", "c", "d", "e", "f", "g", "h", "i"), records);
 
+			// Preserve the original after cursor.
 			assertEquals("after-1", json.get("cursor").get("after").asText());
+			assertNull(json.get("cursor").get("before"));
 		}
 
 		var firstRequest = TestHttpUtils.takeRequest(mockEsi);
@@ -117,6 +122,26 @@ public class ProxyServiceCursorTest {
 		var thirdRequest = TestHttpUtils.takeRequest(mockEsi);
 		assertEquals("before-2", thirdRequest.getRequestUrl().queryParameter("before"));
 		assertNull(thirdRequest.getRequestUrl().queryParameter("after"));
+	}
+
+	@CartesianTest
+	@ValueSource(strings = {"before", "after"})
+	@SneakyThrows
+	void shouldNotFollowCursorsIfSpecificallySupplied(
+			@CartesianTest.Values(strings = {"before", "after"}) String cursorType,
+			@CartesianTest.Values(strings = {"cursor-0", ""}) String cursorValue) {
+		mockEsi.enqueue(new MockResponse()
+				.setResponseCode(200)
+				.setBody(createObjectWithCursor("before-1", "after-1", List.of("a", "b", "c"))
+						.toString()));
+
+		try (var proxyResponse =
+				TestHttpUtils.callProxy(client, proxy, "GET", "/cursor?" + cursorType + "=" + cursorValue)) {
+			assertEquals(200, proxyResponse.code());
+		}
+
+		var esiRequest = TestHttpUtils.takeRequest(mockEsi);
+		assertEquals(cursorValue, esiRequest.getRequestUrl().queryParameter(cursorType));
 	}
 
 	private ObjectNode createObjectWithCursor(String beforeCursor, String afterCursor, List<String> records) {
