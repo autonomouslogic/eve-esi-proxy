@@ -111,7 +111,7 @@ as it is assumed that the caller will handle pagination.
   * if `page=0` is specified in the request, the proxy will still fetch all pages
   * if a page other than zero is specified, only that page will be fetched
 * For [cursor-based Pagination](https://developers.eveonline.com/docs/services/esi/pagination/cursor-based/):
-  * if `before=` (empty string), only the first page will be requested and cursors will not be followed
+  * if `before=` (empty string) is specified, only the first page will be requested and cursors will not be followed. This is consistent with the ESI
   * only `before` cursors will be followed
   * the response returned to the caller will container the original `after` cursor from the first response, but no `before` cursor
 
