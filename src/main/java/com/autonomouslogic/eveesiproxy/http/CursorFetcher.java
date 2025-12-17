@@ -1,6 +1,5 @@
 package com.autonomouslogic.eveesiproxy.http;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -8,9 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.HttpUrl;
@@ -137,10 +134,10 @@ public class CursorFetcher {
 	@SneakyThrows
 	private Response fetchPages(
 			Request firstRequest, Response firstResponse, ObjectNode firstPage, String beforeCursor) {
-		List<ObjectNode> pages = new ArrayList<>();
+		var pages = new ArrayList<ObjectNode>();
 		pages.add(firstPage);
 
-		String nextCursor = beforeCursor;
+		var nextCursor = beforeCursor;
 		while (nextCursor != null) {
 			var nextRequest = buildCursorRequest(firstRequest, nextCursor);
 			try (var nextResponse = OkHttpExec.execute(client.newCall(nextRequest))) {
@@ -172,7 +169,7 @@ public class CursorFetcher {
 	}
 
 	private Request buildCursorRequest(Request originalRequest, String cursor) {
-		HttpUrl newUrl = originalRequest
+		var newUrl = originalRequest
 				.url()
 				.newBuilder()
 				.setQueryParameter("before", cursor)
@@ -186,23 +183,23 @@ public class CursorFetcher {
 			return objectMapper.createObjectNode();
 		}
 
-		ObjectNode result = objectMapper.createObjectNode();
-		ObjectNode firstPage = pages.get(0);
-		Iterator<Map.Entry<String, JsonNode>> fields = firstPage.fields();
+		var result = objectMapper.createObjectNode();
+		var firstPage = pages.get(0);
+		var fields = firstPage.fields();
 
 		while (fields.hasNext()) {
-			Map.Entry<String, JsonNode> field = fields.next();
-			String fieldName = field.getKey();
-			JsonNode fieldValue = field.getValue();
+			var field = fields.next();
+			var fieldName = field.getKey();
+			var fieldValue = field.getValue();
 
 			if (fieldName.equals("cursor")) {
 				continue;
 			}
 
 			if (fieldValue.isArray()) {
-				ArrayNode mergedArray = objectMapper.createArrayNode();
-				for (ObjectNode page : pages) {
-					JsonNode pageField = page.get(fieldName);
+				var mergedArray = objectMapper.createArrayNode();
+				for (var page : pages) {
+					var pageField = page.get(fieldName);
 					if (pageField != null && pageField.isArray()) {
 						mergedArray.addAll((ArrayNode) pageField);
 					}
