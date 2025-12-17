@@ -144,6 +144,28 @@ public class ProxyServiceCursorTest {
 		assertEquals(cursorValue, esiRequest.getRequestUrl().queryParameter(cursorType));
 	}
 
+	@Test
+	@SneakyThrows
+	void shouldPassHeadersAndQueryStringArgsOnSubsequentRequests() {
+		mockEsi.setDispatcher(dispatcher);
+		dispatcher.setFirstResponse(new MockResponse()
+				.setResponseCode(200)
+				.setBody(createObjectWithCursor("before-1", "after-1", List.of("a"))
+						.toString()));
+		dispatcher.addBeforeResponse("before-1", createObjectWithCursor(null, null, List.of("b")));
+
+		try (var proxyResponse =
+				TestHttpUtils.callProxy(client, proxy, "GET", "/cursor?foo=bar", Map.of("X-Foo", "Bar"))) {
+			assertEquals(200, proxyResponse.code());
+		}
+
+		var esiRequests = List.of(TestHttpUtils.takeRequest(mockEsi), TestHttpUtils.takeRequest(mockEsi));
+		for (var esiRequest : esiRequests) {
+			assertEquals("bar", esiRequest.getRequestUrl().queryParameter("foo"));
+			assertEquals("Bar", esiRequest.getHeader("X-Foo"));
+		}
+	}
+
 	private ObjectNode createObjectWithCursor(String beforeCursor, String afterCursor, List<String> records) {
 		var pageJson = objectMapper.createObjectNode();
 		pageJson.set("records", objectMapper.valueToTree(records));
