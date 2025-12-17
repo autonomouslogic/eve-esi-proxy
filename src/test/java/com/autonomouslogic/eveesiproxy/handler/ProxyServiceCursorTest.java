@@ -89,6 +89,7 @@ public class ProxyServiceCursorTest {
 		mockEsi.setDispatcher(dispatcher);
 		dispatcher.setFirstResponse(new MockResponse()
 				.setResponseCode(200)
+				.addHeader("Content-Type", "application/json")
 				.setBody(createObjectWithCursor("before-1", "after-1", List.of("a", "b", "c"))
 						.toString()));
 		dispatcher.addBeforeResponse("before-1", createObjectWithCursor("before-2", "after-2", List.of("d", "e", "f")));
@@ -150,6 +151,7 @@ public class ProxyServiceCursorTest {
 		mockEsi.setDispatcher(dispatcher);
 		dispatcher.setFirstResponse(new MockResponse()
 				.setResponseCode(200)
+				.addHeader("Content-Type", "application/json")
 				.setBody(createObjectWithCursor("before-1", "after-1", List.of("a"))
 						.toString()));
 		dispatcher.addBeforeResponse("before-1", createObjectWithCursor(null, null, List.of("b")));
@@ -195,7 +197,12 @@ public class ProxyServiceCursorTest {
 		}
 
 		void addBeforeResponse(@NonNull String cursor, @NonNull ObjectNode node) {
-			beforeResponses.put(cursor, new MockResponse().setResponseCode(200).setBody(node.toString()));
+			beforeResponses.put(
+					cursor,
+					new MockResponse()
+							.setResponseCode(200)
+							.addHeader("Content-Type", "application/json")
+							.setBody(node.toString()));
 		}
 
 		@NotNull

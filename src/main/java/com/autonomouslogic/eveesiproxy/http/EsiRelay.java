@@ -59,9 +59,15 @@ public class EsiRelay {
 	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
 		var esiRequest = createEsiRequest(proxyRequest).build();
 		try (var esiResponse = OkHttpExec.execute(client.newCall(esiRequest))) {
-			var cursorResponse = cursorFetcher.fetchCursorPages(esiRequest, esiResponse);
-			var pageResponse = pageFetcher.fetchSubPages(esiRequest, cursorResponse);
-			sendResponse(pageResponse, res);
+			Response finalResponse;
+			if (pageFetcher.shouldFetchPages(esiRequest, esiResponse)) {
+				finalResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
+			} else if (cursorFetcher.shouldFetchCursors(esiRequest, esiResponse)) {
+				finalResponse = cursorFetcher.fetchCursorPages(esiRequest, esiResponse);
+			} else {
+				finalResponse = esiResponse;
+			}
+			sendResponse(finalResponse, res);
 		}
 	}
 

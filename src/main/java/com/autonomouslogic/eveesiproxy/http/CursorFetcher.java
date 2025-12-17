@@ -32,15 +32,18 @@ public class CursorFetcher {
 	@Inject
 	protected CursorFetcher() {}
 
-	public Response fetchCursorPages(Request esiRequest, Response esiResponse) {
+	public boolean shouldFetchCursors(Request esiRequest, Response esiResponse) {
 		if (esiResponse.code() != 200) {
-			return esiResponse;
+			return false;
 		}
-
 		if (hasCursorParameter(esiRequest)) {
-			return esiResponse;
+			return false;
 		}
+		var contentType = esiResponse.body() != null ? esiResponse.body().contentType() : null;
+		return contentType != null && "application".equals(contentType.type()) && "json".equals(contentType.subtype());
+	}
 
+	public Response fetchCursorPages(Request esiRequest, Response esiResponse) {
 		byte[] bodyBytes;
 		ObjectNode firstPage;
 		try {
@@ -110,7 +113,8 @@ public class CursorFetcher {
 	}
 
 	@SneakyThrows
-	private Response fetchPages(Request firstRequest, Response firstResponse, ObjectNode firstPage, String beforeCursor) {
+	private Response fetchPages(
+			Request firstRequest, Response firstResponse, ObjectNode firstPage, String beforeCursor) {
 		List<ObjectNode> pages = new ArrayList<>();
 		pages.add(firstPage);
 
