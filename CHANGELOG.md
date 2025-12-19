@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.3.0](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.2.2...1.3.0) (2025-12-19)
+
+
+### Features
+
+* Cursor based pagination ([#150](https://github.com/autonomouslogic/eve-esi-proxy/issues/150)) ([059c7b8](https://github.com/autonomouslogic/eve-esi-proxy/commit/059c7b8077ac98cc0cbac4378444021e86b4c699))
+
 ## [1.2.2](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.2.1...1.2.2) (2025-12-15)
 
 
