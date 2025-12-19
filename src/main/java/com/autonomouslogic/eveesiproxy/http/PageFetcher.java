@@ -36,23 +36,22 @@ public class PageFetcher {
 	@Inject
 	protected PageFetcher() {}
 
-	public Response fetchSubPages(Request esiRequest, Response esiResponse) {
+	public boolean shouldFetchPages(Request esiRequest, Response esiResponse) {
 		if (esiResponse.code() != 200) {
-			return esiResponse;
+			return false;
 		}
-		var requestedPage = getRequestedPage(esiRequest);
-		if (requestedPage.isPresent()) {
-			return esiResponse;
+		if (getRequestedPage(esiRequest).isPresent()) {
+			return false;
 		}
-		var responsePages = getResponsePages(esiResponse);
-		if (responsePages == 1) {
-			return esiResponse;
-		}
+		return getResponsePages(esiResponse) > 1;
+	}
+
+	public Response fetchSubPages(Request esiRequest, Response esiResponse) {
 		log.debug(
 				"Request for {} did not contain a page query parameter, {} pages seen",
 				esiRequest.url(),
-				responsePages);
-		return fetch(esiRequest, esiResponse, responsePages);
+				getResponsePages(esiResponse));
+		return fetch(esiRequest, esiResponse, getResponsePages(esiResponse));
 	}
 
 	private static Optional<Integer> getRequestedPage(Request esiRequest) {

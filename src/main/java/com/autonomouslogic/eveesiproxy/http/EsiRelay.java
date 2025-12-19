@@ -36,6 +36,9 @@ public class EsiRelay {
 	@Inject
 	protected PageFetcher pageFetcher;
 
+	@Inject
+	protected CursorFetcher cursorFetcher;
+
 	private final URL esiBaseUrl;
 
 	@Inject
@@ -56,8 +59,15 @@ public class EsiRelay {
 	public void relayRequest(ServerRequest proxyRequest, ServerResponse res) {
 		var esiRequest = createEsiRequest(proxyRequest).build();
 		try (var esiResponse = OkHttpExec.execute(client.newCall(esiRequest))) {
-			var pageResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
-			sendResponse(pageResponse, res);
+			Response finalResponse;
+			if (pageFetcher.shouldFetchPages(esiRequest, esiResponse)) {
+				finalResponse = pageFetcher.fetchSubPages(esiRequest, esiResponse);
+			} else if (cursorFetcher.shouldFetchCursors(esiRequest, esiResponse)) {
+				finalResponse = cursorFetcher.fetchCursorPages(esiRequest, esiResponse);
+			} else {
+				finalResponse = esiResponse;
+			}
+			sendResponse(finalResponse, res);
 		}
 	}
 
@@ -82,6 +92,7 @@ public class EsiRelay {
 				esiBaseUrl + prologue.uriPath().toString() + prologue.query().toString());
 		var esiUrl = HttpUrl.get(url);
 		esiUrl = pageFetcher.removeInvalidPageQueryString(esiUrl);
+		esiUrl = cursorFetcher.removeInvalidCursorParameters(esiUrl);
 		return esiUrl;
 	}
 

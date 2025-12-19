@@ -3,6 +3,7 @@ package com.autonomouslogic.eveesiproxy.test;
 import com.autonomouslogic.eveesiproxy.handler.IndexServiceTest;
 import com.autonomouslogic.eveesiproxy.handler.LoginServiceTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceCacheTest;
+import com.autonomouslogic.eveesiproxy.handler.ProxyServiceCursorTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceErrorLimitTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServicePagesTest;
 import com.autonomouslogic.eveesiproxy.handler.ProxyServiceProxyTest;
@@ -36,6 +37,8 @@ public interface TestComponent {
 	void inject(LoginServiceTest test);
 
 	void inject(ProxyServiceCacheTest test);
+
+	void inject(ProxyServiceCursorTest test);
 
 	void inject(ProxyServiceErrorLimitTest test);
 
