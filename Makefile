@@ -54,7 +54,7 @@ renovate-validate:
 	node node_modules/renovate/dist/config-validator.js
 
 update-esi-spec:
-	curl -s https://esi.evetech.net/meta/openapi.json | jq . > src/main/resources/esi-openapi.json
+	curl -s -H "X-Compatibility-Date: $(shell date -uI)" https://esi.evetech.net/meta/openapi.json | jq . > src/main/resources/esi-openapi.json
 	cat src/main/resources/esi-openapi.json \
 		| jq -r '.components.securitySchemes.OAuth2.flows.authorizationCode.scopes[]' \
 		| sort > src/main/resources/esi-scopes

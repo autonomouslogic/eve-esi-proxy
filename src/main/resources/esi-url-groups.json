@@ -136,6 +136,14 @@
     "group": "fleet"
   },
   {
+    "url": "/characters/{character_id}/freelance-jobs",
+    "group": "char-freelance-job"
+  },
+  {
+    "url": "/characters/{character_id}/freelance-jobs/{job_id}/participation",
+    "group": "char-freelance-job"
+  },
+  {
     "url": "/characters/{character_id}/fw/stats",
     "group": "factional-warfare"
   },
@@ -364,6 +372,14 @@
     "group": null
   },
   {
+    "url": "/corporations/{corporation_id}/freelance-jobs",
+    "group": "corp-freelance-job"
+  },
+  {
+    "url": "/corporations/{corporation_id}/freelance-jobs/{job_id}/participants",
+    "group": "corp-freelance-job"
+  },
+  {
     "url": "/corporations/{corporation_id}/fw/stats",
     "group": "factional-warfare"
   },
@@ -410,6 +426,22 @@
   {
     "url": "/corporations/{corporation_id}/orders/history",
     "group": null
+  },
+  {
+    "url": "/corporations/{corporation_id}/projects",
+    "group": "corp-project"
+  },
+  {
+    "url": "/corporations/{corporation_id}/projects/{project_id}",
+    "group": "corp-project"
+  },
+  {
+    "url": "/corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}",
+    "group": "corp-project"
+  },
+  {
+    "url": "/corporations/{corporation_id}/projects/{project_id}/contributors",
+    "group": "corp-project"
   },
   {
     "url": "/corporations/{corporation_id}/roles",
@@ -528,6 +560,14 @@
     "group": "fleet"
   },
   {
+    "url": "/freelance-jobs",
+    "group": "freelance-job"
+  },
+  {
+    "url": "/freelance-jobs/{job_id}",
+    "group": "freelance-job"
+  },
+  {
     "url": "/fw/leaderboards",
     "group": "factional-warfare"
   },
@@ -612,7 +652,11 @@
     "group": "meta"
   },
   {
-    "url": "/route/{origin}/{destination}",
+    "url": "/meta/status",
+    "group": "meta"
+  },
+  {
+    "url": "/route/{origin_system_id}/{destination_system_id}",
     "group": "routes"
   },
   {
