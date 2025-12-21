@@ -1,5 +1,17 @@
 EVE ESI Proxy Changelog
 
+## [1.3.1](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.0...1.3.1) (2025-12-21)
+
+
+### Bug Fixes
+
+* **deps:** Updated ESI spec to the latest compatibility date ([#151](https://github.com/autonomouslogic/eve-esi-proxy/issues/151)) ([240163c](https://github.com/autonomouslogic/eve-esi-proxy/commit/240163c1722fbb3056bbe51bf1fd923e521d5030))
+
+
+### Miscellaneous Chores
+
+* Updated user-agent in the Makefile ([e3278f0](https://github.com/autonomouslogic/eve-esi-proxy/commit/e3278f06f85520bd8b7e30bd358f4269d473bb8c))
+
 ## [1.3.0](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.2.2...1.3.0) (2025-12-19)
 
 
