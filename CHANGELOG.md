@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.3.5](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.4...1.3.5) (2026-02-02)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#153](https://github.com/autonomouslogic/eve-esi-proxy/issues/153)) ([35718c5](https://github.com/autonomouslogic/eve-esi-proxy/commit/35718c5788cc0d4847e86423b5cab46218dab071))
+
 ## [1.3.4](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.3...1.3.4) (2026-01-17)
 
 
