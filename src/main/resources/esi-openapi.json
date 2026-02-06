@@ -250,6 +250,14 @@
         "type": "integer",
         "x-common-model": "true"
       },
+      "BloodlineID": {
+        "examples": [
+          1
+        ],
+        "format": "int64",
+        "type": "integer",
+        "x-common-model": "true"
+      },
       "CharacterID": {
         "examples": [
           90000001
@@ -3308,102 +3316,6 @@
         ],
         "type": "object"
       },
-      "CharactersCharacterIdSkillqueueGet": {
-        "items": {
-          "properties": {
-            "finish_date": {
-              "description": "Date on which training of the skill will complete. Omitted if the skill queue is paused.",
-              "format": "date-time",
-              "type": "string"
-            },
-            "finished_level": {
-              "format": "int64",
-              "type": "integer"
-            },
-            "level_end_sp": {
-              "format": "int64",
-              "type": "integer"
-            },
-            "level_start_sp": {
-              "description": "Amount of SP that was in the skill when it started training it's current level. Used to calculate % of current level complete.",
-              "format": "int64",
-              "type": "integer"
-            },
-            "queue_position": {
-              "format": "int64",
-              "type": "integer"
-            },
-            "skill_id": {
-              "format": "int64",
-              "type": "integer"
-            },
-            "start_date": {
-              "format": "date-time",
-              "type": "string"
-            },
-            "training_start_sp": {
-              "format": "int64",
-              "type": "integer"
-            }
-          },
-          "required": [
-            "skill_id",
-            "finished_level",
-            "queue_position"
-          ],
-          "type": "object"
-        },
-        "type": "array"
-      },
-      "CharactersCharacterIdSkillsGet": {
-        "properties": {
-          "skills": {
-            "items": {
-              "description": "skill object",
-              "properties": {
-                "active_skill_level": {
-                  "format": "int64",
-                  "type": "integer"
-                },
-                "skill_id": {
-                  "format": "int64",
-                  "type": "integer"
-                },
-                "skillpoints_in_skill": {
-                  "format": "int64",
-                  "type": "integer"
-                },
-                "trained_skill_level": {
-                  "format": "int64",
-                  "type": "integer"
-                }
-              },
-              "required": [
-                "skill_id",
-                "skillpoints_in_skill",
-                "trained_skill_level",
-                "active_skill_level"
-              ],
-              "type": "object"
-            },
-            "type": "array"
-          },
-          "total_sp": {
-            "format": "int64",
-            "type": "integer"
-          },
-          "unallocated_sp": {
-            "description": "Skill points available to be assigned",
-            "format": "int64",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "skills",
-          "total_sp"
-        ],
-        "type": "object"
-      },
       "CharactersCharacterIdStandingsGet": {
         "items": {
           "properties": {
@@ -3820,6 +3732,112 @@
           "state",
           "contributed",
           "last_modified"
+        ],
+        "type": "object"
+      },
+      "CharactersSkillqueueSkill": {
+        "properties": {
+          "finish_date": {
+            "description": "The date the skill training will finish",
+            "format": "date-time",
+            "type": "string"
+          },
+          "finished_level": {
+            "description": "The level the skill is training for",
+            "format": "int64",
+            "type": "integer"
+          },
+          "level_end_sp": {
+            "description": "The Skill Points at the end of the level",
+            "format": "int64",
+            "type": "integer"
+          },
+          "level_start_sp": {
+            "description": "The Skill Points at the start of the level",
+            "format": "int64",
+            "type": "integer"
+          },
+          "queue_position": {
+            "description": "The position of the skill in the queue",
+            "format": "int64",
+            "type": "integer"
+          },
+          "skill_id": {
+            "$ref": "#/components/schemas/TypeID",
+            "description": "The TypeID of the skill"
+          },
+          "start_date": {
+            "description": "The date the skill training will start/continue",
+            "format": "date-time",
+            "type": "string"
+          },
+          "training_start_sp": {
+            "description": "The Skill Points at the start of training",
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "queue_position",
+          "skill_id",
+          "finished_level"
+        ],
+        "type": "object"
+      },
+      "CharactersSkills": {
+        "properties": {
+          "skills": {
+            "description": "The trained skills",
+            "items": {
+              "$ref": "#/components/schemas/CharactersSkillsSkill"
+            },
+            "type": "array"
+          },
+          "total_sp": {
+            "description": "The total Skill Points spent on skills",
+            "format": "int64",
+            "type": "integer"
+          },
+          "unallocated_sp": {
+            "description": "The amount of unallocated Skill Points",
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "skills",
+          "total_sp"
+        ],
+        "type": "object"
+      },
+      "CharactersSkillsSkill": {
+        "properties": {
+          "active_skill_level": {
+            "description": "The active skill level (can differ from trained due to alpha status and/or active expert systems)",
+            "format": "int64",
+            "type": "integer"
+          },
+          "skill_id": {
+            "description": "The Type ID of the skill",
+            "format": "int64",
+            "type": "integer"
+          },
+          "skillpoints_in_skill": {
+            "description": "The amount of Skill Points in the skill",
+            "format": "int64",
+            "type": "integer"
+          },
+          "trained_skill_level": {
+            "description": "The trained skill level",
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "skill_id",
+          "trained_skill_level",
+          "active_skill_level",
+          "skillpoints_in_skill"
         ],
         "type": "object"
       },
@@ -12368,6 +12386,14 @@
         ],
         "type": "object"
       },
+      "RaceID": {
+        "examples": [
+          1
+        ],
+        "format": "int64",
+        "type": "integer",
+        "x-common-model": "true"
+      },
       "RegionID": {
         "examples": [
           10000001
@@ -17541,18 +17567,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "security": [
@@ -17646,18 +17661,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "security": [
@@ -20261,7 +20265,7 @@
     },
     "/characters/{character_id}/skillqueue": {
       "get": {
-        "description": "List the configured skill queue for the given character",
+        "description": "List the configured skill queue for the given character.\n\nEntries that have their finish time in the past are completed, but aren't updated in the \"/skills\" route\nyet. This will happen the next time the character logs in.",
         "operationId": "GetCharactersCharacterIdSkillqueue",
         "parameters": [
           {
@@ -20270,7 +20274,8 @@
             "name": "character_id",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/CharacterID"
+              "$ref": "#/components/schemas/CharacterID",
+              "description": "The ID of the character"
             }
           },
           {
@@ -20294,7 +20299,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CharactersCharacterIdSkillqueueGet"
+                  "items": {
+                    "$ref": "#/components/schemas/CharactersSkillqueueSkill"
+                  },
+                  "type": "array"
                 }
               }
             },
@@ -20333,7 +20341,8 @@
         "tags": [
           "Skills"
         ],
-        "x-cache-age": 120,
+        "x-cache-age": 60,
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
@@ -20344,7 +20353,7 @@
     },
     "/characters/{character_id}/skills": {
       "get": {
-        "description": "List all trained skills for the given character",
+        "description": "List all trained skills for the given character.\n\nSkills returned by this route can be out-of-date if the character hasn't logged in since one or more skills\ncompleted training. Use the /skillqueue route to check for skills that completed training. Entries that are\nin the past need to be applied on top of this list to get an accurate view of the character's current skills.",
         "operationId": "GetCharactersCharacterIdSkills",
         "parameters": [
           {
@@ -20353,7 +20362,8 @@
             "name": "character_id",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/CharacterID"
+              "$ref": "#/components/schemas/CharacterID",
+              "description": "The ID of the character"
             }
           },
           {
@@ -20377,7 +20387,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CharactersCharacterIdSkillsGet"
+                  "$ref": "#/components/schemas/CharactersSkills"
                 }
               }
             },
@@ -20416,7 +20426,8 @@
         "tags": [
           "Skills"
         ],
-        "x-cache-age": 120,
+        "x-cache-age": 60,
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
@@ -23034,18 +23045,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "security": [
@@ -23176,18 +23176,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "security": [
@@ -24437,18 +24426,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "security": [
@@ -24542,18 +24520,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "security": [
@@ -24657,18 +24624,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "security": [
@@ -24796,18 +24752,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "security": [
@@ -27573,18 +27518,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "summary": "List freelance jobs",
@@ -27661,18 +27595,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "summary": "Get freelance job details",
@@ -29139,18 +29062,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "summary": "Get changelog",
@@ -29216,18 +29128,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "summary": "Get compatibility dates",
@@ -29293,18 +29194,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "summary": "Get health status",
@@ -29400,18 +29290,7 @@
                 }
               }
             },
-            "description": "Error",
-            "headers": {
-              "Cache-Control": {
-                "$ref": "#/components/headers/CacheControl"
-              },
-              "ETag": {
-                "$ref": "#/components/headers/ETag"
-              },
-              "Last-Modified": {
-                "$ref": "#/components/headers/LastModified"
-              }
-            }
+            "description": "Error"
           }
         },
         "summary": "Get route between two systems",
