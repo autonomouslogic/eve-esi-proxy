@@ -1,5 +1,17 @@
 EVE ESI Proxy Changelog
 
+## [1.3.7](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.6...1.3.7) (2026-02-26)
+
+
+### Bug Fixes
+
+* Udpated ESI spec ([bfecb1e](https://github.com/autonomouslogic/eve-esi-proxy/commit/bfecb1e7cea46db8ee66907a558489124b660ce2))
+
+
+### Miscellaneous Chores
+
+* Update ESI spec ([ff4d5c9](https://github.com/autonomouslogic/eve-esi-proxy/commit/ff4d5c9a5ddda73c6543a541f56f429525c01e48))
+
 ## [1.3.6](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.5...1.3.6) (2026-02-07)
 
 
