@@ -17594,6 +17594,7 @@
           "Freelance Jobs"
         ],
         "x-cache-age": 60,
+        "x-cache-mode": "no-cache",
         "x-compatibility-date": "2025-12-16",
         "x-rate-limit": {
           "group": "char-freelance-job",
@@ -17688,6 +17689,7 @@
           "Freelance Jobs"
         ],
         "x-cache-age": 60,
+        "x-cache-mode": "no-cache",
         "x-compatibility-date": "2025-12-16",
         "x-rate-limit": {
           "group": "char-freelance-job",
@@ -23073,6 +23075,7 @@
         "tags": [
           "Freelance Jobs"
         ],
+        "x-cache-age": 0,
         "x-compatibility-date": "2025-12-16",
         "x-pagination": "cursor",
         "x-rate-limit": {
@@ -23204,6 +23207,7 @@
         "tags": [
           "Freelance Jobs"
         ],
+        "x-cache-age": 0,
         "x-compatibility-date": "2025-12-16",
         "x-pagination": "cursor",
         "x-rate-limit": {
@@ -24454,6 +24458,7 @@
         "tags": [
           "Corporation Projects"
         ],
+        "x-cache-age": 0,
         "x-compatibility-date": "2025-08-26",
         "x-pagination": "cursor",
         "x-rate-limit": {
@@ -24549,6 +24554,7 @@
           "Corporation Projects"
         ],
         "x-cache-age": 60,
+        "x-cache-mode": "no-cache",
         "x-compatibility-date": "2025-08-26",
         "x-rate-limit": {
           "group": "corp-project",
@@ -24653,6 +24659,7 @@
           "Corporation Projects"
         ],
         "x-cache-age": 60,
+        "x-cache-mode": "no-cache",
         "x-compatibility-date": "2025-08-26",
         "x-rate-limit": {
           "group": "corp-project",
@@ -24780,6 +24787,7 @@
         "tags": [
           "Corporation Projects"
         ],
+        "x-cache-age": 0,
         "x-compatibility-date": "2025-08-26",
         "x-pagination": "cursor",
         "x-rate-limit": {
@@ -27539,6 +27547,7 @@
         "tags": [
           "Freelance Jobs"
         ],
+        "x-cache-age": 0,
         "x-compatibility-date": "2025-12-16",
         "x-pagination": "cursor",
         "x-rate-limit": {
@@ -27617,6 +27626,7 @@
           "Freelance Jobs"
         ],
         "x-cache-age": 60,
+        "x-cache-mode": "no-cache",
         "x-compatibility-date": "2025-12-16",
         "x-rate-limit": {
           "group": "freelance-job",
@@ -28933,7 +28943,12 @@
           "Market"
         ],
         "x-cache-age": 300,
-        "x-compatibility-date": "2020-01-01"
+        "x-compatibility-date": "2020-01-01",
+        "x-rate-limit": {
+          "group": "market-order",
+          "max-tokens": 12000,
+          "window-size": "15m"
+        }
       }
     },
     "/markets/{region_id}/types": {

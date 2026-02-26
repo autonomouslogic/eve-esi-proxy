@@ -637,7 +637,7 @@
   },
   {
     "url": "/markets/{region_id}/orders",
-    "group": null
+    "group": "market-order"
   },
   {
     "url": "/markets/{region_id}/types",
