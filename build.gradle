@@ -4,7 +4,7 @@ plugins {
 	id "jacoco"
 	id "application"
 	id "io.freefair.lombok" version "9.2.0"
-	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "7.0.11"
+	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "7.0.12"
 	id "com.diffplug.spotless" version "8.2.1"
 }
 
@@ -30,9 +30,9 @@ java {
 }
 
 dependencies {
-	annotationProcessor "com.google.dagger:dagger-compiler:2.59"
+	annotationProcessor "com.google.dagger:dagger-compiler:2.59.2"
 //	implementation "io.reactivex.rxjava3:rxjava:3.1.8"
-	implementation "com.google.dagger:dagger:2.59"
+	implementation "com.google.dagger:dagger:2.59.2"
 
 	// Logging
 	implementation "org.apache.logging.log4j:log4j-api:2.25.3"
@@ -44,9 +44,9 @@ dependencies {
 
 	// Jackson
 	implementation "com.fasterxml.jackson.core:jackson-annotations:2.21"
-	implementation "com.fasterxml.jackson.core:jackson-core:2.21.0"
-	implementation "com.fasterxml.jackson.core:jackson-databind:2.21.0"
-	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.0"
+	implementation "com.fasterxml.jackson.core:jackson-core:2.21.1"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.21.1"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.21.1"
 
 	// Helidon
 	implementation "io.helidon.webserver:helidon-webserver:4.3.4"
@@ -66,12 +66,12 @@ dependencies {
 	implementation "io.reactivex.rxjava3:rxjava:3.1.12"
 
 	// Tests
-	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.59"
-	testImplementation "com.google.dagger:dagger:2.59"
-	testImplementation "org.junit.jupiter:junit-jupiter:6.0.2"
-	testImplementation "org.junit.jupiter:junit-jupiter-params:6.0.2"
+	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.59.2"
+	testImplementation "com.google.dagger:dagger:2.59.2"
+	testImplementation "org.junit.jupiter:junit-jupiter:6.0.3"
+	testImplementation "org.junit.jupiter:junit-jupiter-params:6.0.3"
 	testImplementation "org.junit-pioneer:junit-pioneer:2.3.0"
-	testImplementation "org.mockito:mockito-junit-jupiter:5.21.0"
+	testImplementation "org.mockito:mockito-junit-jupiter:5.22.0"
 	testImplementation "com.squareup.okhttp3:mockwebserver:5.3.2"
 	testImplementation "com.tngtech.archunit:archunit:1.4.1"
 }
