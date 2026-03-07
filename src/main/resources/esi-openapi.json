@@ -10051,6 +10051,14 @@
         },
         "type": "array"
       },
+      "DungeonID": {
+        "examples": [
+          33
+        ],
+        "format": "int64",
+        "type": "integer",
+        "x-common-model": "true"
+      },
       "Error": {
         "properties": {
           "details": {
@@ -12394,6 +12402,14 @@
         ],
         "type": "object"
       },
+      "PlanetID": {
+        "examples": [
+          40000002
+        ],
+        "format": "int64",
+        "type": "integer",
+        "x-common-model": "true"
+      },
       "RaceID": {
         "examples": [
           1
@@ -14506,7 +14522,7 @@
           "Alliance"
         ],
         "x-cache-age": 3600,
-        "x-cache-mode": "ttl-based",
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2020-01-01"
       }
     },
@@ -14983,7 +14999,7 @@
           "Character"
         ],
         "x-cache-age": 86400,
-        "x-cache-mode": "ttl-based",
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2020-01-01"
       }
     },
@@ -21625,7 +21641,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
-        "x-cache-mode": "ttl-based",
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2020-01-01"
       }
     },
