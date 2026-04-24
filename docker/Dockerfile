@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 as build
+FROM ubuntu:26.04 as build
 ARG PROXY_VERSION
 COPY build/distributions/eve-esi-proxy-${PROXY_VERSION}.tar /eve-esi-proxy.tar
 RUN mkdir /eve-esi-proxy
