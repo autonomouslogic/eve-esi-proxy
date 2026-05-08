@@ -5155,7 +5155,7 @@
               "type": "integer"
             },
             "reinforce_exit_start": {
-              "description": "Together with reinforce_exit_end, marks a 2-hour period where this customs office could exit reinforcement mode during the day after initial attack",
+              "description": "Together with reinforce_exit_end, marks a 2-hour or 6-hour (depending on the office type) period where this customs office could exit reinforcement mode during the day after initial attack",
               "format": "int64",
               "type": "integer"
             },
@@ -5178,6 +5178,11 @@
             "terrible_standing_tax_rate": {
               "format": "double",
               "type": "number"
+            },
+            "type_id": {
+              "description": "ID of the type of this customs office",
+              "format": "int64",
+              "type": "integer"
             }
           },
           "required": [
@@ -10068,7 +10073,6 @@
         "x-common-model": "true"
       },
       "Error": {
-        "additionalProperties": false,
         "properties": {
           "details": {
             "description": "List of individual error details.",
@@ -10088,7 +10092,6 @@
         "type": "object"
       },
       "ErrorDetail": {
-        "additionalProperties": false,
         "properties": {
           "location": {
             "description": "Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'",
