@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.3.15](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.14...1.3.15) (2026-05-13)
+
+
+### Bug Fixes
+
+* Fixed OAuth verify URL. Closes [#160](https://github.com/autonomouslogic/eve-esi-proxy/issues/160) ([65e90d6](https://github.com/autonomouslogic/eve-esi-proxy/commit/65e90d65f737943bf52b2e2083a84047c9f3c8e5))
+
 ## [1.3.14](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.13...1.3.14) (2026-05-08)
 
 
