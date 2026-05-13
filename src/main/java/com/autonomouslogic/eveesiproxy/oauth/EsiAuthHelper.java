@@ -82,9 +82,7 @@ public class EsiAuthHelper {
 	@Inject
 	protected EsiAuthHelper() {
 		var secretKey = Configs.EVE_OAUTH_SECRET_KEY.get();
-		var serviceBuilder = new ServiceBuilder(clientId)
-				// .defaultScope(String.join(" ", ALL_SCOPES))
-				.callback(callbackUrl);
+		var serviceBuilder = new ServiceBuilder(clientId).callback(callbackUrl);
 		var logLevel = LOG_LEVEL.getRequired().toUpperCase();
 		if (logLevel.equals("TRACE") || logLevel.equals("DEBUG")) {
 			serviceBuilder.debug();
@@ -143,10 +141,9 @@ public class EsiAuthHelper {
 	@SneakyThrows
 	public EsiVerifyResponse verify(@NonNull String token) {
 		log.trace("Verifying token: {}", token);
-		var url = new URL(new URL(esiBaseUrl), "/verify/");
 		var request = new Request.Builder()
 				.get()
-				.url(url)
+				.url(new URL(Configs.EVE_OAUTH_VERIFY_URL.getRequired()))
 				.header(HeaderNames.USER_AGENT.lowerCase(), userAgentInterceptor.getDefaultUserAgent())
 				.header("Authorization", "Bearer " + token)
 				.build();
