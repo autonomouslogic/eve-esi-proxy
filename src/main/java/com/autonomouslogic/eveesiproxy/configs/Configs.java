@@ -102,6 +102,15 @@ public class Configs {
 			.type(String.class)
 			.build();
 
+	/**
+	 * Userinfo URL for OAuth2 against EVE Online.
+	 */
+	public static final Config<String> EVE_OAUTH_VERIFY_URL = Config.<String>builder()
+			.name("EVE_OAUTH_VERIFY_URL")
+			.defaultValue("https://login.eveonline.com/v2/oauth/verify")
+			.type(String.class)
+			.build();
+
 	public static final Config<Duration> HTTP_CONNECT_TIMEOUT = Config.<Duration>builder()
 			.name("HTTP_CONNECT_TIMEOUT")
 			.defaultValue(Duration.parse("PT5S"))
