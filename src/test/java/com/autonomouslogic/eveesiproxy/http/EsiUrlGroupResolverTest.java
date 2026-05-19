@@ -123,7 +123,6 @@ public class EsiUrlGroupResolverTest {
 				Arguments.of("/characters/12345/search"),
 				Arguments.of("/corporations/npccorps"),
 				Arguments.of("/corporations/12345"),
-				Arguments.of("/corporations/12345/facilities"),
 				Arguments.of("/dogma/attributes"),
 				Arguments.of("/markets/prices"),
 				Arguments.of("/universe/regions"));

@@ -32,6 +32,14 @@
     "group": null
   },
   {
+    "url": "/characters/{character_id}/access-lists",
+    "group": "char-access"
+  },
+  {
+    "url": "/characters/{character_id}/access-lists/{access_list_id}",
+    "group": "char-access"
+  },
+  {
     "url": "/characters/{character_id}/agents_research",
     "group": "char-industry"
   },
@@ -208,6 +216,14 @@
     "group": "char-detail"
   },
   {
+    "url": "/characters/{character_id}/mercenary-tactical-operations",
+    "group": "char-activity"
+  },
+  {
+    "url": "/characters/{character_id}/mercenary-tactical-operations/{operation_id}",
+    "group": "char-activity"
+  },
+  {
     "url": "/characters/{character_id}/mining",
     "group": "char-industry"
   },
@@ -266,6 +282,14 @@
   {
     "url": "/characters/{character_id}/standings",
     "group": "char-social"
+  },
+  {
+    "url": "/characters/{character_id}/structures/mercenary-dens",
+    "group": "char-structure"
+  },
+  {
+    "url": "/characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}",
+    "group": "char-structure"
   },
   {
     "url": "/characters/{character_id}/titles",
@@ -345,7 +369,7 @@
   },
   {
     "url": "/corporations/{corporation_id}/containers/logs",
-    "group": null
+    "group": "corp-structure"
   },
   {
     "url": "/corporations/{corporation_id}/contracts",
@@ -369,7 +393,7 @@
   },
   {
     "url": "/corporations/{corporation_id}/facilities",
-    "group": null
+    "group": "corp-structure"
   },
   {
     "url": "/corporations/{corporation_id}/freelance-jobs",
@@ -461,15 +485,31 @@
   },
   {
     "url": "/corporations/{corporation_id}/starbases",
-    "group": null
+    "group": "corp-structure"
   },
   {
     "url": "/corporations/{corporation_id}/starbases/{starbase_id}",
-    "group": null
+    "group": "corp-structure"
   },
   {
     "url": "/corporations/{corporation_id}/structures",
-    "group": null
+    "group": "corp-structure"
+  },
+  {
+    "url": "/corporations/{corporation_id}/structures/skyhooks",
+    "group": "corp-structure"
+  },
+  {
+    "url": "/corporations/{corporation_id}/structures/skyhooks/{skyhook_id}",
+    "group": "corp-structure"
+  },
+  {
+    "url": "/corporations/{corporation_id}/structures/sovereignty-hubs",
+    "group": "corp-structure"
+  },
+  {
+    "url": "/corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}",
+    "group": "corp-structure"
   },
   {
     "url": "/corporations/{corporation_id}/titles",
@@ -660,15 +700,15 @@
     "group": "routes"
   },
   {
+    "url": "/skyhooks/raidable",
+    "group": "activity"
+  },
+  {
     "url": "/sovereignty/campaigns",
     "group": "sovereignty"
   },
   {
-    "url": "/sovereignty/map",
-    "group": "sovereignty"
-  },
-  {
-    "url": "/sovereignty/structures",
+    "url": "/sovereignty/systems",
     "group": "sovereignty"
   },
   {

@@ -45,6 +45,7 @@ import org.junitpioneer.jupiter.SetEnvironmentVariable;
 		key = "EVE_OAUTH_AUTHORIZATION_URL",
 		value = "http://localhost:" + MOCK_ESI_PORT + "/v2/oauth/authorize")
 @SetEnvironmentVariable(key = "EVE_OAUTH_TOKEN_URL", value = "http://localhost:" + MOCK_ESI_PORT + "/v2/oauth/token")
+@SetEnvironmentVariable(key = "EVE_OAUTH_VERIFY_URL", value = "http://localhost:" + MOCK_ESI_PORT + "/v2/oauth/verify")
 @Timeout(30)
 @Log4j2
 public class LoginServiceTest {
@@ -206,7 +207,7 @@ public class LoginServiceTest {
 		TestHttpUtils.assertRequest(
 				TestHttpUtils.takeRequest(mockEsi),
 				"GET",
-				"/verify/",
+				"/v2/oauth/verify",
 				Map.of(HeaderNames.AUTHORIZATION.lowerCase(), "Bearer access-token-1"));
 
 		// Authed character.
