@@ -1,5 +1,19 @@
 EVE ESI Proxy Changelog
 
+## [1.3.16](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.15...1.3.16) (2026-05-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect to v4 ([#154](https://github.com/autonomouslogic/eve-esi-proxy/issues/154)) ([32acfb7](https://github.com/autonomouslogic/eve-esi-proxy/commit/32acfb72cafdbd8abab88b4800e15bf851080d55))
+* Updated ESI spec ([f8fe6c7](https://github.com/autonomouslogic/eve-esi-proxy/commit/f8fe6c7662567f793eb4ad2aeb491cc54b848374))
+
+
+### Dependency Updates
+
+* **deps:** update codecov/codecov-action action to v6 ([#156](https://github.com/autonomouslogic/eve-esi-proxy/issues/156)) ([9732486](https://github.com/autonomouslogic/eve-esi-proxy/commit/97324864b7c05088b1ddb4e174de525d3365e6f9))
+* **deps:** update ubuntu docker tag to v26 ([#158](https://github.com/autonomouslogic/eve-esi-proxy/issues/158)) ([d4af221](https://github.com/autonomouslogic/eve-esi-proxy/commit/d4af2214b7cfcfa3fb87358d17501f6a2c0af0f1))
+
 ## [1.3.15](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.14...1.3.15) (2026-05-13)
 
 
