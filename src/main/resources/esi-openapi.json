@@ -63,7 +63,7 @@
         "required": true,
         "schema": {
           "enum": [
-            "2026-05-19"
+            "2026-06-09"
           ],
           "format": "date",
           "type": "string"
@@ -3817,6 +3817,14 @@
       },
       "CharactersDetail": {
         "properties": {
+          "achievement_score": {
+            "description": "Character's achievement score",
+            "examples": [
+              1234
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
           "alliance_id": {
             "$ref": "#/components/schemas/AllianceID",
             "description": "Character's alliance ID"
@@ -3830,9 +3838,17 @@
             "$ref": "#/components/schemas/BloodlineID",
             "description": "Character's bloodline ID"
           },
+          "character_title_id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Character's equipped cosmetic title ID"
+          },
           "corporation_id": {
             "$ref": "#/components/schemas/CorporationID",
             "description": "Character's corporation ID"
+          },
+          "corporation_title": {
+            "description": "Character's corporation title",
+            "type": "string"
           },
           "description": {
             "description": "Character's description (biography)",
@@ -3869,10 +3885,6 @@
             ],
             "format": "double",
             "type": "number"
-          },
-          "title": {
-            "description": "Character's corporation title",
-            "type": "string"
           }
         },
         "required": [
@@ -3881,7 +3893,8 @@
           "corporation_id",
           "gender",
           "name",
-          "race_id"
+          "race_id",
+          "achievement_score"
         ],
         "type": "object"
       },
@@ -15731,7 +15744,7 @@
     },
     "termsOfService": "https://support.eveonline.com/hc/en-us/articles/8414770561948-EVE-Online-Terms-of-Service",
     "title": "EVE Spring Inebriation (ESI) - tranquility",
-    "version": "2026-05-19"
+    "version": "2026-06-09"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -16277,7 +16290,7 @@
     "/characters/{character_id}": {
       "get": {
         "description": "Public information about a character",
-        "operationId": "GetCharactersCharacterId",
+        "operationId": "GetCharactersDetail",
         "parameters": [
           {
             "description": "The ID of the character",
@@ -16344,7 +16357,7 @@
         ],
         "x-cache-age": 86400,
         "x-cache-mode": "event-based",
-        "x-compatibility-date": "2020-01-01"
+        "x-compatibility-date": "2026-06-09"
       }
     },
     "/characters/{character_id}/access-lists": {
