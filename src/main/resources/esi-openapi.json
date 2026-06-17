@@ -10423,7 +10423,7 @@
             "type": "string"
           },
           "secured_stock": {
-            "description": "Secured stock of the reagent",
+            "description": "Secured stock of the reagent at the time of 'last_cycle'",
             "examples": [
               1000
             ],
@@ -10435,7 +10435,7 @@
             "description": "Reagent's type ID"
           },
           "unsecured_stock": {
-            "description": "Unsecured stock of the reagent",
+            "description": "Unsecured stock of the reagent at the time of 'last_cycle'",
             "examples": [
               300
             ],
@@ -10575,7 +10575,7 @@
       "CorporationsStructuresSovereigntyHubsDetailReagent": {
         "properties": {
           "amount": {
-            "description": "Amount of reagent in the bay",
+            "description": "Amount of reagent in the bay at the time of 'last_updated'",
             "examples": [
               1000
             ],
