@@ -63,7 +63,7 @@
         "required": true,
         "schema": {
           "enum": [
-            "2026-06-09"
+            "2026-07-17"
           ],
           "format": "date",
           "type": "string"
@@ -13503,6 +13503,52 @@
         ],
         "type": "object"
       },
+      "MetaName": {
+        "properties": {
+          "current": {
+            "description": "The name ESI is going by today. It was almost certainly something else last time you looked.",
+            "examples": [
+              "EVE Spring Inebriation (ESI)"
+            ],
+            "type": "string"
+          },
+          "history": {
+            "description": "Every name ESI has ever gone by, newest first. It has never once been the same twice.",
+            "items": {
+              "$ref": "#/components/schemas/MetaNameEntry"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "current",
+          "history"
+        ],
+        "type": "object"
+      },
+      "MetaNameEntry": {
+        "properties": {
+          "date": {
+            "description": "The date ESI started insisting on this name (UTC-11).",
+            "examples": [
+              "2026-04-01"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "description": "What those three letters allegedly stood for at the time.",
+            "examples": [
+              "EVE Spring Inebriation (ESI)"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "name"
+        ],
+        "type": "object"
+      },
       "MetaStatus": {
         "properties": {
           "routes": {
@@ -15743,8 +15789,8 @@
       "url": "https://developers.eveonline.com/license-agreement"
     },
     "termsOfService": "https://support.eveonline.com/hc/en-us/articles/8414770561948-EVE-Online-Terms-of-Service",
-    "title": "EVE Spring Inebriation (ESI) - tranquility",
-    "version": "2026-06-09"
+    "title": "EVE Swagger Incineration (ESI) - tranquility",
+    "version": "2026-07-17"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -31476,6 +31522,74 @@
         "x-cache-age": 600,
         "x-cache-mode": "not-cached",
         "x-compatibility-date": "2020-01-01",
+        "x-rate-limit": {
+          "group": "meta",
+          "max-tokens": 150,
+          "window-size": "15m"
+        }
+      }
+    },
+    "/meta/name": {
+      "get": {
+        "description": "Get the name ESI is currently going by, plus the full and glorious history of every name it has ever had. The three letters have never once meant the same thing twice.",
+        "operationId": "GetMetaName",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaName"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Get the name of ESI",
+        "tags": [
+          "Meta"
+        ],
+        "x-cache-age": 600,
+        "x-cache-mode": "not-cached",
+        "x-compatibility-date": "2026-07-17",
         "x-rate-limit": {
           "group": "meta",
           "max-tokens": 150,

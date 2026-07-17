@@ -692,6 +692,10 @@
     "group": "meta"
   },
   {
+    "url": "/meta/name",
+    "group": "meta"
+  },
+  {
     "url": "/meta/status",
     "group": "meta"
   },
