@@ -63,7 +63,7 @@
         "required": true,
         "schema": {
           "enum": [
-            "2026-07-17"
+            "2026-07-21"
           ],
           "format": "date",
           "type": "string"
@@ -8340,7 +8340,7 @@
         "properties": {
           "alliance_id": {
             "$ref": "#/components/schemas/AllianceID",
-            "description": "Corporation's alliance ID"
+            "description": "Alliance the corporation is a member of (Player-owned corporation only)"
           },
           "ceo_id": {
             "$ref": "#/components/schemas/CharacterID",
@@ -8359,9 +8359,21 @@
             "description": "Corporation's description",
             "type": "string"
           },
-          "faction_id": {
+          "enlisted_faction_id": {
             "$ref": "#/components/schemas/FactionID",
-            "description": "Corporation's faction ID"
+            "description": "Faction the corporation is enlisted in (Player-owned corporation only)"
+          },
+          "friendly_fire": {
+            "description": "Corporation's friendly fire status",
+            "enum": [
+              "legal",
+              "illegal"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "Friendly fire is legal",
+              "Friendly fire is illegal"
+            ]
           },
           "home_station_id": {
             "$ref": "#/components/schemas/StationID",
@@ -8369,6 +8381,9 @@
           },
           "member_count": {
             "description": "Corporation's member count",
+            "examples": [
+              100
+            ],
             "format": "int64",
             "type": "integer"
           },
@@ -8376,19 +8391,49 @@
             "description": "Corporation's name",
             "type": "string"
           },
+          "palette": {
+            "$ref": "#/components/schemas/CorporationsDetailPalette",
+            "description": "Corporation's palette colors (Player-owned corporation only)"
+          },
           "shares": {
             "description": "Corporation's shares",
+            "examples": [
+              1000
+            ],
             "format": "int64",
             "type": "integer"
           },
-          "tax_rate": {
-            "description": "Corporation's tax rate",
-            "format": "double",
-            "type": "number"
+          "state": {
+            "description": "Corporation's state",
+            "enum": [
+              "active",
+              "closed"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "Corporation is active",
+              "Corporation is closed"
+            ]
+          },
+          "tax_rates": {
+            "$ref": "#/components/schemas/CorporationsDetailTaxrates",
+            "description": "Corporation's tax rates"
           },
           "ticker": {
             "description": "Corporation's short name",
             "type": "string"
+          },
+          "type": {
+            "description": "Corporation's type",
+            "enum": [
+              "player_owned",
+              "npc_owned"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "Corporation is owned by players",
+              "Corporation is owned by NPCs"
+            ]
           },
           "url": {
             "description": "Corporation's URL",
@@ -8400,12 +8445,62 @@
           }
         },
         "required": [
-          "ceo_id",
-          "creator_id",
-          "member_count",
+          "state",
+          "type",
           "name",
-          "tax_rate",
-          "ticker"
+          "ticker",
+          "description",
+          "home_station_id",
+          "member_count",
+          "tax_rates",
+          "shares",
+          "war_eligible",
+          "friendly_fire"
+        ],
+        "type": "object"
+      },
+      "CorporationsDetailPalette": {
+        "properties": {
+          "main_color": {
+            "description": "Main palette color (#rrggbb)",
+            "type": "string"
+          },
+          "secondary_color": {
+            "description": "Secondary palette color (#rrggbb)",
+            "type": "string"
+          },
+          "tertiary_color": {
+            "description": "Tertiary palette color (#rrggbb)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "main_color"
+        ],
+        "type": "object"
+      },
+      "CorporationsDetailTaxrates": {
+        "properties": {
+          "isk": {
+            "description": "ISK tax rate (0.0% - 100.0%)",
+            "examples": [
+              10
+            ],
+            "format": "double",
+            "type": "number"
+          },
+          "loyalty_point": {
+            "description": "Loyalty point tax rate (0.0% - 100.0%)",
+            "examples": [
+              5.6
+            ],
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "isk",
+          "loyalty_point"
         ],
         "type": "object"
       },
@@ -15789,8 +15884,8 @@
       "url": "https://developers.eveonline.com/license-agreement"
     },
     "termsOfService": "https://support.eveonline.com/hc/en-us/articles/8414770561948-EVE-Online-Terms-of-Service",
-    "title": "EVE Swagger Incineration (ESI) - tranquility",
-    "version": "2026-07-17"
+    "title": "EVE Swatch Illustrators (ESI) - tranquility",
+    "version": "2026-07-21"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -23585,7 +23680,7 @@
         ],
         "x-cache-age": 3600,
         "x-cache-mode": "event-based",
-        "x-compatibility-date": "2020-01-01"
+        "x-compatibility-date": "2026-07-21"
       }
     },
     "/corporations/{corporation_id}/alliancehistory": {
