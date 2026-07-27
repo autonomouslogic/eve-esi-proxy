@@ -11321,7 +11321,7 @@
       "Error": {
         "properties": {
           "details": {
-            "description": "List of individual error details.",
+            "description": "List of individual issues.",
             "items": {
               "$ref": "#/components/schemas/ErrorDetail"
             },
@@ -11330,6 +11330,11 @@
           "error": {
             "description": "Error message.",
             "type": "string"
+          },
+          "status": {
+            "description": "HTTP status code.",
+            "format": "int64",
+            "type": "integer"
           }
         },
         "required": [
@@ -15865,7 +15870,8 @@
               "esi-ui.write_waypoint.v1": "esi-ui.write_waypoint.v1",
               "esi-universe.read_structures.v1": "esi-universe.read_structures.v1",
               "esi-wallet.read_character_wallet.v1": "esi-wallet.read_character_wallet.v1",
-              "esi-wallet.read_corporation_wallets.v1": "esi-wallet.read_corporation_wallets.v1"
+              "esi-wallet.read_corporation_wallets.v1": "esi-wallet.read_corporation_wallets.v1",
+              "esi.activity.char:read": "esi.activity.char:read"
             },
             "tokenUrl": "https://login.eveonline.com/v2/oauth/token"
           }
@@ -15948,7 +15954,10 @@
           "Alliance"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/alliances/{alliance_id}": {
@@ -16020,8 +16029,11 @@
           "Alliance"
         ],
         "x-cache-age": 3600,
-        "x-cache-mode": "event-based",
-        "x-compatibility-date": "2020-01-01"
+        "x-cache-mode": "ttl-based",
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/alliances/{alliance_id}/contacts": {
@@ -16116,12 +16128,15 @@
           "Contacts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "alliance-social",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/alliances/{alliance_id}/contacts/labels": {
@@ -16199,12 +16214,15 @@
           "Contacts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "alliance-social",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/alliances/{alliance_id}/corporations": {
@@ -16275,7 +16293,10 @@
           "Alliance"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/alliances/{alliance_id}/icons": {
@@ -16425,7 +16446,10 @@
           "Character"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}": {
@@ -16497,8 +16521,11 @@
           "Character"
         ],
         "x-cache-age": 86400,
-        "x-cache-mode": "event-based",
-        "x-compatibility-date": "2026-06-09"
+        "x-cache-mode": "ttl-based",
+        "x-client-cache-ttl": 86400,
+        "x-compatibility-date": "2026-06-09",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 86400
       }
     },
     "/characters/{character_id}/access-lists": {
@@ -16578,12 +16605,14 @@
         ],
         "x-cache-age": 300,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "char-access",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/access-lists/{access_list_id}": {
@@ -16673,12 +16702,14 @@
         ],
         "x-cache-age": 300,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "char-access",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/agents_research": {
@@ -16756,12 +16787,15 @@
           "Character"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-industry",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/assets": {
@@ -16856,12 +16890,15 @@
           "Assets"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-asset",
           "max-tokens": 1800,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/assets/locations": {
@@ -17139,12 +17176,15 @@
           "Skills"
         ],
         "x-cache-age": 120,
+        "x-client-cache-ttl": 120,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 120
       }
     },
     "/characters/{character_id}/blueprints": {
@@ -17239,12 +17279,15 @@
           "Character"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-industry",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/calendar": {
@@ -17331,12 +17374,15 @@
           "Calendar"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       }
     },
     "/characters/{character_id}/calendar/{event_id}": {
@@ -17424,12 +17470,15 @@
           "Calendar"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       },
       "put": {
         "description": "Set your response status to an event",
@@ -17531,12 +17580,15 @@
           "Calendar"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       }
     },
     "/characters/{character_id}/calendar/{event_id}/attendees": {
@@ -17624,12 +17676,15 @@
           "Calendar"
         ],
         "x-cache-age": 600,
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 600
       }
     },
     "/characters/{character_id}/clones": {
@@ -17707,12 +17762,15 @@
           "Clones"
         ],
         "x-cache-age": 120,
+        "x-client-cache-ttl": 120,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-location",
           "max-tokens": 1200,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 120
       }
     },
     "/characters/{character_id}/contacts": {
@@ -17895,12 +17953,15 @@
           "Contacts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       },
       "post": {
         "description": "Bulk add contacts with same settings",
@@ -18229,12 +18290,15 @@
           "Contacts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/characters/{character_id}/contracts": {
@@ -18329,12 +18393,15 @@
           "Contracts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-contract",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/characters/{character_id}/contracts/{contract_id}/bids": {
@@ -18422,12 +18489,15 @@
           "Contracts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-contract",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/characters/{character_id}/contracts/{contract_id}/items": {
@@ -18515,12 +18585,15 @@
           "Contracts"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-contract",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/corporationhistory": {
@@ -18591,7 +18664,10 @@
           "Character"
         ],
         "x-cache-age": 86400,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 86400,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 86400
       }
     },
     "/characters/{character_id}/cspa": {
@@ -18769,12 +18845,15 @@
           "Character"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-location",
           "max-tokens": 1200,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/characters/{character_id}/fittings": {
@@ -18852,12 +18931,15 @@
           "Fittings"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "fitting",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       },
       "post": {
         "description": "Save a new fitting for a character",
@@ -19204,12 +19286,15 @@
           "Fleets"
         ],
         "x-cache-age": 60,
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "fleet",
           "max-tokens": 1800,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 60
       }
     },
     "/characters/{character_id}/freelance-jobs": {
@@ -19288,13 +19373,15 @@
           "Freelance Jobs"
         ],
         "x-cache-age": 60,
-        "x-cache-mode": "no-cache",
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2025-12-16",
         "x-rate-limit": {
           "group": "char-freelance-job",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/freelance-jobs/{job_id}/participation": {
@@ -19383,13 +19470,15 @@
           "Freelance Jobs"
         ],
         "x-cache-age": 60,
-        "x-cache-mode": "no-cache",
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2025-12-16",
         "x-rate-limit": {
           "group": "char-freelance-job",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/fw/stats": {
@@ -19549,12 +19638,15 @@
           "Clones"
         ],
         "x-cache-age": 120,
+        "x-client-cache-ttl": 120,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 120
       }
     },
     "/characters/{character_id}/industry/jobs": {
@@ -19640,12 +19732,15 @@
           "Industry"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-industry",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/characters/{character_id}/killmails/recent": {
@@ -19740,12 +19835,15 @@
           "Killmails"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-killmail",
           "max-tokens": 30,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/characters/{character_id}/location": {
@@ -19823,12 +19921,15 @@
           "Location"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-location",
           "max-tokens": 1200,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       }
     },
     "/characters/{character_id}/loyalty/points": {
@@ -19906,12 +20007,15 @@
           "Loyalty"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-wallet",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/mail": {
@@ -20013,12 +20117,15 @@
           "Mail"
         ],
         "x-cache-age": 30,
+        "x-client-cache-ttl": 30,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 30
       },
       "post": {
         "description": "Create and send a new mail",
@@ -20234,12 +20341,15 @@
           "Mail"
         ],
         "x-cache-age": 30,
+        "x-client-cache-ttl": 30,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 30
       },
       "post": {
         "description": "Create a mail label",
@@ -20527,12 +20637,15 @@
           "Mail"
         ],
         "x-cache-age": 120,
+        "x-client-cache-ttl": 120,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 120
       }
     },
     "/characters/{character_id}/mail/{mail_id}": {
@@ -20703,12 +20816,15 @@
           "Mail"
         ],
         "x-cache-age": 30,
+        "x-client-cache-ttl": 30,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 30
       },
       "put": {
         "description": "Update metadata about a mail",
@@ -20896,12 +21012,15 @@
           "Character"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/mercenary-tactical-operations": {
@@ -20981,12 +21100,14 @@
         ],
         "x-cache-age": 300,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "char-activity",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/mercenary-tactical-operations/{operation_id}": {
@@ -21076,12 +21197,14 @@
         ],
         "x-cache-age": 300,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "char-activity",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/mining": {
@@ -21176,12 +21299,15 @@
           "Industry"
         ],
         "x-cache-age": 600,
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-industry",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 600
       }
     },
     "/characters/{character_id}/notifications": {
@@ -21259,12 +21385,15 @@
           "Character"
         ],
         "x-cache-age": 600,
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-notification",
           "max-tokens": 15,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 600
       }
     },
     "/characters/{character_id}/notifications/contacts": {
@@ -21342,12 +21471,15 @@
           "Character"
         ],
         "x-cache-age": 600,
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 600
       }
     },
     "/characters/{character_id}/online": {
@@ -21425,12 +21557,15 @@
           "Location"
         ],
         "x-cache-age": 60,
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-location",
           "max-tokens": 1200,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 60
       }
     },
     "/characters/{character_id}/orders": {
@@ -21508,7 +21643,10 @@
           "Market"
         ],
         "x-cache-age": 1200,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 1200,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 1200
       }
     },
     "/characters/{character_id}/orders/history": {
@@ -21603,7 +21741,10 @@
           "Market"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/planets": {
@@ -21681,12 +21822,15 @@
           "Planetary Interaction"
         ],
         "x-cache-age": 600,
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-industry",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 600
       }
     },
     "/characters/{character_id}/planets/{planet_id}": {
@@ -21774,12 +21918,15 @@
           "Planetary Interaction"
         ],
         "x-cache-age": 600,
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-industry",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 600
       }
     },
     "/characters/{character_id}/portrait": {
@@ -21932,12 +22079,15 @@
           "Character"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/search": {
@@ -22065,7 +22215,10 @@
           "Search"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/ship": {
@@ -22143,12 +22296,15 @@
           "Location"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-location",
           "max-tokens": 1200,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       }
     },
     "/characters/{character_id}/skillqueue": {
@@ -22231,12 +22387,14 @@
         ],
         "x-cache-age": 60,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/skills": {
@@ -22316,12 +22474,14 @@
         ],
         "x-cache-age": 60,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/standings": {
@@ -22399,12 +22559,15 @@
           "Character"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-social",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/structures/mercenary-dens": {
@@ -22484,12 +22647,14 @@
         ],
         "x-cache-age": 3600,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "char-structure",
           "max-tokens": 30,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/structures/mercenary-dens/{mercenary_den_id}": {
@@ -22579,12 +22744,14 @@
         ],
         "x-cache-age": 3600,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "char-structure",
           "max-tokens": 30,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/titles": {
@@ -22662,12 +22829,15 @@
           "Character"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-detail",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/wallet": {
@@ -22745,12 +22915,15 @@
           "Wallet"
         ],
         "x-cache-age": 120,
+        "x-client-cache-ttl": 120,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-wallet",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 120
       }
     },
     "/characters/{character_id}/wallet/journal": {
@@ -22845,12 +23018,15 @@
           "Wallet"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-wallet",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/characters/{character_id}/wallet/transactions": {
@@ -22937,12 +23113,15 @@
           "Wallet"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "char-wallet",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/contracts/public/bids/{contract_id}": {
@@ -23040,7 +23219,10 @@
           "Contracts"
         ],
         "x-cache-age": 300,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 300,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/contracts/public/items/{contract_id}": {
@@ -23138,7 +23320,10 @@
           "Contracts"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/contracts/public/{region_id}": {
@@ -23227,7 +23412,10 @@
           "Contracts"
         ],
         "x-cache-age": 1800,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 1800,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 1800
       }
     },
     "/corporation/{corporation_id}/mining/extractions": {
@@ -23322,6 +23510,7 @@
           "Industry"
         ],
         "x-cache-age": 1800,
+        "x-client-cache-ttl": 1800,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-industry",
@@ -23330,7 +23519,9 @@
         },
         "x-required-roles": [
           "Station_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 1800
       }
     },
     "/corporation/{corporation_id}/mining/observers": {
@@ -23425,6 +23616,7 @@
           "Industry"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-industry",
@@ -23433,7 +23625,9 @@
         },
         "x-required-roles": [
           "Accountant"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporation/{corporation_id}/mining/observers/{observer_id}": {
@@ -23538,6 +23732,7 @@
           "Industry"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-industry",
@@ -23546,7 +23741,9 @@
         },
         "x-required-roles": [
           "Accountant"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/npccorps": {
@@ -23679,8 +23876,11 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
-        "x-cache-mode": "event-based",
-        "x-compatibility-date": "2026-07-21"
+        "x-cache-mode": "ttl-based",
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2026-07-21",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/alliancehistory": {
@@ -23751,7 +23951,10 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/assets": {
@@ -23846,6 +24049,7 @@
           "Assets"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-asset",
@@ -23854,7 +24058,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/assets/locations": {
@@ -24155,6 +24361,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-industry",
@@ -24163,7 +24370,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/contacts": {
@@ -24258,12 +24467,15 @@
           "Contacts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-social",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/corporations/{corporation_id}/contacts/labels": {
@@ -24341,12 +24553,15 @@
           "Contacts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-social",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/corporations/{corporation_id}/containers/logs": {
@@ -24441,6 +24656,7 @@
           "Corporation"
         ],
         "x-cache-age": 600,
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-structure",
@@ -24449,7 +24665,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 600
       }
     },
     "/corporations/{corporation_id}/contracts": {
@@ -24544,12 +24762,15 @@
           "Contracts"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-contract",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/corporations/{corporation_id}/contracts/{contract_id}/bids": {
@@ -24654,12 +24875,15 @@
           "Contracts"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-contract",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/contracts/{contract_id}/items": {
@@ -24747,12 +24971,15 @@
           "Contracts"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-contract",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/customs_offices": {
@@ -24847,6 +25074,7 @@
           "Planetary Interaction"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-industry",
@@ -24855,7 +25083,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/divisions": {
@@ -24933,6 +25163,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-wallet",
@@ -24941,7 +25172,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/facilities": {
@@ -25019,6 +25252,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-structure",
@@ -25027,7 +25261,9 @@
         },
         "x-required-roles": [
           "Factory_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/freelance-jobs": {
@@ -25139,7 +25375,7 @@
         "tags": [
           "Freelance Jobs"
         ],
-        "x-cache-age": 0,
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2025-12-16",
         "x-pagination": "cursor",
         "x-rate-limit": {
@@ -25149,7 +25385,8 @@
         },
         "x-required-roles": [
           "Project_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/freelance-jobs/{job_id}/participants": {
@@ -25271,7 +25508,7 @@
         "tags": [
           "Freelance Jobs"
         ],
-        "x-cache-age": 0,
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2025-12-16",
         "x-pagination": "cursor",
         "x-rate-limit": {
@@ -25281,7 +25518,8 @@
         },
         "x-required-roles": [
           "Project_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/fw/stats": {
@@ -25434,7 +25672,10 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/industry/jobs": {
@@ -25538,6 +25779,7 @@
           "Industry"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-industry",
@@ -25546,7 +25788,9 @@
         },
         "x-required-roles": [
           "Factory_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/corporations/{corporation_id}/killmails/recent": {
@@ -25641,6 +25885,7 @@
           "Killmails"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-killmail",
@@ -25649,7 +25894,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/corporations/{corporation_id}/medals": {
@@ -25744,12 +25991,15 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-detail",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/medals/issued": {
@@ -25844,6 +26094,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-detail",
@@ -25852,7 +26103,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/members": {
@@ -25930,12 +26183,15 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-member",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/members/limit": {
@@ -26013,6 +26269,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-member",
@@ -26021,7 +26278,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/members/titles": {
@@ -26099,6 +26358,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-member",
@@ -26107,7 +26367,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/membertracking": {
@@ -26185,6 +26447,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-member",
@@ -26193,7 +26456,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/orders": {
@@ -26288,11 +26553,14 @@
           "Market"
         ],
         "x-cache-age": 1200,
+        "x-client-cache-ttl": 1200,
         "x-compatibility-date": "2020-01-01",
         "x-required-roles": [
           "Accountant",
           "Trader"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 1200
       }
     },
     "/corporations/{corporation_id}/orders/history": {
@@ -26387,11 +26655,14 @@
           "Market"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-required-roles": [
           "Accountant",
           "Trader"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/projects": {
@@ -26522,14 +26793,15 @@
         "tags": [
           "Corporation Projects"
         ],
-        "x-cache-age": 0,
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2025-08-26",
         "x-pagination": "cursor",
         "x-rate-limit": {
           "group": "corp-project",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/projects/{project_id}": {
@@ -26618,13 +26890,15 @@
           "Corporation Projects"
         ],
         "x-cache-age": 60,
-        "x-cache-mode": "no-cache",
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2025-08-26",
         "x-rate-limit": {
           "group": "corp-project",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/projects/{project_id}/contribution/{character_id}": {
@@ -26723,13 +26997,15 @@
           "Corporation Projects"
         ],
         "x-cache-age": 60,
-        "x-cache-mode": "no-cache",
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2025-08-26",
         "x-rate-limit": {
           "group": "corp-project",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/projects/{project_id}/contributors": {
@@ -26851,7 +27127,7 @@
         "tags": [
           "Corporation Projects"
         ],
-        "x-cache-age": 0,
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2025-08-26",
         "x-pagination": "cursor",
         "x-rate-limit": {
@@ -26861,7 +27137,8 @@
         },
         "x-required-roles": [
           "Project_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/roles": {
@@ -26939,12 +27216,15 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-member",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/roles/history": {
@@ -27039,6 +27319,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-member",
@@ -27047,7 +27328,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/shareholders": {
@@ -27142,6 +27425,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-detail",
@@ -27150,7 +27434,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/standings": {
@@ -27245,12 +27531,15 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-member",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/starbases": {
@@ -27345,6 +27634,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-structure",
@@ -27353,7 +27643,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/starbases/{starbase_id}": {
@@ -27451,6 +27743,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-structure",
@@ -27459,7 +27752,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/structures": {
@@ -27557,6 +27852,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-structure",
@@ -27565,7 +27861,9 @@
         },
         "x-required-roles": [
           "Station_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/structures/skyhooks": {
@@ -27645,6 +27943,7 @@
         ],
         "x-cache-age": 3600,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "corp-structure",
@@ -27653,7 +27952,8 @@
         },
         "x-required-roles": [
           "Station_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/structures/skyhooks/{skyhook_id}": {
@@ -27743,6 +28043,7 @@
         ],
         "x-cache-age": 3600,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "corp-structure",
@@ -27751,7 +28052,8 @@
         },
         "x-required-roles": [
           "Station_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/structures/sovereignty-hubs": {
@@ -27831,12 +28133,14 @@
         ],
         "x-cache-age": 3600,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "corp-structure",
           "max-tokens": 300,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/structures/sovereignty-hubs/{sovereignty_hub_id}": {
@@ -27926,6 +28230,7 @@
         ],
         "x-cache-age": 3600,
         "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "corp-structure",
@@ -27934,7 +28239,8 @@
         },
         "x-required-roles": [
           "Station_Manager"
-        ]
+        ],
+        "x-server-cache-mode": "event-based"
       }
     },
     "/corporations/{corporation_id}/titles": {
@@ -28012,6 +28318,7 @@
           "Corporation"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-detail",
@@ -28020,7 +28327,9 @@
         },
         "x-required-roles": [
           "Director"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/wallets": {
@@ -28098,6 +28407,7 @@
           "Wallet"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-wallet",
@@ -28107,7 +28417,9 @@
         "x-required-roles": [
           "Accountant",
           "Junior_Accountant"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/corporations/{corporation_id}/wallets/{division}/journal": {
@@ -28212,6 +28524,7 @@
           "Wallet"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-wallet",
@@ -28221,7 +28534,9 @@
         "x-required-roles": [
           "Accountant",
           "Junior_Accountant"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/corporations/{corporation_id}/wallets/{division}/transactions": {
@@ -28318,6 +28633,7 @@
           "Wallet"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "corp-wallet",
@@ -28327,7 +28643,9 @@
         "x-required-roles": [
           "Accountant",
           "Junior_Accountant"
-        ]
+        ],
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/dogma/attributes": {
@@ -28749,12 +29067,15 @@
           "Fleets"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "fleet",
           "max-tokens": 1800,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       },
       "put": {
         "description": "Update settings about a fleet",
@@ -28930,12 +29251,15 @@
           "Fleets"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "fleet",
           "max-tokens": 1800,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       },
       "post": {
         "description": "Invite a character into the fleet. If a character has a CSPA charge set it is not possible to invite them to the fleet using ESI",
@@ -29522,12 +29846,15 @@
           "Fleets"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "fleet",
           "max-tokens": 1800,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       },
       "post": {
         "description": "Create a new wing in a fleet",
@@ -29995,14 +30322,15 @@
         "tags": [
           "Freelance Jobs"
         ],
-        "x-cache-age": 0,
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2025-12-16",
         "x-pagination": "cursor",
         "x-rate-limit": {
           "group": "freelance-job",
           "max-tokens": 900,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/freelance-jobs/{job_id}": {
@@ -30074,13 +30402,15 @@
           "Freelance Jobs"
         ],
         "x-cache-age": 60,
-        "x-cache-mode": "no-cache",
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
         "x-compatibility-date": "2025-12-16",
         "x-rate-limit": {
           "group": "freelance-job",
           "max-tokens": 900,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/fw/leaderboards": {
@@ -30406,12 +30736,15 @@
           "Faction Warfare"
         ],
         "x-cache-age": 1800,
+        "x-client-cache-ttl": 1800,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "factional-warfare",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 1800
       }
     },
     "/fw/wars": {
@@ -30539,12 +30872,15 @@
           "Incursions"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "incursion",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/industry/facilities": {
@@ -30606,12 +30942,15 @@
           "Industry"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "industry",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/industry/systems": {
@@ -30673,12 +31012,15 @@
           "Industry"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "industry",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/insurance/prices": {
@@ -30743,12 +31085,15 @@
           "Insurance"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "insurance",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/killmails/{killmail_id}/{killmail_hash}": {
@@ -30829,12 +31174,15 @@
           "Killmails"
         ],
         "x-cache-age": 2592000,
+        "x-client-cache-ttl": 2592000,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "killmail",
           "max-tokens": 3600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 2592000
       }
     },
     "/loyalty/stores/{corporation_id}/offers": {
@@ -31101,7 +31449,10 @@
           "Market"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/markets/structures/{structure_id}": {
@@ -31197,7 +31548,10 @@
           "Market"
         ],
         "x-cache-age": 300,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 300,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/markets/{region_id}/history": {
@@ -31391,12 +31745,15 @@
           "Market"
         ],
         "x-cache-age": 300,
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "market-order",
           "max-tokens": 12000,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/markets/{region_id}/types": {
@@ -31485,7 +31842,10 @@
           "Market"
         ],
         "x-cache-age": 600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 600
       }
     },
     "/meta/changelog": {
@@ -31547,13 +31907,15 @@
           "Meta"
         ],
         "x-cache-age": 600,
-        "x-cache-mode": "not-cached",
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2025-09-26",
         "x-rate-limit": {
           "group": "meta",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/meta/compatibility-dates": {
@@ -31615,13 +31977,15 @@
           "Meta"
         ],
         "x-cache-age": 600,
-        "x-cache-mode": "not-cached",
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "meta",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/meta/name": {
@@ -31683,13 +32047,15 @@
           "Meta"
         ],
         "x-cache-age": 600,
-        "x-cache-mode": "not-cached",
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 600,
         "x-compatibility-date": "2026-07-17",
         "x-rate-limit": {
           "group": "meta",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/meta/status": {
@@ -31750,13 +32116,14 @@
         "tags": [
           "Meta"
         ],
-        "x-cache-age": 0,
+        "x-cache-mode": "event-based",
         "x-compatibility-date": "2025-11-06",
         "x-rate-limit": {
           "group": "meta",
           "max-tokens": 150,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/route/{origin_system_id}/{destination_system_id}": {
@@ -31847,13 +32214,14 @@
         "tags": [
           "Routes"
         ],
-        "x-cache-age": 0,
+        "x-cache-mode": "not-cached",
         "x-compatibility-date": "2025-09-30",
         "x-rate-limit": {
           "group": "routes",
           "max-tokens": 3600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "not-cached"
       }
     },
     "/skyhooks/raidable": {
@@ -31916,12 +32284,15 @@
         ],
         "x-cache-age": 300,
         "x-cache-mode": "ttl-based",
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "activity",
           "max-tokens": 30,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 60
       }
     },
     "/sovereignty/campaigns": {
@@ -31983,12 +32354,15 @@
           "Sovereignty"
         ],
         "x-cache-age": 5,
+        "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "sovereignty",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 5
       }
     },
     "/sovereignty/systems": {
@@ -32051,12 +32425,15 @@
         ],
         "x-cache-age": 300,
         "x-cache-mode": "ttl-based",
+        "x-client-cache-ttl": 300,
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "sovereignty",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 300
       }
     },
     "/status": {
@@ -32118,12 +32495,15 @@
           "Status"
         ],
         "x-cache-age": 30,
+        "x-client-cache-ttl": 30,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "status",
           "max-tokens": 600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 30
       }
     },
     "/ui/autopilot/waypoint": {
@@ -33943,7 +34323,10 @@
           "Planetary Interaction"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/universe/stargates/{stargate_id}": {
@@ -34227,7 +34610,10 @@
           "Universe"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/universe/structures/{structure_id}": {
@@ -34306,7 +34692,10 @@
           "Universe"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/universe/system_jumps": {
@@ -34368,7 +34757,10 @@
           "Universe"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/universe/system_kills": {
@@ -34430,7 +34822,10 @@
           "Universe"
         ],
         "x-cache-age": 3600,
-        "x-compatibility-date": "2020-01-01"
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2020-01-01",
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/universe/systems": {
@@ -34787,12 +35182,15 @@
           "Wars"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "killmail",
           "max-tokens": 3600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/wars/{war_id}": {
@@ -34864,12 +35262,15 @@
           "Wars"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "killmail",
           "max-tokens": 3600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     },
     "/wars/{war_id}/killmails": {
@@ -34958,12 +35359,15 @@
           "Wars"
         ],
         "x-cache-age": 3600,
+        "x-client-cache-ttl": 3600,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
           "group": "killmail",
           "max-tokens": 3600,
           "window-size": "15m"
-        }
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 3600
       }
     }
   },
