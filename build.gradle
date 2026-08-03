@@ -4,8 +4,8 @@ plugins {
 	id "jacoco"
 	id "application"
 	id "io.freefair.lombok" version "9.5.0"
-	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "7.0.22"
-	id "com.diffplug.spotless" version "8.8.0"
+	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "7.0.23"
+	id "com.diffplug.spotless" version "8.9.0"
 }
 
 group = "com.autonomouslogic.esiproxy"
@@ -44,13 +44,13 @@ dependencies {
 
 	// Jackson
 	implementation "com.fasterxml.jackson.core:jackson-annotations:2.22"
-	implementation "com.fasterxml.jackson.core:jackson-core:2.22.0"
-	implementation "com.fasterxml.jackson.core:jackson-databind:2.22.0"
-	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.0"
+	implementation "com.fasterxml.jackson.core:jackson-core:2.22.1"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.22.1"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.1"
 
 	// Helidon
-	implementation "io.helidon.webserver:helidon-webserver:4.5.0"
-	implementation "io.helidon.logging:helidon-logging-slf4j:4.5.0"
+	implementation "io.helidon.webserver:helidon-webserver:4.5.1"
+	implementation "io.helidon.logging:helidon-logging-slf4j:4.5.1"
 
 	// Misc
 	implementation "com.squareup.okhttp3:okhttp:5.4.0"
@@ -59,7 +59,7 @@ dependencies {
 	implementation "commons-io:commons-io:2.22.0"
 	implementation "com.google.guava:guava:33.6.0-jre"
 	implementation "com.github.scribejava:scribejava-core:8.3.3"
-	implementation "commons-codec:commons-codec:1.22.0"
+	implementation "commons-codec:commons-codec:1.22.1"
 	implementation "org.apache.commons:commons-lang3:3.20.0"
 	implementation "org.thymeleaf:thymeleaf:3.1.5.RELEASE"
 	implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:4.0.1"
@@ -68,8 +68,8 @@ dependencies {
 	// Tests
 	testAnnotationProcessor "com.google.dagger:dagger-compiler:2.60.1"
 	testImplementation "com.google.dagger:dagger:2.60.1"
-	testImplementation "org.junit.jupiter:junit-jupiter:6.1.1"
-	testImplementation "org.junit.jupiter:junit-jupiter-params:6.1.1"
+	testImplementation "org.junit.jupiter:junit-jupiter:6.1.2"
+	testImplementation "org.junit.jupiter:junit-jupiter-params:6.1.2"
 	testImplementation "org.junit-pioneer:junit-pioneer:2.3.0"
 	testImplementation "org.mockito:mockito-junit-jupiter:5.23.0"
 	testImplementation "com.squareup.okhttp3:mockwebserver:5.4.0"
