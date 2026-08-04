@@ -224,6 +224,14 @@
     "group": "char-activity"
   },
   {
+    "url": "/characters/{character_id}/military-campaigns/objectives",
+    "group": "char-military-campaign"
+  },
+  {
+    "url": "/characters/{character_id}/military-campaigns/objectives/{objective_id}",
+    "group": "char-military-campaign"
+  },
+  {
     "url": "/characters/{character_id}/mining",
     "group": "char-industry"
   },
@@ -698,6 +706,22 @@
   {
     "url": "/meta/status",
     "group": "meta"
+  },
+  {
+    "url": "/military-campaigns",
+    "group": "military-campaign"
+  },
+  {
+    "url": "/military-campaigns/{campaign_id}",
+    "group": "military-campaign"
+  },
+  {
+    "url": "/military-campaigns/{campaign_id}/objectives",
+    "group": "military-campaign"
+  },
+  {
+    "url": "/military-campaigns/{campaign_id}/objectives/{objective_id}",
+    "group": "military-campaign"
   },
   {
     "url": "/route/{origin_system_id}/{destination_system_id}",

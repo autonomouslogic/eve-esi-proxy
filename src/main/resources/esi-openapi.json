@@ -63,7 +63,7 @@
         "required": true,
         "schema": {
           "enum": [
-            "2026-07-21"
+            "2026-08-04"
           ],
           "format": "date",
           "type": "string"
@@ -4039,6 +4039,110 @@
         "required": [
           "id",
           "mercenary_den_id"
+        ],
+        "type": "object"
+      },
+      "CharactersMilitaryCampaignsObjectivesListing": {
+        "properties": {
+          "cursor": {
+            "$ref": "#/components/schemas/Cursor"
+          },
+          "objectives": {
+            "description": "List of military campaign objectives",
+            "items": {
+              "$ref": "#/components/schemas/CharactersMilitaryCampaignsObjectivesParticipationCharacterobjective"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "objectives"
+        ],
+        "type": "object"
+      },
+      "CharactersMilitaryCampaignsObjectivesParticipation": {
+        "properties": {
+          "campaign_id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Campaign's ID"
+          },
+          "contributed": {
+            "description": "The character's cumulative contribution",
+            "examples": [
+              10
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Objective's ID"
+          },
+          "is_committed": {
+            "description": "Whether the character is currently committed to the objective",
+            "examples": [
+              true
+            ],
+            "type": "boolean"
+          },
+          "last_modified": {
+            "description": "Moment this information was last modified",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "campaign_id",
+          "is_committed",
+          "contributed",
+          "last_modified"
+        ],
+        "type": "object"
+      },
+      "CharactersMilitaryCampaignsObjectivesParticipationCharacterobjective": {
+        "properties": {
+          "campaign_id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Campaign's ID"
+          },
+          "contributed": {
+            "description": "The character's cumulative contribution",
+            "examples": [
+              10
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Objective's ID"
+          },
+          "is_committed": {
+            "description": "Whether the character is currently committed to the objective",
+            "examples": [
+              true
+            ],
+            "type": "boolean"
+          },
+          "last_modified": {
+            "description": "Moment this information was last modified",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "campaign_id",
+          "is_committed",
+          "contributed",
+          "last_modified"
         ],
         "type": "object"
       },
@@ -13712,6 +13816,329 @@
         ],
         "type": "object"
       },
+      "MilitaryCampaignsDetail": {
+        "properties": {
+          "finished": {
+            "description": "Moment the campaign transitioned to a non-active state",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Campaign's ID"
+          },
+          "progress": {
+            "description": "Campaign's progress",
+            "examples": [
+              50
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "started": {
+            "description": "Moment the campaign started",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "state": {
+            "description": "Campaign's state",
+            "enum": [
+              "Unspecified",
+              "Active",
+              "Completed",
+              "Expired"
+            ],
+            "examples": [
+              "Active"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "An unspecified state",
+              "The campaign is active and accepting contributions",
+              "The campaign met its target before the end date",
+              "The campaign failed to meet its target before the end date"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "progress"
+        ],
+        "type": "object"
+      },
+      "MilitaryCampaignsDetailCampaign": {
+        "properties": {
+          "finished": {
+            "description": "Moment the campaign transitioned to a non-active state",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Campaign's ID"
+          },
+          "progress": {
+            "description": "Campaign's progress",
+            "examples": [
+              50
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "started": {
+            "description": "Moment the campaign started",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "state": {
+            "description": "Campaign's state",
+            "enum": [
+              "Unspecified",
+              "Active",
+              "Completed",
+              "Expired"
+            ],
+            "examples": [
+              "Active"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "An unspecified state",
+              "The campaign is active and accepting contributions",
+              "The campaign met its target before the end date",
+              "The campaign failed to meet its target before the end date"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "progress"
+        ],
+        "type": "object"
+      },
+      "MilitaryCampaignsListing": {
+        "properties": {
+          "campaigns": {
+            "description": "List of military campaigns",
+            "items": {
+              "$ref": "#/components/schemas/MilitaryCampaignsDetailCampaign"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "campaigns"
+        ],
+        "type": "object"
+      },
+      "MilitaryCampaignsObjectivesDetail": {
+        "properties": {
+          "finished": {
+            "description": "Moment the objective transitioned to a non-active state",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Objective's ID"
+          },
+          "last_modified": {
+            "description": "Objective's last modified",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "participants": {
+            "$ref": "#/components/schemas/MilitaryCampaignsObjectivesDetailParticipants",
+            "description": "Objective's participants"
+          },
+          "progress": {
+            "description": "Objective's progress",
+            "examples": [
+              50
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "started": {
+            "description": "Moment the objective started",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "state": {
+            "description": "Objective's state",
+            "enum": [
+              "Unspecified",
+              "Active",
+              "Completed",
+              "Expired"
+            ],
+            "examples": [
+              "Active"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "An unspecified state",
+              "The campaign is active and accepting contributions",
+              "The campaign met its target before the end date",
+              "The campaign failed to meet its target before the end date"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "progress",
+          "participants",
+          "last_modified"
+        ],
+        "type": "object"
+      },
+      "MilitaryCampaignsObjectivesDetailObjective": {
+        "properties": {
+          "finished": {
+            "description": "Moment the objective transitioned to a non-active state",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Objective's ID"
+          },
+          "last_modified": {
+            "description": "Objective's last modified",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "participants": {
+            "$ref": "#/components/schemas/MilitaryCampaignsObjectivesDetailParticipants",
+            "description": "Objective's participants"
+          },
+          "progress": {
+            "description": "Objective's progress",
+            "examples": [
+              50
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "started": {
+            "description": "Moment the objective started",
+            "examples": [
+              "2025-11-01T00:00:00Z"
+            ],
+            "format": "date-time",
+            "type": "string"
+          },
+          "state": {
+            "description": "Objective's state",
+            "enum": [
+              "Unspecified",
+              "Active",
+              "Completed",
+              "Expired"
+            ],
+            "examples": [
+              "Active"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "An unspecified state",
+              "The campaign is active and accepting contributions",
+              "The campaign met its target before the end date",
+              "The campaign failed to meet its target before the end date"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "progress",
+          "participants",
+          "last_modified"
+        ],
+        "type": "object"
+      },
+      "MilitaryCampaignsObjectivesDetailParticipants": {
+        "properties": {
+          "committed": {
+            "description": "Number of currently committed participants",
+            "examples": [
+              1
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "contributors": {
+            "description": "Number of participants with at least one contribution",
+            "examples": [
+              2
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "total": {
+            "description": "Number of participants (including those that resigned)",
+            "examples": [
+              4
+            ],
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "committed",
+          "contributors"
+        ],
+        "type": "object"
+      },
+      "MilitaryCampaignsObjectivesListing": {
+        "properties": {
+          "cursor": {
+            "$ref": "#/components/schemas/Cursor"
+          },
+          "objectives": {
+            "description": "List of military campaign objectives",
+            "items": {
+              "$ref": "#/components/schemas/MilitaryCampaignsObjectivesDetailObjective"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "objectives"
+        ],
+        "type": "object"
+      },
       "PlanetID": {
         "examples": [
           40000002
@@ -15871,7 +16298,8 @@
               "esi-universe.read_structures.v1": "esi-universe.read_structures.v1",
               "esi-wallet.read_character_wallet.v1": "esi-wallet.read_character_wallet.v1",
               "esi-wallet.read_corporation_wallets.v1": "esi-wallet.read_corporation_wallets.v1",
-              "esi.activity.char:read": "esi.activity.char:read"
+              "esi.activity.char:read": "esi.activity.char:read",
+              "esi.cosmetic.char:read": "esi.cosmetic.char:read"
             },
             "tokenUrl": "https://login.eveonline.com/v2/oauth/token"
           }
@@ -15890,8 +16318,8 @@
       "url": "https://developers.eveonline.com/license-agreement"
     },
     "termsOfService": "https://support.eveonline.com/hc/en-us/articles/8414770561948-EVE-Online-Terms-of-Service",
-    "title": "EVE Swatch Illustrators (ESI) - tranquility",
-    "version": "2026-07-21"
+    "title": "EVE Soldier Inspiration (ESI) - tranquility",
+    "version": "2026-08-04"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -21201,6 +21629,225 @@
         "x-compatibility-date": "2026-05-19",
         "x-rate-limit": {
           "group": "char-activity",
+          "max-tokens": 150,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based"
+      }
+    },
+    "/characters/{character_id}/military-campaigns/objectives": {
+      "get": {
+        "description": "Listing of the military campaign objectives the character has participated in.",
+        "operationId": "GetCharactersMilitaryCampaignsObjectivesListing",
+        "parameters": [
+          {
+            "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+            "explode": false,
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+            "explode": false,
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The amount of records to retrieve per request.",
+            "explode": false,
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "description": "The amount of records to retrieve per request.",
+              "format": "int64",
+              "maximum": 100,
+              "minimum": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The ID of the character",
+            "in": "path",
+            "name": "character_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CharacterID",
+              "description": "The ID of the character"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharactersMilitaryCampaignsObjectivesListing"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "esi.activity.char:read"
+            ]
+          }
+        ],
+        "summary": "List character participation in military campaigns",
+        "tags": [
+          "Military Campaigns"
+        ],
+        "x-cache-age": 60,
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
+        "x-compatibility-date": "2026-08-04",
+        "x-pagination": "cursor",
+        "x-rate-limit": {
+          "group": "char-military-campaign",
+          "max-tokens": 150,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based"
+      }
+    },
+    "/characters/{character_id}/military-campaigns/objectives/{objective_id}": {
+      "get": {
+        "description": "Show your participation in a military campaign objective.",
+        "operationId": "GetCharactersMilitaryCampaignsObjectivesParticipation",
+        "parameters": [
+          {
+            "description": "The ID of the character",
+            "in": "path",
+            "name": "character_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CharacterID",
+              "description": "The ID of the character"
+            }
+          },
+          {
+            "description": "The ID of the objective",
+            "in": "path",
+            "name": "objective_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID",
+              "description": "The ID of the objective"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharactersMilitaryCampaignsObjectivesParticipation"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "esi.activity.char:read"
+            ]
+          }
+        ],
+        "summary": "Get character military campaign objective participation",
+        "tags": [
+          "Military Campaigns"
+        ],
+        "x-cache-age": 60,
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
+        "x-compatibility-date": "2026-08-04",
+        "x-rate-limit": {
+          "group": "char-military-campaign",
           "max-tokens": 150,
           "window-size": "15m"
         },
@@ -32126,6 +32773,361 @@
         "x-server-cache-mode": "event-based"
       }
     },
+    "/military-campaigns": {
+      "get": {
+        "description": "Listing of all active military campaigns.",
+        "operationId": "GetMilitaryCampaignsListing",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilitaryCampaignsListing"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "List military campaigns",
+        "tags": [
+          "Military Campaigns"
+        ],
+        "x-cache-age": 60,
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
+        "x-compatibility-date": "2026-08-04",
+        "x-rate-limit": {
+          "group": "military-campaign",
+          "max-tokens": 300,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based"
+      }
+    },
+    "/military-campaigns/{campaign_id}": {
+      "get": {
+        "description": "Get the details of a military campaign.",
+        "operationId": "GetMilitaryCampaignsDetail",
+        "parameters": [
+          {
+            "description": "The ID of the military campaign",
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID",
+              "description": "The ID of the military campaign"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilitaryCampaignsDetail"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Get military campaign details",
+        "tags": [
+          "Military Campaigns"
+        ],
+        "x-cache-age": 60,
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
+        "x-compatibility-date": "2026-08-04",
+        "x-rate-limit": {
+          "group": "military-campaign",
+          "max-tokens": 300,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based"
+      }
+    },
+    "/military-campaigns/{campaign_id}/objectives": {
+      "get": {
+        "description": "Listing of all active, completed or expired objectives of a military campaign.",
+        "operationId": "GetMilitaryCampaignsObjectivesListing",
+        "parameters": [
+          {
+            "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+            "explode": false,
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+            "explode": false,
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The amount of records to retrieve per request.",
+            "explode": false,
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "description": "The amount of records to retrieve per request.",
+              "format": "int64",
+              "maximum": 100,
+              "minimum": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The ID of the military campaign",
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID",
+              "description": "The ID of the military campaign"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilitaryCampaignsObjectivesListing"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "List military campaign objectives",
+        "tags": [
+          "Military Campaigns"
+        ],
+        "x-cache-age": 60,
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
+        "x-compatibility-date": "2026-08-04",
+        "x-pagination": "cursor",
+        "x-rate-limit": {
+          "group": "military-campaign",
+          "max-tokens": 300,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based"
+      }
+    },
+    "/military-campaigns/{campaign_id}/objectives/{objective_id}": {
+      "get": {
+        "description": "Get the details of an objective of a military campaign.",
+        "operationId": "GetMilitaryCampaignsObjectivesDetail",
+        "parameters": [
+          {
+            "description": "The ID of the military campaign",
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID",
+              "description": "The ID of the military campaign"
+            }
+          },
+          {
+            "description": "The ID of the objective",
+            "in": "path",
+            "name": "objective_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID",
+              "description": "The ID of the objective"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilitaryCampaignsObjectivesDetail"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Get military campaign objective details",
+        "tags": [
+          "Military Campaigns"
+        ],
+        "x-cache-age": 60,
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 60,
+        "x-compatibility-date": "2026-08-04",
+        "x-rate-limit": {
+          "group": "military-campaign",
+          "max-tokens": 300,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based"
+      }
+    },
     "/route/{origin_system_id}/{destination_system_id}": {
       "post": {
         "description": "Calculate the systems between the given origin and destination.",
@@ -35451,6 +36453,9 @@
     },
     {
       "name": "Meta"
+    },
+    {
+      "name": "Military Campaigns"
     },
     {
       "name": "Planetary Interaction"
