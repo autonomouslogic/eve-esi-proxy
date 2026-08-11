@@ -1,5 +1,18 @@
 EVE ESI Proxy Changelog
 
+## [1.3.27](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.26...1.3.27) (2026-08-11)
+
+
+### Bug Fixes
+
+* Updated ESI spec ([7559385](https://github.com/autonomouslogic/eve-esi-proxy/commit/75593850b452eec1a543ed65cd7d5f78c28caf99))
+
+
+### Dependency Updates
+
+* **deps:** update actions/checkout action to v7 ([#164](https://github.com/autonomouslogic/eve-esi-proxy/issues/164)) ([e3597f3](https://github.com/autonomouslogic/eve-esi-proxy/commit/e3597f3b8b0a95b6b61183a1002ba50a82dc9507))
+* **deps:** update codecov/codecov-action action to v7 ([#162](https://github.com/autonomouslogic/eve-esi-proxy/issues/162)) ([958ffca](https://github.com/autonomouslogic/eve-esi-proxy/commit/958ffca79d41d6ca6ae4e6cb1f9acb295ce6aeff))
+
 ## [1.3.26](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.25...1.3.26) (2026-08-04)
 
 
