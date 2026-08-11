@@ -14618,30 +14618,41 @@
         "type": "integer",
         "x-common-model": "true"
       },
-      "StatusGet": {
+      "Status": {
         "properties": {
           "players": {
-            "description": "Current online player count",
+            "description": "Number of characters currently logged in",
+            "examples": [
+              12345
+            ],
+            "format": "int64",
             "type": "integer"
           },
           "server_version": {
-            "description": "Running version as string",
+            "description": "Build number of the cluster",
+            "examples": [
+              "1132976"
+            ],
             "type": "string"
           },
           "start_time": {
-            "description": "Server start timestamp",
+            "description": "Moment the cluster started accepting connections",
+            "examples": [
+              "2017-01-02T12:34:56Z"
+            ],
             "format": "date-time",
             "type": "string"
           },
           "vip": {
-            "description": "If the server is in VIP mode",
+            "description": "Whether the cluster only accepts VIP logins",
             "type": "boolean"
           }
         },
         "required": [
-          "start_time",
+          "server_version",
           "players",
-          "server_version"
+          "vip",
+          "start_time"
         ],
         "type": "object"
       },
@@ -33440,7 +33451,7 @@
     },
     "/status": {
       "get": {
-        "description": "EVE Server status",
+        "description": "Current status of the EVE Online cluster",
         "operationId": "GetStatus",
         "parameters": [
           {
@@ -33464,7 +33475,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StatusGet"
+                  "$ref": "#/components/schemas/Status"
                 }
               }
             },
@@ -33492,11 +33503,12 @@
             "description": "Error"
           }
         },
-        "summary": "Retrieve the uptime and player counts",
+        "summary": "Get the server's status",
         "tags": [
           "Status"
         ],
         "x-cache-age": 30,
+        "x-cache-mode": "ttl-based",
         "x-client-cache-ttl": 30,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
