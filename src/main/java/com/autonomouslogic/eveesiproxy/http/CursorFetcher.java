@@ -1,8 +1,8 @@
 package com.autonomouslogic.eveesiproxy.http;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
@@ -185,10 +185,8 @@ public class CursorFetcher {
 
 		var result = objectMapper.createObjectNode();
 		var firstPage = pages.get(0);
-		var fields = firstPage.fields();
 
-		while (fields.hasNext()) {
-			var field = fields.next();
+		for (var field : firstPage.properties()) {
 			var fieldName = field.getKey();
 			var fieldValue = field.getValue();
 

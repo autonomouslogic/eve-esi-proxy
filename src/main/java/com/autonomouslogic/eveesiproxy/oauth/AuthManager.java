@@ -1,9 +1,9 @@
 package com.autonomouslogic.eveesiproxy.oauth;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.File;

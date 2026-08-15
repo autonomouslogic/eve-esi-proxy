@@ -1,8 +1,8 @@
 package com.autonomouslogic.eveesiproxy.http;
 
 import com.autonomouslogic.commons.ResourceUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
