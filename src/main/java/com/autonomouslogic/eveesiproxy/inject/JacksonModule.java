@@ -7,7 +7,6 @@ import jakarta.inject.Singleton;
 import tools.jackson.core.StreamWriteFeature;
 import tools.jackson.core.json.JsonReadFeature;
 import tools.jackson.databind.DeserializationFeature;
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.cfg.DateTimeFeature;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -18,7 +17,7 @@ import tools.jackson.databind.json.JsonMapper;
 public class JacksonModule {
 	@Provides
 	@Singleton
-	public ObjectMapper objectMapper() {
+	public JsonMapper jsonMapper() {
 		return JsonMapper.builder()
 				.changeDefaultVisibility(vc -> vc.with(JsonAutoDetect.Visibility.NONE))
 				.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)

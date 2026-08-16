@@ -35,7 +35,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
 
 @SetEnvironmentVariable(key = "ESI_BASE_URL", value = "http://localhost:" + MOCK_ESI_PORT)
@@ -60,7 +60,7 @@ public class LoginServiceTest {
 	AuthManager authManager;
 
 	@Inject
-	ObjectMapper objectMapper;
+	JsonMapper jsonMapper;
 
 	MockWebServer mockEsi;
 
@@ -152,7 +152,7 @@ public class LoginServiceTest {
 		TestHttpUtils.enqueueResponse(
 				mockEsi,
 				200,
-				((ObjectNode) objectMapper.valueToTree(EsiVerifyResponse.builder()
+				((ObjectNode) jsonMapper.valueToTree(EsiVerifyResponse.builder()
 								.characterId(characterId)
 								.characterName("Test Character")
 								.characterOwnerHash("owner-hash-1")
