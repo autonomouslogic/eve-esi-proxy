@@ -1,8 +1,6 @@
 package com.autonomouslogic.eveesiproxy.http;
 
 import com.autonomouslogic.commons.ResourceUtil;
-import tools.jackson.core.type.TypeReference;
-import tools.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
@@ -11,6 +9,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.Value;
 import lombok.extern.log4j.Log4j2;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 @Singleton
 @Log4j2

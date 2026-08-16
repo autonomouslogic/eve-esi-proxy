@@ -6,7 +6,6 @@ import com.autonomouslogic.commons.ResourceUtil;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.http.OkHttpExec;
 import com.autonomouslogic.eveesiproxy.http.UserAgentInterceptor;
-import tools.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth.AccessTokenRequestParams;
@@ -37,6 +36,7 @@ import okhttp3.Request;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * @link <a href="https://docs.esi.evetech.net/docs/sso/native_sso_flow.html">OAuth 2.0 for Mobile or Desktop Applications</a>
