@@ -2,8 +2,6 @@ package com.autonomouslogic.eveesiproxy.http;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.util.VirtualThreads;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.reactivex.rxjava3.core.Flowable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -21,6 +19,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
 
 @Singleton
 @Log4j2
@@ -29,7 +29,7 @@ public class PageFetcher {
 	protected OkHttpClient client;
 
 	@Inject
-	protected ObjectMapper objectMapper;
+	protected JsonMapper jsonMapper;
 
 	private final int maxConcurrentPages = Configs.HTTP_MAX_CONCURRENT_PAGES.getRequired();
 
@@ -110,12 +110,12 @@ public class PageFetcher {
 				.message("merged pages")
 				.code(200)
 				.header(ProxyHeaderNames.X_EVE_ESI_PAGES_FETCHED, Integer.toString(pages))
-				.body(ResponseBody.create(objectMapper.writeValueAsBytes(result), MediaType.get("application/json")))
+				.body(ResponseBody.create(jsonMapper.writeValueAsBytes(result), MediaType.get("application/json")))
 				.build();
 	}
 
 	private ArrayNode mergePages(int responsePages, Map<Integer, ArrayNode> pageResults) {
-		var result = objectMapper.createArrayNode();
+		var result = jsonMapper.createArrayNode();
 		for (int i = 0; i < responsePages; i++) {
 			result.addAll(pageResults.get(i));
 		}
@@ -151,7 +151,7 @@ public class PageFetcher {
 	@SneakyThrows
 	private void readResponse(Response response, int page, Map<Integer, ArrayNode> pageResults) {
 		try (var in = response.body().byteStream()) {
-			var array = (ArrayNode) objectMapper.readTree(in);
+			var array = (ArrayNode) jsonMapper.readTree(in);
 			pageResults.put(page - 1, array);
 		}
 	}

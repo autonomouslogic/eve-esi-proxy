@@ -1,8 +1,5 @@
 package com.autonomouslogic.eveesiproxy.http;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
@@ -16,6 +13,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 @Singleton
 @Log4j2
@@ -24,7 +24,7 @@ public class CursorFetcher {
 	protected OkHttpClient client;
 
 	@Inject
-	protected ObjectMapper objectMapper;
+	protected JsonMapper jsonMapper;
 
 	@Inject
 	protected CursorFetcher() {}
@@ -49,7 +49,7 @@ public class CursorFetcher {
 				return esiResponse;
 			}
 			bodyBytes = body.bytes();
-			var json = objectMapper.readTree(bodyBytes);
+			var json = jsonMapper.readTree(bodyBytes);
 			if (!json.isObject()) {
 				return recreateResponse(esiResponse, bodyBytes);
 			}
@@ -112,7 +112,7 @@ public class CursorFetcher {
 			return null;
 		}
 		var bytes = body.bytes();
-		var json = objectMapper.readTree(bytes);
+		var json = jsonMapper.readTree(bytes);
 		if (!json.isObject()) {
 			return null;
 		}
@@ -163,8 +163,7 @@ public class CursorFetcher {
 				.protocol(firstResponse.protocol())
 				.message("merged cursor pages")
 				.code(200)
-				.body(ResponseBody.create(
-						objectMapper.writeValueAsBytes(mergedPage), MediaType.get("application/json")))
+				.body(ResponseBody.create(jsonMapper.writeValueAsBytes(mergedPage), MediaType.get("application/json")))
 				.build();
 	}
 
@@ -180,15 +179,13 @@ public class CursorFetcher {
 
 	private ObjectNode mergePages(List<ObjectNode> pages) {
 		if (pages.isEmpty()) {
-			return objectMapper.createObjectNode();
+			return jsonMapper.createObjectNode();
 		}
 
-		var result = objectMapper.createObjectNode();
+		var result = jsonMapper.createObjectNode();
 		var firstPage = pages.get(0);
-		var fields = firstPage.fields();
 
-		while (fields.hasNext()) {
-			var field = fields.next();
+		for (var field : firstPage.properties()) {
 			var fieldName = field.getKey();
 			var fieldValue = field.getValue();
 
@@ -197,7 +194,7 @@ public class CursorFetcher {
 			}
 
 			if (fieldValue.isArray()) {
-				var mergedArray = objectMapper.createArrayNode();
+				var mergedArray = jsonMapper.createArrayNode();
 				for (var page : pages) {
 					var pageField = page.get(fieldName);
 					if (pageField != null && pageField.isArray()) {
@@ -221,7 +218,7 @@ public class CursorFetcher {
 
 		var after = cursor.get("after");
 		if (after != null) {
-			var newCursor = objectMapper.createObjectNode();
+			var newCursor = jsonMapper.createObjectNode();
 			newCursor.set("after", after);
 			mergedPage.set("cursor", newCursor);
 		}

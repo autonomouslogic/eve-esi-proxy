@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.util.HashMap;
@@ -32,6 +30,8 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * Tests automatic cursor-based pagination handling.
@@ -50,7 +50,7 @@ public class ProxyServiceCursorTest {
 	OkHttpClient client;
 
 	@Inject
-	ObjectMapper objectMapper;
+	JsonMapper jsonMapper;
 
 	MockWebServer mockEsi;
 	CursorDispatcher dispatcher;
@@ -106,11 +106,10 @@ public class ProxyServiceCursorTest {
 			var responseBody = proxyResponse.body();
 			assertNotNull(responseBody);
 			var jsonString = responseBody.string();
-			var json = (ObjectNode) objectMapper.readTree(jsonString);
+			var json = (ObjectNode) jsonMapper.readTree(jsonString);
 
-			var records = (List<String>) objectMapper.convertValue(
-					json.get("records"),
-					objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+			var records = (List<String>) jsonMapper.convertValue(
+					json.get("records"), jsonMapper.getTypeFactory().constructCollectionType(List.class, String.class));
 			assertEquals(List.of("a", "b", "c", "d", "e", "f", "g", "h", "i"), records);
 
 			// Preserve the original after cursor.
@@ -180,11 +179,11 @@ public class ProxyServiceCursorTest {
 	}
 
 	private ObjectNode createObjectWithCursor(String beforeCursor, String afterCursor, List<String> records) {
-		var pageJson = objectMapper.createObjectNode();
-		pageJson.set("records", objectMapper.valueToTree(records));
+		var pageJson = jsonMapper.createObjectNode();
+		pageJson.set("records", jsonMapper.valueToTree(records));
 
 		if (beforeCursor != null || afterCursor != null) {
-			var cursor = objectMapper.createObjectNode();
+			var cursor = jsonMapper.createObjectNode();
 			if (beforeCursor != null) {
 				cursor.put("before", beforeCursor);
 			}

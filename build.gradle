@@ -43,10 +43,10 @@ dependencies {
 	runtimeOnly "org.apache.logging.log4j:log4j-jul:2.26.1"
 
 	// Jackson
+	implementation platform("tools.jackson:jackson-bom:3.2.2")
 	implementation "com.fasterxml.jackson.core:jackson-annotations:2.22"
-	implementation "com.fasterxml.jackson.core:jackson-core:2.22.1"
-	implementation "com.fasterxml.jackson.core:jackson-databind:2.22.1"
-	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.22.1"
+	implementation "tools.jackson.core:jackson-core"
+	implementation "tools.jackson.core:jackson-databind"
 
 	// Helidon
 	implementation "io.helidon.webserver:helidon-webserver:4.5.1"

@@ -6,7 +6,6 @@ import com.autonomouslogic.commons.ResourceUtil;
 import com.autonomouslogic.eveesiproxy.configs.Configs;
 import com.autonomouslogic.eveesiproxy.http.OkHttpExec;
 import com.autonomouslogic.eveesiproxy.http.UserAgentInterceptor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth.AccessTokenRequestParams;
@@ -37,6 +36,7 @@ import okhttp3.Request;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @link <a href="https://docs.esi.evetech.net/docs/sso/native_sso_flow.html">OAuth 2.0 for Mobile or Desktop Applications</a>
@@ -62,7 +62,7 @@ public class EsiAuthHelper {
 	protected OkHttpClient client;
 
 	@Inject
-	protected ObjectMapper objectMapper;
+	protected JsonMapper jsonMapper;
 
 	@Inject
 	protected UserAgentInterceptor userAgentInterceptor;
@@ -155,7 +155,7 @@ public class EsiAuthHelper {
 			}
 			var b = response.body().string();
 			try {
-				verify = objectMapper.readValue(b, EsiVerifyResponse.class);
+				verify = jsonMapper.readValue(b, EsiVerifyResponse.class);
 			} catch (Exception e) {
 				log.warn("Failed to parse verify response: {}", b, e);
 				throw e;

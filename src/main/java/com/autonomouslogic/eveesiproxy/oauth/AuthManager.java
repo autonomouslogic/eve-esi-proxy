@@ -1,9 +1,6 @@
 package com.autonomouslogic.eveesiproxy.oauth;
 
 import com.autonomouslogic.eveesiproxy.configs.Configs;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.File;
@@ -16,23 +13,25 @@ import java.util.Optional;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Hex;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.json.JsonMapper;
 
 @Singleton
 @Log4j2
 public class AuthManager {
-	private final ObjectMapper objectMapper;
+	private final JsonMapper jsonMapper;
 	private final ObjectWriter objectWriter;
 	private final File configFile;
 	private final JavaType javaType;
 	private Map<Long, AuthedCharacter> authedCharacters;
 
 	@Inject
-	protected AuthManager(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
-		objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+	protected AuthManager(JsonMapper jsonMapper) {
+		this.jsonMapper = jsonMapper;
+		objectWriter = jsonMapper.writerWithDefaultPrettyPrinter();
 		configFile = new File(Configs.CONFIG_DIR.getRequired(), "auth.json");
-		javaType =
-				objectMapper.getTypeFactory().constructMapType(LinkedHashMap.class, Long.class, AuthedCharacter.class);
+		javaType = jsonMapper.getTypeFactory().constructMapType(LinkedHashMap.class, Long.class, AuthedCharacter.class);
 		loadConfig();
 	}
 
@@ -60,7 +59,7 @@ public class AuthManager {
 			authedCharacters = new LinkedHashMap<>();
 		} else {
 			log.trace("Loading auth config file from {}", configFile);
-			authedCharacters = objectMapper.readValue(configFile, javaType);
+			authedCharacters = jsonMapper.readValue(configFile, javaType);
 			log.trace("Loaded {} authed characters", authedCharacters.size());
 		}
 	}

@@ -11,9 +11,6 @@ import com.autonomouslogic.eveesiproxy.http.HttpDate;
 import com.autonomouslogic.eveesiproxy.http.ProxyHeaderNames;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
 import com.autonomouslogic.eveesiproxy.test.TestHttpUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.helidon.http.HeaderNames;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -38,6 +35,9 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * Tests automatic page handling.
@@ -55,7 +55,7 @@ public class ProxyServicePagesTest {
 	OkHttpClient client;
 
 	@Inject
-	ObjectMapper objectMapper;
+	JsonMapper jsonMapper;
 
 	MockWebServer mockEsi;
 
@@ -93,7 +93,7 @@ public class ProxyServicePagesTest {
 		for (int i = 0; i < 10; i++) {
 			pagesJson.add(createPage(i));
 		}
-		var expectedArray = objectMapper.createArrayNode();
+		var expectedArray = jsonMapper.createArrayNode();
 		for (ArrayNode entries : pagesJson) {
 			expectedArray.addAll(entries);
 		}
@@ -135,7 +135,7 @@ public class ProxyServicePagesTest {
 			var responseBody = proxyResponse.body();
 			assertNotNull(responseBody);
 			var suppliedJson = responseBody.string();
-			var suppliedArray = (ArrayNode) objectMapper.readTree(suppliedJson);
+			var suppliedArray = (ArrayNode) jsonMapper.readTree(suppliedJson);
 			assertEquals(expectedArray.size(), suppliedArray.size());
 			assertEquals(expectedArray, suppliedArray);
 
@@ -154,7 +154,7 @@ public class ProxyServicePagesTest {
 	}
 
 	private ArrayNode createPage(int page) {
-		var array = objectMapper.createArrayNode();
+		var array = jsonMapper.createArrayNode();
 		for (int i = 0; i < 2; i++) {
 			array.add(createEntry(page, i));
 		}
@@ -163,9 +163,9 @@ public class ProxyServicePagesTest {
 
 	@SneakyThrows
 	private ObjectNode createEntry(int page, int entry) {
-		var json = objectMapper.createObjectNode().put("order_id", (page + 1) * 100 + entry);
+		var json = jsonMapper.createObjectNode().put("order_id", (page + 1) * 100 + entry);
 		// Re-encode the JSON to ensure the types in the tree are as the client would see them.
-		return (ObjectNode) objectMapper.readTree(objectMapper.writeValueAsBytes(json));
+		return (ObjectNode) jsonMapper.readTree(jsonMapper.writeValueAsBytes(json));
 	}
 
 	@Test
