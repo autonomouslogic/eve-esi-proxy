@@ -58,9 +58,7 @@ dependencies {
 	implementation "com.autonomouslogic.commons:commons-java:1.11.1"
 	implementation "commons-io:commons-io:2.22.0"
 	implementation "com.google.guava:guava:33.6.0-jre"
-	implementation("com.github.scribejava:scribejava-core:8.3.3") {
-		exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
-	}
+	implementation "com.github.scribejava:scribejava-core:8.3.3"
 	implementation "commons-codec:commons-codec:1.22.1"
 	implementation "org.apache.commons:commons-lang3:3.20.0"
 	implementation "org.thymeleaf:thymeleaf:3.1.5.RELEASE"
