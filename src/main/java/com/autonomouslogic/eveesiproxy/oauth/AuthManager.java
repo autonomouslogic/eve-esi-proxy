@@ -14,8 +14,8 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.binary.Hex;
 import tools.jackson.databind.JavaType;
-import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.json.JsonMapper;
 
 @Singleton
 @Log4j2
@@ -31,8 +31,7 @@ public class AuthManager {
 		this.jsonMapper = jsonMapper;
 		objectWriter = jsonMapper.writerWithDefaultPrettyPrinter();
 		configFile = new File(Configs.CONFIG_DIR.getRequired(), "auth.json");
-		javaType =
-				jsonMapper.getTypeFactory().constructMapType(LinkedHashMap.class, Long.class, AuthedCharacter.class);
+		javaType = jsonMapper.getTypeFactory().constructMapType(LinkedHashMap.class, Long.class, AuthedCharacter.class);
 		loadConfig();
 	}
 

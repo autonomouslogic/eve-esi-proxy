@@ -109,8 +109,7 @@ public class ProxyServiceCursorTest {
 			var json = (ObjectNode) jsonMapper.readTree(jsonString);
 
 			var records = (List<String>) jsonMapper.convertValue(
-					json.get("records"),
-					jsonMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+					json.get("records"), jsonMapper.getTypeFactory().constructCollectionType(List.class, String.class));
 			assertEquals(List.of("a", "b", "c", "d", "e", "f", "g", "h", "i"), records);
 
 			// Preserve the original after cursor.

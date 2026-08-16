@@ -163,8 +163,7 @@ public class CursorFetcher {
 				.protocol(firstResponse.protocol())
 				.message("merged cursor pages")
 				.code(200)
-				.body(ResponseBody.create(
-						jsonMapper.writeValueAsBytes(mergedPage), MediaType.get("application/json")))
+				.body(ResponseBody.create(jsonMapper.writeValueAsBytes(mergedPage), MediaType.get("application/json")))
 				.build();
 	}
 
