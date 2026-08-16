@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.3.28](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.27...1.3.28) (2026-08-16)
+
+
+### Bug Fixes
+
+* **deps:** Upgraded to Jackson 3 ([#168](https://github.com/autonomouslogic/eve-esi-proxy/issues/168)) ([21ed6e3](https://github.com/autonomouslogic/eve-esi-proxy/commit/21ed6e3ed435c70e45f93afa88ebe0ac6a00df40))
+
 ## [1.3.27](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.26...1.3.27) (2026-08-11)
 
 
