@@ -63,7 +63,7 @@
         "required": true,
         "schema": {
           "enum": [
-            "2026-08-04"
+            "2026-08-18"
           ],
           "format": "date",
           "type": "string"
@@ -3815,6 +3815,118 @@
         },
         "type": "array"
       },
+      "CharactersCosmeticsSkinr": {
+        "properties": {
+          "licenses": {
+            "description": "SKINR licenses the character owns",
+            "items": {
+              "$ref": "#/components/schemas/CharactersCosmeticsSkinrItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "licenses"
+        ],
+        "type": "object"
+      },
+      "CharactersCosmeticsSkinrComponents": {
+        "properties": {
+          "licenses": {
+            "description": "SKINR component licenses the character owns",
+            "items": {
+              "$ref": "#/components/schemas/CharactersCosmeticsSkinrComponentsItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "licenses"
+        ],
+        "type": "object"
+      },
+      "CharactersCosmeticsSkinrComponentsItem": {
+        "properties": {
+          "component_id": {
+            "description": "ID of the component (see SDE for details)",
+            "examples": [
+              67890
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "runs": {
+            "description": "Remaining uses of this license",
+            "oneOf": [
+              {
+                "properties": {
+                  "remaining": {
+                    "description": "Runs remaining on license",
+                    "format": "int64",
+                    "type": "integer"
+                  }
+                },
+                "title": "remaining",
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "unlimited": {
+                    "description": "Whether the license has unlimited uses",
+                    "type": "boolean"
+                  }
+                },
+                "title": "unlimited",
+                "type": "object"
+              }
+            ]
+          },
+          "type": {
+            "description": "Kind of component",
+            "enum": [
+              "nanocoating",
+              "pattern"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "Nanocoating component",
+              "Pattern component"
+            ]
+          }
+        },
+        "required": [
+          "component_id",
+          "type",
+          "runs"
+        ],
+        "type": "object"
+      },
+      "CharactersCosmeticsSkinrItem": {
+        "properties": {
+          "activated": {
+            "description": "Whether this SKINR is activated",
+            "type": "boolean"
+          },
+          "skinr_id": {
+            "description": "SKINR identifier",
+            "type": "string"
+          },
+          "unactivated": {
+            "description": "Number of unactivated copies of this SKINR",
+            "examples": [
+              3
+            ],
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "skinr_id",
+          "activated",
+          "unactivated"
+        ],
+        "type": "object"
+      },
       "CharactersDetail": {
         "properties": {
           "achievement_score": {
@@ -4143,6 +4255,164 @@
           "is_committed",
           "contributed",
           "last_modified"
+        ],
+        "type": "object"
+      },
+      "CharactersParagonHubSkinr": {
+        "properties": {
+          "cursor": {
+            "$ref": "#/components/schemas/Cursor"
+          },
+          "listings": {
+            "description": "Page of SKINR listings the character has posted",
+            "items": {
+              "$ref": "#/components/schemas/CharactersParagonHubSkinrItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "listings"
+        ],
+        "type": "object"
+      },
+      "CharactersParagonHubSkinrItem": {
+        "properties": {
+          "created": {
+            "description": "When the listing was created",
+            "format": "date-time",
+            "type": "string"
+          },
+          "expires": {
+            "description": "When the listing expires",
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Unique identifier of the listing"
+          },
+          "last_modified": {
+            "description": "When this listing was last retrieved from the game",
+            "format": "date-time",
+            "type": "string"
+          },
+          "price": {
+            "description": "Asking price of the listing",
+            "oneOf": [
+              {
+                "properties": {
+                  "isk": {
+                    "description": "Price in ISK",
+                    "format": "double",
+                    "type": "number"
+                  }
+                },
+                "title": "isk",
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "plex": {
+                    "description": "Price in PLEX",
+                    "format": "int64",
+                    "type": "integer"
+                  }
+                },
+                "title": "plex",
+                "type": "object"
+              }
+            ]
+          },
+          "quantity": {
+            "description": "How many licenses remain in this listing",
+            "examples": [
+              3
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "seller_id": {
+            "$ref": "#/components/schemas/CharacterID",
+            "description": "Character that posted the listing"
+          },
+          "skinr_id": {
+            "description": "SKINR license identifier",
+            "type": "string"
+          },
+          "state": {
+            "description": "Lifecycle state of the listing",
+            "enum": [
+              "listed",
+              "sold_out",
+              "expired",
+              "removed"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "The listing is live and has licenses available",
+              "All licenses in the listing have been sold",
+              "The listing reached its expiry time",
+              "The listing was cancelled or invalidated"
+            ]
+          },
+          "target": {
+            "description": "Who the listing is visible to",
+            "oneOf": [
+              {
+                "properties": {
+                  "character_id": {
+                    "$ref": "#/components/schemas/CharacterID",
+                    "description": "Character the listing is visible to"
+                  }
+                },
+                "title": "character_id",
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "corporation_id": {
+                    "$ref": "#/components/schemas/CorporationID",
+                    "description": "Corporation the listing is visible to"
+                  }
+                },
+                "title": "corporation_id",
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "alliance_id": {
+                    "$ref": "#/components/schemas/AllianceID",
+                    "description": "Alliance the listing is visible to"
+                  }
+                },
+                "title": "alliance_id",
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "public": {
+                    "description": "Whether the listing is visible to everyone",
+                    "type": "boolean"
+                  }
+                },
+                "title": "public",
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "last_modified",
+          "seller_id",
+          "skinr_id",
+          "created",
+          "expires",
+          "quantity",
+          "price",
+          "target"
         ],
         "type": "object"
       },
@@ -11165,6 +11435,327 @@
         ],
         "type": "object"
       },
+      "CosmeticsSkinr": {
+        "properties": {
+          "creator_id": {
+            "$ref": "#/components/schemas/CharacterID",
+            "description": "SKINR creator character ID"
+          },
+          "id": {
+            "description": "SKINR ID",
+            "type": "string"
+          },
+          "layout": {
+            "$ref": "#/components/schemas/CosmeticsSkinrLayout",
+            "description": "SKINR layout"
+          },
+          "line": {
+            "description": "SKINR line name",
+            "type": "string"
+          },
+          "name": {
+            "description": "SKINR name",
+            "type": "string"
+          },
+          "ship_type_id": {
+            "$ref": "#/components/schemas/TypeID",
+            "description": "ID of the ship hull",
+            "examples": [
+              587
+            ]
+          },
+          "tier": {
+            "$ref": "#/components/schemas/CosmeticsSkinrTier",
+            "description": "SKINR tier"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "creator_id",
+          "ship_type_id",
+          "tier",
+          "layout"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrLayout": {
+        "properties": {
+          "pattern_blend_mode": {
+            "description": "Blend mode to use when compositing patterns",
+            "enum": [
+              "normal",
+              "subtract",
+              "exclusion",
+              "nested",
+              "nested_inverted"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "Normal (overlay) blend mode",
+              "Subtract blend mode",
+              "Exclusion blend mode",
+              "Nested blend mode",
+              "Nested inverted blend mode"
+            ]
+          },
+          "slots": {
+            "description": "Cosmetic slots in the layout",
+            "items": {
+              "$ref": "#/components/schemas/CosmeticsSkinrLayoutslot"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "slots",
+          "pattern_blend_mode"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrLayoutslot": {
+        "properties": {
+          "configuration": {
+            "description": "Configuration of the cosmetic slot",
+            "oneOf": [
+              {
+                "properties": {
+                  "nanocoating": {
+                    "$ref": "#/components/schemas/CosmeticsSkinrSlotnanocoating",
+                    "description": "Nanocoating configuration"
+                  }
+                },
+                "title": "nanocoating",
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "pattern": {
+                    "$ref": "#/components/schemas/CosmeticsSkinrSlotpattern",
+                    "description": "Pattern configuration"
+                  }
+                },
+                "title": "pattern",
+                "type": "object"
+              }
+            ]
+          },
+          "id": {
+            "description": "ID of cosmetic slot (see SDE for details)",
+            "examples": [
+              1
+            ],
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "configuration"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrPatternconfiguration": {
+        "properties": {
+          "mirrored": {
+            "description": "Whether to mirror the UV coordinates",
+            "type": "boolean"
+          },
+          "projection": {
+            "$ref": "#/components/schemas/CosmeticsSkinrPatternprojection",
+            "description": "How the pattern is mapped onto the ship hull"
+          },
+          "transform": {
+            "$ref": "#/components/schemas/CosmeticsSkinrPatterntransform",
+            "description": "Transformation applied to the pattern"
+          }
+        },
+        "required": [
+          "projection",
+          "transform",
+          "mirrored"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrPatternprojection": {
+        "properties": {
+          "slot1": {
+            "description": "Whether the pattern is projected on cosmetic slot 1",
+            "type": "boolean"
+          },
+          "slot2": {
+            "description": "Whether the pattern is projected on cosmetic slot 2",
+            "type": "boolean"
+          },
+          "slot3": {
+            "description": "Whether the pattern is projected on cosmetic slot 3",
+            "type": "boolean"
+          },
+          "slot4": {
+            "description": "Whether the pattern is projected on cosmetic slot 4",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "slot1",
+          "slot2",
+          "slot3",
+          "slot4"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrPatterntransform": {
+        "properties": {
+          "position": {
+            "$ref": "#/components/schemas/CosmeticsSkinrVector3",
+            "description": "Translation applied to the pattern"
+          },
+          "rotation": {
+            "$ref": "#/components/schemas/CosmeticsSkinrVector4",
+            "description": "Rotation applied to the pattern"
+          },
+          "scaling": {
+            "$ref": "#/components/schemas/CosmeticsSkinrVector3",
+            "description": "Scaling applied to the pattern"
+          }
+        },
+        "required": [
+          "position",
+          "rotation",
+          "scaling"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrSlotnanocoating": {
+        "properties": {
+          "id": {
+            "description": "ID of nanocoating component (see SDE for details)",
+            "examples": [
+              67890
+            ],
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrSlotpattern": {
+        "properties": {
+          "configuration": {
+            "$ref": "#/components/schemas/CosmeticsSkinrPatternconfiguration",
+            "description": "Pattern component configuration"
+          },
+          "id": {
+            "description": "ID of pattern component (see SDE for details)",
+            "examples": [
+              67890
+            ],
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "configuration"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrTier": {
+        "properties": {
+          "level": {
+            "description": "SKINR tier level",
+            "examples": [
+              1
+            ],
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "level"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrVector3": {
+        "properties": {
+          "x": {
+            "description": "X coordinate",
+            "examples": [
+              0
+            ],
+            "format": "double",
+            "type": "number"
+          },
+          "y": {
+            "description": "Y coordinate",
+            "examples": [
+              0
+            ],
+            "format": "double",
+            "type": "number"
+          },
+          "z": {
+            "description": "Z coordinate",
+            "examples": [
+              0
+            ],
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y",
+          "z"
+        ],
+        "type": "object"
+      },
+      "CosmeticsSkinrVector4": {
+        "properties": {
+          "w": {
+            "description": "W coordinate",
+            "examples": [
+              1
+            ],
+            "format": "double",
+            "type": "number"
+          },
+          "x": {
+            "description": "X coordinate",
+            "examples": [
+              1
+            ],
+            "format": "double",
+            "type": "number"
+          },
+          "y": {
+            "description": "Y coordinate",
+            "examples": [
+              0
+            ],
+            "format": "double",
+            "type": "number"
+          },
+          "z": {
+            "description": "Z coordinate",
+            "examples": [
+              0
+            ],
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y",
+          "z",
+          "w"
+        ],
+        "type": "object"
+      },
       "Cursor": {
         "properties": {
           "after": {
@@ -14139,6 +14730,172 @@
         ],
         "type": "object"
       },
+      "ParagonHubSkinr": {
+        "properties": {
+          "cursor": {
+            "$ref": "#/components/schemas/Cursor"
+          },
+          "listings": {
+            "description": "Page of public SKINR listings",
+            "items": {
+              "$ref": "#/components/schemas/ParagonHubSkinrInternalItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "listings"
+        ],
+        "type": "object"
+      },
+      "ParagonHubSkinrAlliances": {
+        "properties": {
+          "cursor": {
+            "$ref": "#/components/schemas/Cursor"
+          },
+          "listings": {
+            "description": "Page of SKINR listings targeted at the alliance",
+            "items": {
+              "$ref": "#/components/schemas/ParagonHubSkinrInternalItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "listings"
+        ],
+        "type": "object"
+      },
+      "ParagonHubSkinrCharacters": {
+        "properties": {
+          "cursor": {
+            "$ref": "#/components/schemas/Cursor"
+          },
+          "listings": {
+            "description": "Page of SKINR listings targeted at the character",
+            "items": {
+              "$ref": "#/components/schemas/ParagonHubSkinrInternalItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "listings"
+        ],
+        "type": "object"
+      },
+      "ParagonHubSkinrCorporations": {
+        "properties": {
+          "cursor": {
+            "$ref": "#/components/schemas/Cursor"
+          },
+          "listings": {
+            "description": "Page of SKINR listings targeted at the corporation",
+            "items": {
+              "$ref": "#/components/schemas/ParagonHubSkinrInternalItem"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "listings"
+        ],
+        "type": "object"
+      },
+      "ParagonHubSkinrInternalItem": {
+        "properties": {
+          "created": {
+            "description": "When the listing was created",
+            "format": "date-time",
+            "type": "string"
+          },
+          "expires": {
+            "description": "When the listing expires",
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/UUID",
+            "description": "Unique identifier of the listing"
+          },
+          "last_modified": {
+            "description": "When this listing was last retrieved from the game",
+            "format": "date-time",
+            "type": "string"
+          },
+          "price": {
+            "description": "Asking price of the listing",
+            "oneOf": [
+              {
+                "properties": {
+                  "isk": {
+                    "description": "Price in ISK",
+                    "format": "double",
+                    "type": "number"
+                  }
+                },
+                "title": "isk",
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "plex": {
+                    "description": "Price in PLEX",
+                    "format": "int64",
+                    "type": "integer"
+                  }
+                },
+                "title": "plex",
+                "type": "object"
+              }
+            ]
+          },
+          "quantity": {
+            "description": "How many licenses remain in this listing",
+            "examples": [
+              3
+            ],
+            "format": "int64",
+            "type": "integer"
+          },
+          "seller_id": {
+            "$ref": "#/components/schemas/CharacterID",
+            "description": "Character that posted the listing"
+          },
+          "skinr_id": {
+            "description": "SKINR license identifier",
+            "type": "string"
+          },
+          "state": {
+            "description": "Lifecycle state of the listing",
+            "enum": [
+              "listed",
+              "sold_out",
+              "expired",
+              "removed"
+            ],
+            "type": "string",
+            "x-enum-descriptions": [
+              "The listing is live and has licenses available",
+              "All licenses in the listing have been sold",
+              "The listing reached its expiry time",
+              "The listing was cancelled"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "last_modified",
+          "seller_id",
+          "skinr_id",
+          "created",
+          "expires",
+          "quantity",
+          "price"
+        ],
+        "type": "object"
+      },
       "PlanetID": {
         "examples": [
           40000002
@@ -16329,8 +17086,8 @@
       "url": "https://developers.eveonline.com/license-agreement"
     },
     "termsOfService": "https://support.eveonline.com/hc/en-us/articles/8414770561948-EVE-Online-Terms-of-Service",
-    "title": "EVE Soldier Inspiration (ESI) - tranquility",
-    "version": "2026-08-04"
+    "title": "EVE SKINR Ingenuity (ESI) - tranquility",
+    "version": "2026-08-18"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -19107,6 +19864,180 @@
         "x-compatibility-date": "2020-01-01",
         "x-server-cache-mode": "ttl-based",
         "x-server-cache-ttl": 86400
+      }
+    },
+    "/characters/{character_id}/cosmetics/skinr": {
+      "get": {
+        "description": "Listing of all SKINR licenses you own",
+        "operationId": "GetCharactersCosmeticsSkinr",
+        "parameters": [
+          {
+            "description": "The ID of the character whose SKINR licenses to return",
+            "in": "path",
+            "name": "character_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CharacterID",
+              "description": "The ID of the character whose SKINR licenses to return"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharactersCosmeticsSkinr"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "esi.cosmetic.char:read"
+            ]
+          }
+        ],
+        "summary": "List a character's owned SKINR licenses",
+        "tags": [
+          "Cosmetics"
+        ],
+        "x-cache-age": 3600,
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2026-08-18",
+        "x-rate-limit": {
+          "group": "char-skinr",
+          "max-tokens": 30,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based"
+      }
+    },
+    "/characters/{character_id}/cosmetics/skinr/components": {
+      "get": {
+        "description": "Listing of all SKINR component licenses you own",
+        "operationId": "GetCharactersCosmeticsSkinrComponents",
+        "parameters": [
+          {
+            "description": "The ID of the character whose SKINR component licenses to return",
+            "in": "path",
+            "name": "character_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CharacterID",
+              "description": "The ID of the character whose SKINR component licenses to return"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharactersCosmeticsSkinrComponents"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "esi.cosmetic.char:read"
+            ]
+          }
+        ],
+        "summary": "List a character's owned SKINR component licenses",
+        "tags": [
+          "Cosmetics"
+        ],
+        "x-cache-age": 3600,
+        "x-cache-mode": "event-based",
+        "x-client-cache-ttl": 3600,
+        "x-compatibility-date": "2026-08-18",
+        "x-rate-limit": {
+          "group": "char-skinr",
+          "max-tokens": 30,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/cspa": {
@@ -22403,6 +23334,127 @@
         "x-compatibility-date": "2020-01-01",
         "x-server-cache-mode": "ttl-based",
         "x-server-cache-ttl": 3600
+      }
+    },
+    "/characters/{character_id}/paragon-hub/skinr": {
+      "get": {
+        "description": "List the SKINR listings a character has posted on the Paragon Hub.",
+        "operationId": "GetCharactersParagonHubSkinr",
+        "parameters": [
+          {
+            "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+            "explode": false,
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+            "explode": false,
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The amount of records to retrieve per request.",
+            "explode": false,
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "description": "The amount of records to retrieve per request.",
+              "format": "int64",
+              "maximum": 100,
+              "minimum": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The ID of the character whose listings to return",
+            "in": "path",
+            "name": "character_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CharacterID",
+              "description": "The ID of the character whose listings to return"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharactersParagonHubSkinr"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "esi.cosmetic.char:read"
+            ]
+          }
+        ],
+        "summary": "List a character's Paragon Hub SKINR listings",
+        "tags": [
+          "Paragon Hub"
+        ],
+        "x-cache-mode": "event-based",
+        "x-compatibility-date": "2026-08-18",
+        "x-pagination": "cursor",
+        "x-rate-limit": {
+          "group": "char-paragon-hub",
+          "max-tokens": 150,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based",
+        "x-tombstone-ttl": 604800
       }
     },
     "/characters/{character_id}/planets": {
@@ -29306,6 +30358,87 @@
         "x-server-cache-ttl": 3600
       }
     },
+    "/cosmetics/skinr/{skinr_id}": {
+      "get": {
+        "description": "All attributes of a SKINR license",
+        "operationId": "GetCosmeticsSkinr",
+        "parameters": [
+          {
+            "description": "SKINR identifier",
+            "in": "path",
+            "name": "skinr_id",
+            "required": true,
+            "schema": {
+              "description": "SKINR identifier",
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CosmeticsSkinr"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Get SKINR attributes",
+        "tags": [
+          "Cosmetics"
+        ],
+        "x-cache-age": 31536000,
+        "x-cache-mode": "ttl-based",
+        "x-client-cache-ttl": 31536000,
+        "x-compatibility-date": "2026-08-18",
+        "x-rate-limit": {
+          "group": "skinr",
+          "max-tokens": 12000,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "ttl-based",
+        "x-server-cache-ttl": 604800
+      }
+    },
     "/dogma/attributes": {
       "get": {
         "description": "Get a list of dogma attribute ids\n\nThis route expires daily at 11:05",
@@ -33139,6 +34272,473 @@
         "x-server-cache-mode": "event-based"
       }
     },
+    "/paragon-hub/skinr": {
+      "get": {
+        "description": "Browse the SKINR listings publicly available on the Paragon Hub.",
+        "operationId": "GetParagonHubSkinr",
+        "parameters": [
+          {
+            "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+            "explode": false,
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+            "explode": false,
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The amount of records to retrieve per request.",
+            "explode": false,
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "description": "The amount of records to retrieve per request.",
+              "format": "int64",
+              "maximum": 100,
+              "minimum": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParagonHubSkinr"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "List public Paragon Hub SKINR listings",
+        "tags": [
+          "Paragon Hub"
+        ],
+        "x-cache-mode": "event-based",
+        "x-compatibility-date": "2026-08-18",
+        "x-pagination": "cursor",
+        "x-rate-limit": {
+          "group": "paragon-hub",
+          "max-tokens": 150,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based",
+        "x-tombstone-ttl": 604800
+      }
+    },
+    "/paragon-hub/skinr/alliances/{alliance_id}": {
+      "get": {
+        "description": "Browse the SKINR listings on the Paragon Hub that are visible to the given alliance.",
+        "operationId": "GetParagonHubSkinrAlliances",
+        "parameters": [
+          {
+            "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+            "explode": false,
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+            "explode": false,
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The amount of records to retrieve per request.",
+            "explode": false,
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "description": "The amount of records to retrieve per request.",
+              "format": "int64",
+              "maximum": 100,
+              "minimum": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The ID of the alliance the listings are targeted at",
+            "in": "path",
+            "name": "alliance_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/AllianceID",
+              "description": "The ID of the alliance the listings are targeted at"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParagonHubSkinrAlliances"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "esi.cosmetic.char:read"
+            ]
+          }
+        ],
+        "summary": "List Paragon Hub SKINR listings targeted at an alliance",
+        "tags": [
+          "Paragon Hub"
+        ],
+        "x-cache-mode": "event-based",
+        "x-compatibility-date": "2026-08-18",
+        "x-pagination": "cursor",
+        "x-rate-limit": {
+          "group": "char-paragon-hub",
+          "max-tokens": 150,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based",
+        "x-tombstone-ttl": 604800
+      }
+    },
+    "/paragon-hub/skinr/characters/{character_id}": {
+      "get": {
+        "description": "Browse the SKINR listings on the Paragon Hub that are visible to the given character.",
+        "operationId": "GetParagonHubSkinrCharacters",
+        "parameters": [
+          {
+            "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+            "explode": false,
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+            "explode": false,
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The amount of records to retrieve per request.",
+            "explode": false,
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "description": "The amount of records to retrieve per request.",
+              "format": "int64",
+              "maximum": 100,
+              "minimum": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The ID of the character the listings are targeted at",
+            "in": "path",
+            "name": "character_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CharacterID",
+              "description": "The ID of the character the listings are targeted at"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParagonHubSkinrCharacters"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "esi.cosmetic.char:read"
+            ]
+          }
+        ],
+        "summary": "List Paragon Hub SKINR listings targeted at a character",
+        "tags": [
+          "Paragon Hub"
+        ],
+        "x-cache-mode": "event-based",
+        "x-compatibility-date": "2026-08-18",
+        "x-pagination": "cursor",
+        "x-rate-limit": {
+          "group": "char-paragon-hub",
+          "max-tokens": 150,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based",
+        "x-tombstone-ttl": 604800
+      }
+    },
+    "/paragon-hub/skinr/corporations/{corporation_id}": {
+      "get": {
+        "description": "Browse the SKINR listings on the Paragon Hub that are visible to the given corporation.",
+        "operationId": "GetParagonHubSkinrCorporations",
+        "parameters": [
+          {
+            "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+            "explode": false,
+            "in": "query",
+            "name": "after",
+            "schema": {
+              "description": "Return records from after this cursor (mutual exclusive with 'before'). '0' to start from the beginning.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+            "explode": false,
+            "in": "query",
+            "name": "before",
+            "schema": {
+              "description": "Return records from before this cursor (mutual exclusive with 'after'). '0' to start from the end.",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The amount of records to retrieve per request.",
+            "explode": false,
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "description": "The amount of records to retrieve per request.",
+              "format": "int64",
+              "maximum": 100,
+              "minimum": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The ID of the corporation the listings are targeted at",
+            "in": "path",
+            "name": "corporation_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CorporationID",
+              "description": "The ID of the corporation the listings are targeted at"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/AcceptLanguage"
+          },
+          {
+            "$ref": "#/components/parameters/IfNoneMatch"
+          },
+          {
+            "$ref": "#/components/parameters/CompatibilityDate"
+          },
+          {
+            "$ref": "#/components/parameters/Tenant"
+          },
+          {
+            "$ref": "#/components/parameters/IfModifiedSince"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParagonHubSkinrCorporations"
+                }
+              }
+            },
+            "description": "OK",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/CacheControl"
+              },
+              "ETag": {
+                "$ref": "#/components/headers/ETag"
+              },
+              "Last-Modified": {
+                "$ref": "#/components/headers/LastModified"
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "esi.cosmetic.char:read"
+            ]
+          }
+        ],
+        "summary": "List Paragon Hub SKINR listings targeted at a corporation",
+        "tags": [
+          "Paragon Hub"
+        ],
+        "x-cache-mode": "event-based",
+        "x-compatibility-date": "2026-08-18",
+        "x-pagination": "cursor",
+        "x-rate-limit": {
+          "group": "char-paragon-hub",
+          "max-tokens": 150,
+          "window-size": "15m"
+        },
+        "x-server-cache-mode": "event-based",
+        "x-tombstone-ttl": 604800
+      }
+    },
     "/route/{origin_system_id}/{destination_system_id}": {
       "post": {
         "description": "Calculate the systems between the given origin and destination.",
@@ -36425,6 +38025,9 @@
       "name": "Corporation Projects"
     },
     {
+      "name": "Cosmetics"
+    },
+    {
       "name": "Dogma"
     },
     {
@@ -36468,6 +38071,9 @@
     },
     {
       "name": "Military Campaigns"
+    },
+    {
+      "name": "Paragon Hub"
     },
     {
       "name": "Planetary Interaction"

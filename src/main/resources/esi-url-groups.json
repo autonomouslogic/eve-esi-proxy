@@ -120,6 +120,14 @@
     "group": null
   },
   {
+    "url": "/characters/{character_id}/cosmetics/skinr",
+    "group": "char-skinr"
+  },
+  {
+    "url": "/characters/{character_id}/cosmetics/skinr/components",
+    "group": "char-skinr"
+  },
+  {
     "url": "/characters/{character_id}/cspa",
     "group": "char-detail"
   },
@@ -254,6 +262,10 @@
   {
     "url": "/characters/{character_id}/orders/history",
     "group": null
+  },
+  {
+    "url": "/characters/{character_id}/paragon-hub/skinr",
+    "group": "char-paragon-hub"
   },
   {
     "url": "/characters/{character_id}/planets",
@@ -536,6 +548,10 @@
     "group": "corp-wallet"
   },
   {
+    "url": "/cosmetics/skinr/{skinr_id}",
+    "group": "skinr"
+  },
+  {
     "url": "/dogma/attributes",
     "group": null
   },
@@ -722,6 +738,22 @@
   {
     "url": "/military-campaigns/{campaign_id}/objectives/{objective_id}",
     "group": "military-campaign"
+  },
+  {
+    "url": "/paragon-hub/skinr",
+    "group": "paragon-hub"
+  },
+  {
+    "url": "/paragon-hub/skinr/alliances/{alliance_id}",
+    "group": "char-paragon-hub"
+  },
+  {
+    "url": "/paragon-hub/skinr/characters/{character_id}",
+    "group": "char-paragon-hub"
+  },
+  {
+    "url": "/paragon-hub/skinr/corporations/{corporation_id}",
+    "group": "char-paragon-hub"
   },
   {
     "url": "/route/{origin_system_id}/{destination_system_id}",
