@@ -3,6 +3,7 @@ package com.autonomouslogic.eveesiproxy.handler;
 import static com.autonomouslogic.eveesiproxy.test.TestConstants.MOCK_ESI_PORT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.autonomouslogic.eveesiproxy.EveEsiProxy;
 import com.autonomouslogic.eveesiproxy.test.DaggerTestComponent;
@@ -78,6 +79,20 @@ public class ProxyServiceRetryTest {
 		for (int i = 0; i < 2; i++) {
 			assertNotNull(TestHttpUtils.takeRequest(mockEsi));
 		}
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = {520})
+	@SneakyThrows
+	void shouldNotRetrySomeServerErrors(int status) {
+		TestHttpUtils.enqueueResponse(mockEsi, status, "Error");
+
+		try (var proxyResponse = TestHttpUtils.callProxy(client, proxy, "GET", "/esi")) {
+			TestHttpUtils.assertResponse(proxyResponse, status, "Error");
+		}
+
+		assertNotNull(TestHttpUtils.takeRequest(mockEsi));
+		assertNull(TestHttpUtils.takeRequest(mockEsi));
 	}
 
 	@Test

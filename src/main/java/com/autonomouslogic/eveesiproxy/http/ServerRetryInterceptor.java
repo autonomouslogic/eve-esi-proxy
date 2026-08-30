@@ -33,10 +33,11 @@ public class ServerRetryInterceptor implements Interceptor {
 		try {
 			var response = chain.proceed(req);
 			for (int i = 1; i < maxTries; i++) {
-				if (response.code() / 100 != 5) {
+				var code = response.code();
+				if (code == 520 || code / 100 != 5) {
 					return response;
 				}
-				log.trace("Retrying {} {}: {}", req.method(), req.url(), response.code());
+				log.trace("Retrying {} {}: {}", req.method(), req.url(), code);
 				response.close();
 				Thread.sleep(retryDelay);
 				response = chain.proceed(req);
