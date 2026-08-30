@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.3.31](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.30...1.3.31) (2026-08-30)
+
+
+### Bug Fixes
+
+* 520 responses should not be retried ([4b73807](https://github.com/autonomouslogic/eve-esi-proxy/commit/4b73807e2d4d0b2976f332e236e2c9b786a86040))
+
 ## [1.3.30](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.29...1.3.30) (2026-08-20)
 
 
