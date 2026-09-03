@@ -105,47 +105,6 @@
         "type": "integer",
         "x-common-model": "true"
       },
-      "AllianceDetail": {
-        "properties": {
-          "creator_corporation_id": {
-            "$ref": "#/components/schemas/CorporationID",
-            "description": "Alliance's creator corporation ID"
-          },
-          "creator_id": {
-            "$ref": "#/components/schemas/CharacterID",
-            "description": "Alliance's creator ID"
-          },
-          "date_founded": {
-            "description": "Alliance's founding date",
-            "format": "date-time",
-            "type": "string"
-          },
-          "executor_corporation_id": {
-            "$ref": "#/components/schemas/CorporationID",
-            "description": "Alliance's executor corporation ID"
-          },
-          "faction_id": {
-            "$ref": "#/components/schemas/FactionID",
-            "description": "Alliance's faction ID"
-          },
-          "name": {
-            "description": "Alliance's name",
-            "type": "string"
-          },
-          "ticker": {
-            "description": "Alliance's ticker",
-            "type": "string"
-          }
-        },
-        "required": [
-          "creator_corporation_id",
-          "creator_id",
-          "date_founded",
-          "name",
-          "ticker"
-        ],
-        "type": "object"
-      },
       "AllianceID": {
         "examples": [
           99000001
@@ -229,6 +188,47 @@
             "type": "string"
           }
         },
+        "type": "object"
+      },
+      "AlliancesDetail": {
+        "properties": {
+          "creator_corporation_id": {
+            "$ref": "#/components/schemas/CorporationID",
+            "description": "Alliance's creator corporation ID"
+          },
+          "creator_id": {
+            "$ref": "#/components/schemas/CharacterID",
+            "description": "Alliance's creator ID"
+          },
+          "date_founded": {
+            "description": "Alliance's founding date",
+            "format": "date-time",
+            "type": "string"
+          },
+          "executor_corporation_id": {
+            "$ref": "#/components/schemas/CorporationID",
+            "description": "Alliance's executor corporation ID"
+          },
+          "faction_id": {
+            "$ref": "#/components/schemas/FactionID",
+            "description": "Alliance's faction ID"
+          },
+          "name": {
+            "description": "Alliance's name",
+            "type": "string"
+          },
+          "ticker": {
+            "description": "Alliance's ticker",
+            "type": "string"
+          }
+        },
+        "required": [
+          "creator_corporation_id",
+          "creator_id",
+          "date_founded",
+          "name",
+          "ticker"
+        ],
         "type": "object"
       },
       "AlliancesGet": {
@@ -14358,7 +14358,7 @@
           "routes": {
             "description": "List of all API routes and their health status",
             "items": {
-              "$ref": "#/components/schemas/MetaStatusRoutestatus"
+              "$ref": "#/components/schemas/MetaStatusRoute"
             },
             "type": "array"
           }
@@ -14368,7 +14368,7 @@
         ],
         "type": "object"
       },
-      "MetaStatusRoutestatus": {
+      "MetaStatusRoute": {
         "properties": {
           "method": {
             "description": "Route's HTTP method",
@@ -17201,7 +17201,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AllianceDetail"
+                  "$ref": "#/components/schemas/AlliancesDetail"
                 }
               }
             },
