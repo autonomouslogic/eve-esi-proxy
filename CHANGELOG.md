@@ -1,5 +1,12 @@
 EVE ESI Proxy Changelog
 
+## [1.3.34](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.33...1.3.34) (2026-09-05)
+
+
+### Dependency Updates
+
+* **deps:** update actions/setup-java action to v6 ([#169](https://github.com/autonomouslogic/eve-esi-proxy/issues/169)) ([2cc1a26](https://github.com/autonomouslogic/eve-esi-proxy/commit/2cc1a26113e451bd6c52975f0df1f660d344277e))
+
 ## [1.3.33](https://github.com/autonomouslogic/eve-esi-proxy/compare/1.3.32...1.3.33) (2026-09-03)
 
 
