@@ -4,7 +4,7 @@ plugins {
 	id "jacoco"
 	id "application"
 	id "io.freefair.lombok" version "9.5.0"
-	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "7.0.23"
+	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "7.0.24"
 	id "com.diffplug.spotless" version "8.10.2"
 }
 
@@ -55,7 +55,7 @@ dependencies {
 	// Misc
 	implementation "com.squareup.okhttp3:okhttp:5.5.0"
 //	implementation "org.yaml:snakeyaml:2.3"
-	implementation "com.autonomouslogic.commons:commons-java:1.11.1"
+	implementation "com.autonomouslogic.commons:commons-java:1.11.2"
 	implementation "commons-io:commons-io:2.22.0"
 	implementation "com.google.guava:guava:33.7.1-jre"
 	implementation "com.github.scribejava:scribejava-core:8.3.3"
