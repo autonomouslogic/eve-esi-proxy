@@ -21301,7 +21301,7 @@
           "Location"
         ],
         "x-cache-age": 5,
-        "x-cache-mode": "ttl-based",
+        "x-cache-mode": "event-based",
         "x-client-cache-ttl": 5,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
@@ -21309,8 +21309,7 @@
           "max-tokens": 1200,
           "window-size": "15m"
         },
-        "x-server-cache-mode": "ttl-based",
-        "x-server-cache-ttl": 5
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/loyalty/points": {
@@ -23158,7 +23157,7 @@
           "Location"
         ],
         "x-cache-age": 60,
-        "x-cache-mode": "ttl-based",
+        "x-cache-mode": "event-based",
         "x-client-cache-ttl": 60,
         "x-compatibility-date": "2020-01-01",
         "x-rate-limit": {
@@ -23166,8 +23165,7 @@
           "max-tokens": 1200,
           "window-size": "15m"
         },
-        "x-server-cache-mode": "ttl-based",
-        "x-server-cache-ttl": 60
+        "x-server-cache-mode": "event-based"
       }
     },
     "/characters/{character_id}/orders": {
