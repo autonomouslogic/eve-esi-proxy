@@ -50,7 +50,7 @@ dependencies {
 
 	// Helidon
 	implementation "io.helidon.webserver:helidon-webserver:4.5.5"
-	implementation "io.helidon.logging:helidon-logging-slf4j:4.5.5"
+	implementation "io.helidon.logging:helidon-logging-slf4j:27.0.0"
 
 	// Misc
 	implementation "com.squareup.okhttp3:okhttp:5.5.0"
