@@ -49,7 +49,7 @@ dependencies {
 	implementation "tools.jackson.core:jackson-databind"
 
 	// Helidon
-	implementation "io.helidon.webserver:helidon-webserver:4.5.5"
+	implementation "io.helidon.webserver:helidon-webserver:27.0.0"
 	implementation "io.helidon.logging:helidon-logging-slf4j:4.5.5"
 
 	// Misc
