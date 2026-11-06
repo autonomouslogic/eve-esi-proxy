@@ -5,7 +5,7 @@ plugins {
 	id "application"
 	id "io.freefair.lombok" version "9.8.3"
 	id "org.danilopianini.git-sensitive-semantic-versioning-gradle-plugin" version "7.3.0"
-	id "com.diffplug.spotless" version "8.10.4"
+	id "com.diffplug.spotless" version "8.11.0"
 }
 
 group = "com.autonomouslogic.esiproxy"
