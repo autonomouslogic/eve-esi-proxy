@@ -796,95 +796,11 @@
     "group": "ui"
   },
   {
-    "url": "/universe/ancestries",
-    "group": null
-  },
-  {
-    "url": "/universe/asteroid_belts/{asteroid_belt_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/bloodlines",
-    "group": null
-  },
-  {
-    "url": "/universe/categories",
-    "group": null
-  },
-  {
-    "url": "/universe/categories/{category_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/constellations",
-    "group": null
-  },
-  {
-    "url": "/universe/constellations/{constellation_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/factions",
-    "group": null
-  },
-  {
-    "url": "/universe/graphics",
-    "group": null
-  },
-  {
-    "url": "/universe/graphics/{graphic_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/groups",
-    "group": null
-  },
-  {
-    "url": "/universe/groups/{group_id}",
-    "group": null
-  },
-  {
     "url": "/universe/ids",
     "group": null
   },
   {
-    "url": "/universe/moons/{moon_id}",
-    "group": null
-  },
-  {
     "url": "/universe/names",
-    "group": null
-  },
-  {
-    "url": "/universe/planets/{planet_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/races",
-    "group": null
-  },
-  {
-    "url": "/universe/regions",
-    "group": null
-  },
-  {
-    "url": "/universe/regions/{region_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/schematics/{schematic_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/stargates/{stargate_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/stars/{star_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/stations/{station_id}",
     "group": null
   },
   {
@@ -901,22 +817,6 @@
   },
   {
     "url": "/universe/system_kills",
-    "group": null
-  },
-  {
-    "url": "/universe/systems",
-    "group": null
-  },
-  {
-    "url": "/universe/systems/{system_id}",
-    "group": null
-  },
-  {
-    "url": "/universe/types",
-    "group": null
-  },
-  {
-    "url": "/universe/types/{type_id}",
     "group": null
   },
   {
